@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTO - जप्त वाहन विक्री फॉर्म | Seized Vehicle Sale Form</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Shivaji01', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #d9534f;
+            margin-bottom: 10px;
+        }
+        
+        .form-header {
+            background-color: #d9534f;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .translate-btn {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            background: white;
+            color: #d9534f;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        
+        .btn-submit {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+            width: 200px;
+        }
+        
+        .btn-submit:hover {
+            background-color: #4cae4c;
+        }
+        
+        .required:after {
+            content: " *";
+            color: red;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .radio-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .terms {
+            font-size: 14px;
+        }
+        
+        @media (max-width: 600px) {
+            .translate-btn {
+                position: static;
+                margin-top: 10px;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <div>
+                <h1 id="form-title">🚗 जप्त वाहन विक्री फॉर्म</h1>
+                <p id="form-subtitle">RTO अधिकृत वाहन लिलावासाठी अर्ज</p>
+            </div>
+            <button class="translate-btn" id="translate-btn">English</button>
+        </div>
+        
+        <form action="#" method="POST">
+            <div class="form-group">
+                <label for="applicant_name" class="required" id="label-name">अर्जदाराचे नाव</label>
+                <input type="text" id="applicant_name" name="applicant_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="contact_no" class="required" id="label-contact">संपर्क क्रमांक</label>
+                <input type="text" id="contact_no" name="contact_no" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="aadhar_no" class="required" id="label-aadhar">आधार कार्ड क्रमांक</label>
+                <input type="text" id="aadhar_no" name="aadhar_no" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="vehicle_no" class="required" id="label-vehicle">वाहन क्रमांक</label>
+                <input type="text" id="vehicle_no" name="vehicle_no" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="vehicle_type" class="required" id="label-type">वाहन प्रकार</label>
+                <select id="vehicle_type" name="vehicle_type" required>
+                    <option value="">-- निवडा --</option>
+                    <option value="two_wheeler">दुचाकी</option>
+                    <option value="four_wheeler">चारचाकी</option>
+                    <option value="commercial">व्यावसायिक वाहन</option>
+                    <option value="other">इतर</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="seized_date" class="required" id="label-seized">जप्तीची तारीख</label>
+                <input type="date" id="seized_date" name="seized_date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="auction_date" class="required" id="label-auction">लिलाव तारीख</label>
+                <input type="date" id="auction_date" name="auction_date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="bid_amount" class="required" id="label-bid">बोली रक्कम (₹)</label>
+                <input type="number" id="bid_amount" name="bid_amount" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="payment_method" class="required" id="label-payment">पैसे भरण्याची पद्धत</label>
+                <select id="payment_method" name="payment_method" required>
+                    <option value="">-- निवडा --</option>
+                    <option value="dd">डिमांड ड्राफ्ट</option>
+                    <option value="online">ऑनलाइन भरणे</option>
+                    <option value="cash">रोख (RTO कार्यालयात)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label id="label-previous">आपण यापूर्वी RTO लिलावात भाग घेतला आहे का?</label>
+                <div class="radio-group" id="radio-group">
+                    <label><input type="radio" name="previous_auction" value="yes" id="radio-yes"> <span id="radio-yes-label">होय</span></label>
+                    <label><input type="radio" name="previous_auction" value="no" id="radio-no"> <span id="radio-no-label">नाही</span></label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="remarks" id="label-remarks">अतिरिक्त माहिती (अनिवार्य नाही)</label>
+                <textarea id="remarks" name="remarks" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group terms">
+                <label>
+                    <input type="checkbox" required> 
+                    <span id="terms-text">मी सर्व अटी मान्य करतो/करते. <a href="#" id="terms-link">अटी व शर्ती</a></span>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn-submit" id="submit-btn">अर्ज सादर करा</button>
+        </form>
+    </div>
+
+    <script>
+        const translations = {
+            marathi: {
+                title: "🚗 जप्त वाहन विक्री फॉर्म",
+                subtitle: "RTO अधिकृत वाहन लिलावासाठी अर्ज",
+                btn: "English",
+                labels: {
+                    name: "अर्जदाराचे नाव",
+                    contact: "संपर्क क्रमांक",
+                    aadhar: "आधार कार्ड क्रमांक",
+                    vehicle: "वाहन क्रमांक",
+                    type: "वाहन प्रकार",
+                    seized: "जप्तीची तारीख",
+                    auction: "लिलाव तारीख",
+                    bid: "बोली रक्कम (₹)",
+                    payment: "पैसे भरण्याची पद्धत",
+                    previous: "आपण यापूर्वी RTO लिलावात भाग घेतला आहे का?",
+                    remarks: "अतिरिक्त माहिती (अनिवार्य नाही)",
+                    terms: "मी सर्व अटी मान्य करतो/करते. <a href='#'>अटी व शर्ती</a>"
+                },
+                options: {
+                    select: "-- निवडा --",
+                    vehicle: ["दुचाकी", "चारचाकी", "व्यावसायिक वाहन", "इतर"],
+                    payment: ["डिमांड ड्राफ्ट", "ऑनलाइन भरणे", "रोख (RTO कार्यालयात)"],
+                    radio: ["होय", "नाही"]
+                },
+                submit: "अर्ज सादर करा"
+            },
+            english: {
+                title: "🚗 Seized Vehicle Sale Form",
+                subtitle: "RTO Official Vehicle Auction Application",
+                btn: "मराठी",
+                labels: {
+                    name: "Applicant Name",
+                    contact: "Contact Number",
+                    aadhar: "Aadhaar Card Number",
+                    vehicle: "Vehicle Number",
+                    type: "Vehicle Type",
+                    seized: "Seizure Date",
+                    auction: "Auction Date",
+                    bid: "Bid Amount (₹)",
+                    payment: "Payment Method",
+                    previous: "Have you participated in RTO auctions before?",
+                    remarks: "Additional Information (Optional)",
+                    terms: "I accept all <a href='#'>Terms & Conditions</a>"
+                },
+                options: {
+                    select: "-- Select --",
+                    vehicle: ["Two Wheeler", "Four Wheeler", "Commercial Vehicle", "Other"],
+                    payment: ["Demand Draft", "Online Payment", "Cash (At RTO Office)"],
+                    radio: ["Yes", "No"]
+                },
+                submit: "Submit Application"
+            }
+        };
+
+        let currentLang = 'marathi';
+
+        function updateLanguage() {
+            const lang = translations[currentLang];
+            
+            // Update form titles and button
+            document.getElementById('form-title').textContent = lang.title;
+            document.getElementById('form-subtitle').textContent = lang.subtitle;
+            document.getElementById('translate-btn').textContent = lang.btn;
+            
+            // Update all labels
+            Object.keys(lang.labels).forEach(key => {
+                const element = document.getElementById(`label-${key}`);
+                if (element) element.innerHTML = lang.labels[key];
+            });
+            
+            // Update dropdown options
+            const vehicleSelect = document.getElementById('vehicle_type');
+            vehicleSelect.options[0].text = lang.options.select;
+            for (let i = 0; i < lang.options.vehicle.length; i++) {
+                vehicleSelect.options[i+1].text = lang.options.vehicle[i];
+            }
+            
+            const paymentSelect = document.getElementById('payment_method');
+            paymentSelect.options[0].text = lang.options.select;
+            for (let i = 0; i < lang.options.payment.length; i++) {
+                paymentSelect.options[i+1].text = lang.options.payment[i];
+            }
+            
+            // Update radio buttons
+            document.getElementById('radio-yes-label').textContent = lang.options.radio[0];
+            document.getElementById('radio-no-label').textContent = lang.options.radio[1];
+            
+            // Update terms text
+            document.getElementById('terms-text').innerHTML = lang.labels.terms;
+            
+            // Update submit button
+            document.getElementById('submit-btn').textContent = lang.submit;
+        }
+
+        document.getElementById('translate-btn').addEventListener('click', function() {
+            currentLang = currentLang === 'marathi' ? 'english' : 'marathi';
+            updateLanguage();
+        });
+    </script>
+</body>
+</html>

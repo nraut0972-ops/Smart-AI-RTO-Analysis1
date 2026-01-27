@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTO Checklist Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .rto-blue {
+            background-color: #1e3a8a;
+        }
+        
+        .rto-light-blue {
+            background-color: #3b82f6;
+        }
+        
+        .checkbox-container:hover .checkmark {
+            border-color: #3b82f6;
+        }
+        
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+        
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 7px;
+            top: 3px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+        
+        .download-btn {
+            background-color: #059669;
+        }
+        
+        .download-btn:hover {
+            background-color: #047857;
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen pb-10">
+        <!-- Header -->
+        <header class="rto-blue text-white py-6 shadow-lg">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a3595e34-8fb9-43c3-861e-1527319dec41.png" alt="Government of India emblem featuring four lions standing back to back in blue and white" 
+                             class="mr-3 h-12 w-12 rounded-full border-2 border-white">
+                        <div>
+                            <h1 class="text-xl font-bold">RTO Checklist Generator</h1>
+                            <p class="text-sm text-blue-100">All India Vehicle & License Services</p>
+                        </div>
+                    </div>
+                    <div class="text-blue-100 text-sm">
+                        <p>Ensuring document compliance since 2023</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 mt-8">
+            <div class="bg-white rounded-lg shadow-md form-container mx-auto p-6 md:p-8 max-w-4xl">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Generate Your RTO Document Checklist</h2>
+                
+                <!-- Progress Steps -->
+                <div class="flex mb-8">
+                    <div class="flex-1 flex items-center">
+                        <div id="step1" class="rto-blue h-8 w-8 rounded-full flex items-center justify-center text-white font-bold mr-2">1</div>
+                        <span class="text-sm font-medium">Select Service</span>
+                    </div>
+                    <div class="flex-1 flex items-center">
+                        <div id="step2" class="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center text-gray-600 font-bold mr-2">2</div>
+                        <span class="text-gray-500 text-sm">Select Procedure</span>
+                    </div>
+                    <div class="flex-1 flex items-center">
+                        <div id="step3" class="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center text-gray-600 font-bold mr-2">3</div>
+                        <span class="text-gray-500 text-sm">Documents List</span>
+                    </div>
+                </div>
+                
+                <!-- Service Selection -->
+                <div id="serviceSection">
+                    <h3 class="text-lg font-semibold mb-4">Select the Service Type</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="service-card p-4 border rounded-lg cursor-pointer hover:border-blue-500 transition-all" data-service="license">
+                            <div class="flex items-center">
+                                <div class="rto-light-blue p-2 rounded-full mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Driving License</h4>
+                                    <p class="text-sm text-gray-600">New, renewal, duplicate, etc.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-card p-4 border rounded-lg cursor-pointer hover:border-blue-500 transition-all" data-service="registration">
+                            <div class="flex items-center">
+                                <div class="rto-light-blue p-2 rounded-full mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Vehicle Registration</h4>
+                                    <p class="text-sm text-gray-600">New, transfer, duplicate RC</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-card p-4 border rounded-lg cursor-pointer hover:border-blue-500 transition-all" data-service="permit">
+                            <div class="flex items-center">
+                                <div class="rto-light-blue p-2 rounded-full mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2m5-11a2 2 0 11-4 0 2 2 0 014 0zM5 19a2 2 0 100-4 2 2 0 000 4z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Permits</h4>
+                                    <p class="text-sm text-gray-600">National, tourist, temporary</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-card p-4 border rounded-lg cursor-pointer hover:border-blue-500 transition-all" data-service="other">
+                            <div class="flex items-center">
+                                <div class="rto-light-blue p-2 rounded-full mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Other Services</h4>
+                                    <p class="text-sm text-gray-600">NOC, Fitness, PUC, etc.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Procedure Selection (hidden initially) -->
+                <div id="procedureSection" class="hidden">
+                    <h3 class="text-lg font-semibold mb-4">Select the Procedure</h3>
+                    <div id="procedureOptions" class="mb-6">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                    <div class="flex justify-between">
+                        <button id="backToService" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition">Back</button>
+                        <button id="confirmProcedure" class="rto-blue text-white px-4 py-2 rounded hover:bg-blue-700 transition">Continue</button>
+                    </div>
+                </div>
+                
+                <!-- Documents List (hidden initially) -->
+                <div id="documentSection" class="hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="documentTitle" class="text-lg font-semibold"></h3>
+                        <div class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                            <span id="docCount">0</span> documents required
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                        <div class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p class="text-sm text-gray-700"><span id="procedureDescription"></span> Below is the complete list of required documents. Tick the boxes as you collect each document.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="documentList" class="space-y-3 mb-6">
+                        <!-- Document items will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button id="backToProcedure" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition">Back</button>
+                        <button id="downloadChecklist" class="download-btn text-white px-4 py-2 rounded hover:bg-green-700 transition flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Download Checklist
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="container mx-auto px-4 mt-10 text-center text-gray-500 text-sm">
+            <p>© 2023 RTO Checklist Generator. This is an unofficial reference tool only.</p>
+            <p class="mt-1">For official information, please contact your local RTO office.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Data structure for procedures and documents
+            const proceduresData = {
+                license: [
+                    {
+                        name: "New Driving License (Learner's)",
+                        description: "Application for a new learner's license for two-wheelers, four-wheelers, or commercial vehicles.",
+                        documents: [
+                            "Application Form (Form 2, 3 or 6 as applicable)",
+                            "Age proof (Birth Certificate/10th Mark Sheet/Passport/PAN Card)",
+                            "Address proof (Aadhar Card/Passport/Voter ID/Utility Bill)",
+                            "4 Passport-size photographs",
+                            "Medical Certificate (Form 1A, for commercial vehicles)",
+                            "Duly filled Form 1 (Self-declaration of fitness)"
+                        ]
+                    },
+                    {
+                        name: "New Driving License (Permanent)",
+                        description: "Conversion from learner's license to permanent license after successful test.",
+                        documents: [
+                            "Application Form 4 or 5",
+                            "Valid Learner's License",
+                            "Test fee payment receipt",
+                            "Application fee receipt",
+                            "3 Recent passport-size photographs"
+                        ]
+                    },
+                    {
+                        name: "Driving License Renewal",
+                        description: "Renewal of expired driving license (can be renewed between 1 month before to 1 year after expiry).",
+                        documents: [
+                            "Application Form 9",
+                            "Expired Driving License original",
+                            "Age proof if renewal after expiry",
+                            "Address proof if address has changed",
+                            "3 Passport-size photographs",
+                            "Medical Certificate (Form 1A, for commercial vehicles)"
+                        ]
+                    },
+                    {
+                        name: "Duplicate Driving License",
+                        description: "For lost, damaged or mutilated driving licenses.",
+                        documents: [
+                            "Application Form LLD",
+                            "FIR copy (if lost or stolen)",
+                            "Damaged license (if applicable)",
+                            "Address proof",
+                            "3 Passport-size photographs"
+                        ]
+                    }
+                ],
+                registration: [
+                    {
+                        name: "New Vehicle Registration",
+                        description: "First time registration of newly purchased vehicle.",
+                        documents: [
+                            "Application Form 20",
+                            "Sales Certificate from dealer (Form 21)",
+                            "Temporary Registration Certificate (if issued)",
+                            "Valid Insurance Certificate",
+                            "PUC Certificate",
+                            "Vehicle's Invoice from dealer",
+                            "Address proof of owner",
+                            "PAN Card or Form 60/61 if no PAN",
+                            "Road Tax payment receipt",
+                            "4 Passport size photographs"
+                        ]
+                    },
+                    {
+                        name: "Vehicle Registration Transfer (Within State)",
+                        description: "Transfer of ownership when selling/buying a used vehicle (same state).",
+                        documents: [
+                            "Application Form 29 and 30",
+                            "Original Registration Certificate",
+                            "Valid Insurance Certificate",
+                            "PUC Certificate",
+                            "Road Tax clearance",
+                            "Address proof of new owner",
+                            "PAN Card of both parties or Form 60/61",
+                            "Valid ID proof of both parties",
+                            "NOC from financier (if applicable)",
+                            "4 Passport size photographs of new owner"
+                        ]
+                    },
+                    {
+                        name: "Duplicate Registration Certificate",
+                        description: "For lost, damaged or mutilated Registration Certificates (RC).",
+                        documents: [
+                            "Application Form 26",
+                            "FIR copy (if lost or stolen)",
+                            "Damaged RC (if applicable)",
+                            "Valid Insurance Certificate",
+                            "PUC Certificate",
+                            "Address proof",
+                            "Challan clearance (if applicable)",
+                            "3 Passport size photographs"
+                        ]
+                    },
+                    {
+                        name: "Address Change in RC",
+                        description: "Updating new address in Registration Certificate when moving within the state.",
+                        documents: [
+                            "Application Form 33",
+                            "Original Registration Certificate",
+                            "Valid Insurance Certificate",
+                            "PUC Certificate",
+                            "Address proof (minimum two documents)",
+                            "3 Passport size photographs"
+                        ]
+                    }
+                ],
+                permit: [
+                    {
+                        name: "National Permit (Cab/Heavy Vehicle)",
+                        description: "Permit for interstate operation of commercial vehicles.",
+                        documents: [
+                            "Application Form 46",
+                            "Original Registration Certificate",
+                            "Valid Insurance Certificate",
+                            "PUC Certificate",
+                            "Fitness Certificate",
+                            "Proof of Tax Payment",
+                            "Vehicle Owner's ID proof",
+                            "Route Permit details",
+                            "Certificate of Local Body Tax (if applicable)",
+                            "4 Passport size photographs"
+                        ]
+                    },
+                    {
+                        name: "Tourist Permit",
+                        description: "For operating tourist vehicles across states.",
+                        documents: [
+                            "Application Form 45",
+                            "Original Registration Certificate",
+                            "Valid Insurance Certificate",
+                            "PUC Certificate",
+                            "Fitness Certificate",
+                            "Tour Operator License",
+                            "Vehicle Owner's ID proof",
+                            "Address proof of operator",
+                            "4 Passport size photographs"
+                        ]
+                    },
+                    {
+                        name: "Temporary Permit",
+                        description: "Short-term permit for special purposes (up to 6 months).",
+                        documents: [
+                            "Application Form 38",
+                            "Original Registration Certificate",
+                            "Valid Insurance Certificate",
+                            "PUC Certificate",
+                            "Purpose of temporary permit (documentation)",
+                            "Vehicle Owner's ID proof",
+                            "Address proof",
+                            "4 Passport size photographs"
+                        ]
+                    }
+                ],
+                other: [
+                    {
+                        name: "No Objection Certificate (NOC)",
+                        description: "Required when moving a vehicle to another state permanently.",
+                        documents: [
+                            "Application Form 28",
+                            "Original Registration Certificate",
+                            "Valid Insurance Certificate",
+                            "PUC Certificate",
+                            "Tax payment clearance",
+                            "Challan clearance certificate",
+                            "Address proof (new and old)",
+                            "3 Passport size photographs"
+                        ]
+                    },
+                    {
+                        name: "Fitness Certificate",
+                        description: "Mandatory periodic fitness check for commercial vehicles.",
+                        documents: [
+                            "Application Form 38A",
+                            "Original Registration Certificate",
+                            "Valid Insurance Certificate",
+                            "PUC Certificate",
+                            "Road tax payment receipt",
+                            "Challan clearance certificate",
+                            "Vehicle inspection report",
+                            "2 Passport size photographs"
+                        ]
+                    },
+                    {
+                        name: "Pollution Under Control (PUC) Certificate",
+                        description: "Emission test certificate required for all vehicles.",
+                        documents: [
+                            "Original Registration Certificate",
+                            "Valid Insurance Certificate",
+                            "Vehicle Insurance Certificate",
+                            "Previous PUC Certificate (if available)"
+                        ]
+                    },
+                    {
+                        name: "Hypothecation Termination",
+                        description: "Removing financier's lien after loan closure.",
+                        documents: [
+                            "Application Form 35",
+                            "Original Registration Certificate",
+                            "Loan closure certificate from bank",
+                            "NOC from financier",
+                            "Valid ID proof",
+                            "Address proof",
+                            "3 Passport size photographs"
+                        ]
+                    }
+                ]
+            };
+
+            // DOM elements
+            const serviceCards = document.querySelectorAll('.service-card');
+            const serviceSection = document.getElementById('serviceSection');
+            const procedureSection = document.getElementById('procedureSection');
+            const documentSection = document.getElementById('documentSection');
+            const procedureOptions = document.getElementById('procedureOptions');
+            const documentList = document.getElementById('documentList');
+            const documentTitle = document.getElementById('documentTitle');
+            const procedureDescription = document.getElementById('procedureDescription');
+            const docCount = document.getElementById('docCount');
+            
+            const backToServiceBtn = document.getElementById('backToService');
+            const confirmProcedureBtn = document.getElementById('confirmProcedure');
+            const backToProcedureBtn = document.getElementById('backToProcedure');
+            const downloadChecklistBtn = document.getElementById('downloadChecklist');
+            
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+
+            // State variables
+            let currentService = null;
+            let currentProcedure = null;
+            let currentDocuments = [];
+
+            // Add event listeners to service cards
+            serviceCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    currentService = this.getAttribute('data-service');
+                    loadProcedures(currentService);
+                    serviceSection.classList.add('hidden');
+                    procedureSection.classList.remove('hidden');
+                    step2.classList.remove('bg-gray-200', 'text-gray-600');
+                    step2.classList.add('rto-blue', 'text-white');
+                    step2.nextElementSibling.classList.remove('text-gray-500');
+                });
+            });
+
+            // Back to service button
+            backToServiceBtn.addEventListener('click', function() {
+                procedureSection.classList.add('hidden');
+                serviceSection.classList.remove('hidden');
+                step2.classList.add('bg-gray-200', 'text-gray-600');
+                step2.classList.remove('rto-blue', 'text-white');
+                step2.nextElementSibling.classList.add('text-gray-500');
+            });
+
+            // Back to procedure button
+            backToProcedureBtn.addEventListener('click', function() {
+                documentSection.classList.add('hidden');
+                procedureSection.classList.remove('hidden');
+                step3.classList.add('bg-gray-200', 'text-gray-600');
+                step3.classList.remove('rto-blue', 'text-white');
+                step3.nextElementSibling.classList.add('text-gray-500');
+            });
+
+            // Confirm procedure button
+            confirmProcedureBtn.addEventListener('click', function() {
+                const selectedProcedure = document.querySelector('input[name="procedure"]:checked');
+                if (selectedProcedure) {
+                    currentProcedure = selectedProcedure.value;
+                    loadDocuments(currentService, currentProcedure);
+                    procedureSection.classList.add('hidden');
+                    documentSection.classList.remove('hidden');
+                    step3.classList.remove('bg-gray-200', 'text-gray-600');
+                    step3.classList.add('rto-blue', 'text-white');
+                    step3.nextElementSibling.classList.remove('text-gray-500');
+                } else {
+                    alert('Please select a procedure to continue');
+                }
+            });
+
+            // Download checklist button
+            downloadChecklistBtn.addEventListener('click', function() {
+                downloadChecklist();
+            });
+
+            // Load procedures for selected service
+            function loadProcedures(service) {
+                procedureOptions.innerHTML = '';
+                const procedures = proceduresData[service];
+                
+                procedures.forEach((procedure, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'mb-2';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = 'procedure';
+                    input.id = `procedure${index}`;
+                    input.value = index;
+                    input.className = 'hidden';
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = `procedure${index}`;
+                    label.className = 'flex items-start p-4 border rounded-lg cursor-pointer hover:border-blue-500';
+                    
+                    const radioDiv = document.createElement('div');
+                    radioDiv.className = 'flex items-center h-5 mt-0.5';
+                    
+                    const radio = document.createElement('div');
+                    radio.className = 'h-4 w-4 border border-gray-300 rounded-full flex items-center justify-center';
+                    
+                    const radioInner = document.createElement('div');
+                    radioInner.className = 'h-2 w-2 rounded-full bg-white hidden';
+                    
+                    radio.appendChild(radioInner);
+                    radioDiv.appendChild(radio);
+                    
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'ml-3';
+                    
+                    const title = document.createElement('h4');
+                    title.className = 'font-medium text-gray-800';
+                    title.textContent = procedure.name;
+                    
+                    const desc = document.createElement('p');
+                    desc.className = 'text-sm text-gray-600 mt-1';
+                    desc.textContent = procedure.description;
+                    
+                    contentDiv.appendChild(title);
+                    contentDiv.appendChild(desc);
+                    label.appendChild(radioDiv);
+                    label.appendChild(contentDiv);
+                    
+                    input.addEventListener('change', function() {
+                        if (this.checked) {
+                            document.querySelectorAll('label').forEach(l => {
+                                l.style.borderColor = '#e5e7eb';
+                            });
+                            label.style.borderColor = '#3b82f6';
+                            radio.style.borderColor = '#3b82f6';
+                            radio.style.backgroundColor = '#3b82f6';
+                            radioInner.classList.remove('hidden');
+                        }
+                    });
+                    
+                    div.appendChild(input);
+                    div.appendChild(label);
+                    procedureOptions.appendChild(div);
+                });
+            }
+
+            // Load documents for selected procedure
+            function loadDocuments(service, procedureIndex) {
+                const procedure = proceduresData[service][procedureIndex];
+                documentTitle.textContent = procedure.name;
+                procedureDescription.textContent = procedure.description;
+                docCount.textContent = procedure.documents.length;
+                documentList.innerHTML = '';
+                currentDocuments = procedure.documents;
+                
+                procedure.documents.forEach((doc, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-start p-4 bg-white border rounded-lg hover:bg-blue-50';
+                    
+                    const checkboxContainer = document.createElement('label');
+                    checkboxContainer.className = 'checkbox-container flex items-center cursor-pointer';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.className = 'opacity-0 absolute h-5 w-5';
+                    
+                    const checkmark = document.createElement('span');
+                    checkmark.className = 'checkmark h-5 w-5 border border-gray-300 rounded ml-2 flex-shrink-0';
+                    
+                    const docDiv = document.createElement('div');
+                    docDiv.className = 'ml-3 flex-1';
+                    
+                    const docText = document.createElement('p');
+                    docText.className = 'text-gray-800';
+                    docText.textContent = doc;
+                    
+                    checkboxContainer.appendChild(input);
+                    checkboxContainer.appendChild(checkmark);
+                    docDiv.appendChild(docText);
+                    div.appendChild(checkboxContainer);
+                    div.appendChild(docDiv);
+                    documentList.appendChild(div);
+                });
+            }
+
+            // Download checklist as PDF
+            function downloadChecklist() {
+                // In a real implementation, this would generate and download a PDF
+                // For this demo, we'll create a printable HTML document
+                
+                let checkedCount = 0;
+                const checkboxes = document.querySelectorAll('#documentList input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    if (cb.checked) checkedCount++;
+                });
+                
+                const progress = Math.round((checkedCount / currentDocuments.length) * 100);
+                
+                const win = window.open('', '_blank');
+                win.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>RTO Checklist - ${documentTitle.textContent}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; }
+                            h1 { color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; }
+                            .progress { background: #f0f0f0; height: 20px; border-radius: 10px; margin: 20px 0; }
+                            .progress-bar { background: #059669; height: 100%; width: ${progress}%; border-radius: 10px; color: white; text-align: center; font-size: 12px; line-height: 20px; }
+                            .document { margin-bottom: 10px; padding-left: 25px; position: relative; }
+                            .document:before { content: ''; position: absolute; left: 0; top: 7px; width: 16px; height: 16px; border: 1px solid #666; }
+                            .checked:before { content: '✓'; color: #059669; text-align: center; font-weight: bold; }
+                            .info { background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 20px 0; font-size: 14px; }
+                            .date { text-align: right; margin-top: 30px; font-size: 14px; color: #666; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>RTO Document Checklist</h1>
+                        <h2>${documentTitle.textContent}</h2>
+                        <p>Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
+                        
+                        <div class="info">
+                            <p><strong>Procedure:</strong> ${procedureDescription.textContent}</p>
+                            <p><strong>Completion:</strong> ${checkedCount} of ${currentDocuments.length} documents collected</p>
+                        </div>
+                        
+                        <div class="progress">
+                            <div class="progress-bar">${progress}%</div>
+                        </div>
+                        
+                        <h3>Required Documents:</h3>
+                        ${Array.from(checkboxes).map((cb, i) => `
+                            <div class="document ${cb.checked ? 'checked' : ''}">
+                                ${currentDocuments[i]}
+                            </div>
+                        `).join('')}
+                        
+                        <div class="info">
+                            <p><strong>Notes:</strong></p>
+                            <p>1. Original documents are required. Carry self-attested photocopies.</p>
+                            <p>2. Some documents may need notarization or additional attestation.</p>
+                            <p>3. Fees may apply for each service - check with your local RTO.</p>
+                        </div>
+                        
+                        <div class="date">
+                            Document checklist generated by RTO Checklist Generator<br>
+                            https://example.com/rto-checklist
+                        </div>
+                    </body>
+                    </html>
+                `);
+                win.document.close();
+                win.focus();
+                
+                // For a real implementation, you would use a library like jsPDF or html2pdf
+                // setTimeout(() => { win.print(); }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
+

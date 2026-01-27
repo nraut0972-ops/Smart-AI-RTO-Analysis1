@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vehicle Record Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+    }
+
+    .container {
+      background: white;
+      width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    select, input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .row > div {
+      width: 48%;
+    }
+
+    .btn {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .btn input {
+      padding: 10px 20px;
+      border: none;
+      color: white;
+      background-color: #007bff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn input[type="reset"] {
+      background-color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Vehicle Record Details</h2>
+  <form>
+    <label for="district">District</label>
+    <select id="district" name="district" required>
+      <option value="">--Select District--</option>
+      <option value="Pune">Pune</option>
+      <option value="Mumbai">Mumbai</option>
+      <option value="Nagpur">Nagpur</option>
+      <option value="Nashik">Nashik</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label for="taluka">Taluka </label>
+        <select id="taluka" name="taluka" required>
+          <option value="">--Select Taluka--</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="village">Village </label>
+        <select id="village" name="village" required>
+          <option>--Select--</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="vehicleNumber">Vehicle Number</label>
+    <input type="text" id="vehicleNumber" name="vehicleNumber" placeholder=" MH12AB1234">
+
+    <label for="firstName">First Name </label>
+    <input type="text" id="firstName" name="firstName" required>
+
+    <label for="nameSearch">Name Search </label>
+    <select id="nameSearch" name="nameSearch" required>
+      <option>--Select--</option>
+    </select>
+
+    <label for="mobile">Mobile </label>
+    <input type="tel" id="mobile" name="mobile" required placeholder="Enter mobile number">
+
+    <label for="captcha">Captcha </label>
+    <input type="text" id="captcha" name="captcha" required placeholder="Enter Captcha">
+
+    <div class="btn">
+      <input type="submit" value="Submit">
+      <input type="reset" value="Reset">
+    </div>
+  </form>
+</div>
+
+<script>
+  const talukaData = {
+    Pune: ['Haveli', 'Mulshi', 'Bhor', 'Shirur'],
+    Mumbai: ['Andheri', 'Borivali', 'Dadar', 'Kurla'],
+    Nagpur: ['Nagpur North', 'Nagpur South', 'Hingna', 'Kamptee'],
+    Nashik: ['Nashik', 'Igatpuri', 'Sinnar', 'Dindori']
+  };
+
+  const districtSelect = document.getElementById('district');
+  const talukaSelect = document.getElementById('taluka');
+
+  districtSelect.addEventListener('change', function () {
+    const selectedDistrict = this.value;
+    const talukas = talukaData[selectedDistrict] || [];
+
+    // Clear previous talukas
+    talukaSelect.innerHTML = '<option value="">--Select Taluka--</option>';
+
+    // Add new talukas
+    talukas.forEach(taluka => {
+      const option = document.createElement('option');
+      option.value = taluka;
+      option.textContent = taluka;
+      talukaSelect.appendChild(option);
+    });
+  });
+</script>
+
+</body>
+</html>

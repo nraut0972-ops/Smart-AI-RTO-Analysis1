@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vehicle Insurance Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 18px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    #newInsuranceBtn {
+      display: none;
+      margin-top: 15px;
+      background-color: #28a745;
+      text-decoration: none;
+      padding: 10px 16px;
+      display: inline-block;
+      color: white;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vehicle Insurance Status</h1>
+
+  <label for="vehicleNumber">Enter Vehicle Number:</label>
+  <input type="text" id="vehicleNumber" placeholder=" MH12AB1234">
+
+  <button onclick="checkInsurance()">Check Insurance</button>
+
+  <div id="result"></div>
+  <a id="newInsuranceBtn" href="Insuranceapplyform.html">Apply for New Insurance</a>
+
+  <script>
+    // Dummy insurance data
+    const insuranceData = {
+      "MH45NG7499": "2025-12-01",
+      "MH45NR0505": "2025-08-10",
+      "MH45Q9441": "2025-07-30"
+    };
+
+    function checkInsurance() {
+      const vehicleNumber = document.getElementById("vehicleNumber").value.toUpperCase().trim();
+      const resultDiv = document.getElementById("result");
+      const newBtn = document.getElementById("newInsuranceBtn");
+
+      if (!vehicleNumber) {
+        resultDiv.innerText = "Please enter a vehicle number.";
+        newBtn.style.display = "none";
+        return;
+      }
+
+      if (!insuranceData[vehicleNumber]) {
+        resultDiv.innerText = "No insurance data found for this vehicle.";
+        newBtn.style.display = "none";
+        return;
+      }
+
+      const expiryDate = new Date(insuranceData[vehicleNumber]);
+      const today = new Date();
+
+      if (today > expiryDate) {
+        resultDiv.innerText = `Insurance for ${vehicleNumber} has expired.`;
+        newBtn.style.display = "inline-block";
+      } else {
+        const diffTime = expiryDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        resultDiv.innerText = `Insurance for ${vehicleNumber} is valid for ${diffDays} more day(s).`;
+        newBtn.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTO Analysis Project - User Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 15px;
+        }
+
+        .project-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+        }
+
+        .login-form {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1a2980;
+            font-size: 18px;
+        }
+
+        .input-with-icon input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-with-icon input:focus {
+            border-color: #1a2980;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 41, 128, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #777;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember-me input {
+            accent-color: #1a2980;
+        }
+
+        .forgot-password {
+            color: #1a2980;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: #26d0ce;
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .login-button:hover {
+            background: linear-gradient(to right, #15226e, #20b8b6);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(21, 34, 110, 0.3);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .signup-link {
+            text-align: center;
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .signup-link a {
+            color: #1a2980;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .project-link-section {
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 4px solid #1a2980;
+        }
+
+        .project-link-section h3 {
+            color: #1a2980;
+            margin-bottom: 10px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-link-section h3 i {
+            color: #26d0ce;
+        }
+
+        .project-link-section p {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .project-link-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #1a2980;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .project-link-button:hover {
+            background-color: #15226e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(21, 34, 110, 0.2);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .social-login {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .social-login p {
+            margin-bottom: 15px;
+            color: #777;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .social-login p::before, .social-login p::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background-color: #ddd;
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+        }
+
+        .facebook {
+            background-color: #3b5998;
+        }
+
+        .google {
+            background-color: #dd4b39;
+        }
+
+        .twitter {
+            background-color: #1da1f2;
+        }
+
+        /* Responsive design */
+        @media (max-width: 500px) {
+            .login-container {
+                max-width: 100%;
+            }
+            
+            .login-form {
+                padding: 25px 20px;
+            }
+            
+            .remember-forgot {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .project-link-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="project-badge">RTO Project</div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to access RTO Analysis Project</p>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i> Login successful! Redirecting to dashboard...
+        </div>
+        
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" name="username" placeholder="Enter username or email" required>
+                </div>
+                <div class="error-message" id="usernameError">Please enter a valid username or email</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+            </div>
+            
+            <div class="remember-forgot">
+                <div class="remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Remember me</label>
+                </div>
+                <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="login-button">Sign In to RTO Portal</button>
+            
+            <div class="signup-link">
+                Don't have an account? <a href="#">Request access</a>
+            </div>
+            
+            <!-- RTO Analysis Project Link Section -->
+            <div class="project-link-section">
+                <h3><i class="fas fa-project-diagram"></i> RTO Analysis Project</h3>
+                <p>Access the complete RTO Analysis Project dashboard, reports, and data visualization tools. This project provides insights into Regional Transport Office statistics and analytics.</p>
+                <a href="file:///C:/Users/rautn/Desktop/RTO%20Analysis%20UI/RTO%20Analysis.html" class="project-link-button" id="projectLink">
+                    <i class="fas fa-external-link-alt"></i> Open RTO Analysis Project
+                </a>
+            </div>
+            
+            <div class="social-login">
+                <p>Or sign in with</p>
+                <div class="social-icons">
+                    <div class="social-icon facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <div class="social-icon google">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="social-icon twitter">
+                        <i class="fab fa-twitter"></i>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const usernameError = document.getElementById('usernameError');
+            const passwordError = document.getElementById('passwordError');
+            const togglePassword = document.getElementById('togglePassword');
+            const successMessage = document.getElementById('successMessage');
+            const projectLink = document.getElementById('projectLink');
+            
+            // RTO Project के लिए demo credentials
+            const demoCredentials = {
+                username: "rto_admin",
+                password: "rto@2026",
+                email: "admin@rto-project.com"
+            };
+            
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Toggle eye icon
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+            
+            // Form validation
+            function validateForm() {
+                let isValid = true;
+                
+                // Reset error messages
+                usernameError.style.display = 'none';
+                passwordError.style.display = 'none';
+                
+                // Validate username/email
+                const usernameValue = usernameInput.value.trim();
+                if (usernameValue === '') {
+                    usernameError.textContent = 'Username or email is required';
+                    usernameError.style.display = 'block';
+                    isValid = false;
+                } else if (!isValidEmail(usernameValue) && usernameValue.length < 3) {
+                    usernameError.textContent = 'Please enter a valid email or username (min 3 chars)';
+                    usernameError.style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate password
+                const passwordValue = passwordInput.value;
+                if (passwordValue === '') {
+                    passwordError.textContent = 'Password is required';
+                    passwordError.style.display = 'block';
+                    isValid = false;
+                } else if (passwordValue.length < 6) {
+                    passwordError.textContent = 'Password must be at least 6 characters';
+                    passwordError.style.display = 'block';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            // Email validation helper
+            function isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            // Check if entered credentials match demo credentials
+            function checkCredentials(username, password) {
+                const user = username.toLowerCase().trim();
+                return (user === demoCredentials.username.toLowerCase() || user === demoCredentials.email.toLowerCase()) && 
+                       password === demoCredentials.password;
+            }
+            
+            // Form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    const username = usernameInput.value;
+                    const password = passwordInput.value;
+                    
+                    // Check credentials
+                    if (checkCredentials(username, password)) {
+                        // Show success message
+                        successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Login successful! Redirecting to RTO Analysis Project...';
+                        successMessage.style.display = 'block';
+                        
+                        // Hide form after successful login
+                        loginForm.style.opacity = '0.7';
+                        
+                        // Redirect to RTO project after 2 seconds
+                        setTimeout(function() {
+                            window.location.href = "RTO_Analysis_Project.html";
+                        }, 2000);
+                    } else {
+                        // Show error for invalid credentials
+                        passwordError.textContent = 'Invalid username or password. Try: rto_admin / rto@2024';
+                        passwordError.style.display = 'block';
+                        
+                        // Shake animation for incorrect credentials
+                        loginForm.style.animation = 'shake 0.5s';
+                        setTimeout(() => {
+                            loginForm.style.animation = '';
+                        }, 500);
+                    }
+                }
+            });
+            
+            // Real-time validation for username
+            usernameInput.addEventListener('blur', function() {
+                const value = this.value.trim();
+                if (value === '') {
+                    usernameError.textContent = 'Username or email is required';
+                    usernameError.style.display = 'block';
+                } else if (!isValidEmail(value) && value.length < 3) {
+                    usernameError.textContent = 'Please enter a valid email or username (min 3 chars)';
+                    usernameError.style.display = 'block';
+                } else {
+                    usernameError.style.display = 'none';
+                }
+            });
+            
+            // Real-time validation for password
+            passwordInput.addEventListener('blur', function() {
+                const value = this.value;
+                if (value === '') {
+                    passwordError.textContent = 'Password is required';
+                    passwordError.style.display = 'block';
+                } else if (value.length < 6) {
+                    passwordError.textContent = 'Password must be at least 6 characters';
+                    passwordError.style.display = 'block';
+                } else {
+                    passwordError.style.display = 'none';
+                }
+            });
+            
+            // Add shake animation for incorrect login
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Demo credentials fill for testing
+            const demoFillButton = document.createElement('button');
+            demoFillButton.textContent = 'Fill Demo Credentials';
+            demoFillButton.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #1a2980;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 12px;
+                z-index: 1000;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            `;
+            demoFillButton.addEventListener('click', function() {
+                usernameInput.value = demoCredentials.username;
+                passwordInput.value = demoCredentials.password;
+                document.getElementById('rememberMe').checked = true;
+            });
+            document.body.appendChild(demoFillButton);
+            
+            // Social login buttons
+            document.querySelectorAll('.social-icon').forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const platform = this.classList.contains('facebook') ? 'Facebook' : 
+                                   this.classList.contains('google') ? 'Google' : 'Twitter';
+                    alert(`RTO Analysis Project - ${platform} login integration would be implemented in production.`);
+                });
+            });
+            
+            // Forgot password link
+            document.querySelector('.forgot-password').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('For RTO Analysis Project, please contact the system administrator at admin@rto-project.com to reset your password.');
+            });
+            
+            // Request access link
+            document.querySelector('.signup-link a').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('To request access to the RTO Analysis Project, please email your request to access@rto-project.com with your details and justification.');
+            });
+            
+            // Project link click
+            projectLink.addEventListener('click', function(e) {
+                if (!loginForm.checkValidity()) {
+                    e.preventDefault();
+                    alert('Please login first to access the RTO Analysis Project. Use demo credentials: rto_admin / rto@2024');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

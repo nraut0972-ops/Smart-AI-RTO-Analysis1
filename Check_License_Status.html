@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Check Driving License Status</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f9ff;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    .status-message {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Check Driving License Status</h2>
+    <form onsubmit="checkStatus(event)">
+      <label for="licenseNumber">Driving License Number:</label>
+      <input type="text" id="licenseNumber" name="licenseNumber" required placeholder="Enter your DL number">
+
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob" required>
+
+      <button type="submit">Check Status</button>
+    </form>
+
+    <div class="status-message" id="statusMessage"></div>
+  </div>
+
+  <script>
+    // Sample mock status check (you can connect to backend later)
+    function checkStatus(event) {
+      event.preventDefault();
+
+      const dlNumber = document.getElementById("licenseNumber").value.trim();
+      const dob = document.getElementById("dob").value;
+
+      // Example logic: (replace this with real API call)
+      let status = "Status: Valid";
+
+      if (dlNumber.toLowerCase().includes("exp")) {
+        status = "Status: Expired";
+      } else if (dlNumber.toLowerCase().includes("proc")) {
+        status = "Status: Under Process";
+      }
+
+      document.getElementById("statusMessage").textContent = status;
+    }
+  </script>
+</body>
+</html>

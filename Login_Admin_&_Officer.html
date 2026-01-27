@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart RTO - Admin Login Portal</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --admin-blue: #0d4e9e;
+            --admin-dark: #1a237e;
+            --admin-red: #d32f2f;
+            --admin-green: #2e7d32;
+            --admin-gold: #ffc107;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a237e 0%, #0d4e9e 50%, #1565c0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .admin-login-container {
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .admin-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .admin-header {
+            background: linear-gradient(to right, var(--admin-dark), var(--admin-blue));
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .gov-logo {
+            height: 70px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .admin-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        
+        .admin-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .security-level {
+            display: inline-block;
+            background-color: var(--admin-gold);
+            color: #333;
+            padding: 4px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .admin-body {
+            padding: 30px;
+        }
+        
+        .login-form {
+            margin-top: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--admin-dark);
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.95rem;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--admin-blue);
+            font-size: 1.1rem;
+        }
+        
+        .form-control {
+            padding: 14px 15px 14px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+        
+        .form-control:focus {
+            border-color: var(--admin-blue);
+            box-shadow: 0 0 0 0.25rem rgba(13, 78, 158, 0.25);
+            background-color: white;
+        }
+        
+        .btn-admin-login {
+            background: linear-gradient(to right, var(--admin-dark), var(--admin-blue));
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .btn-admin-login:hover {
+            background: linear-gradient(to right, var(--admin-blue), #1a73e8);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(13, 78, 158, 0.3);
+        }
+        
+        .btn-admin-login:active {
+            transform: translateY(0);
+        }
+        
+        .btn-admin-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-message {
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            color: var(--admin-red);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
+            20%, 40%, 60%, 80% {transform: translateX(5px);}
+        }
+        
+        .security-notice {
+            background-color: #f0f7ff;
+            border-left: 4px solid var(--admin-blue);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #333;
+        }
+        
+        .attempts-counter {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .attempts-warning {
+            color: var(--admin-red);
+            font-weight: 600;
+        }
+        
+        .admin-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .footer-links {
+            margin-top: 10px;
+        }
+        
+        .footer-link {
+            color: var(--admin-blue);
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 500;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .back-to-main {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .btn-back {
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .captcha-container {
+            background-color: #f5f5f5;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .captcha-text {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--admin-dark);
+            background-color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px dashed #999;
+        }
+        
+        .captcha-refresh {
+            background: none;
+            border: none;
+            color: var(--admin-blue);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .captcha-refresh:hover {
+            transform: rotate(90deg);
+            color: var(--admin-dark);
+        }
+        
+        .captcha-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            text-align: center;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .login-success {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s;
+        }
+        
+        .login-success.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .success-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.5s;
+        }
+        
+        .login-success.show .success-content {
+            transform: translateY(0);
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: var(--admin-green);
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            color: var(--admin-green);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .success-message {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        
+        .user-details {
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .user-detail-item {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            min-width: 150px;
+            color: var(--admin-blue);
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .btn-success-action {
+            background: linear-gradient(to right, var(--admin-green), #4caf50);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-success-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        @media (max-width: 576px) {
+            .admin-login-container {
+                max-width: 100%;
+            }
+            
+            .admin-body {
+                padding: 20px;
+            }
+            
+            .admin-title {
+                font-size: 1.5rem;
+            }
+            
+            .success-content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Container -->
+    <div class="admin-login-container">
+        <div class="admin-card">
+            <!-- Admin Header -->
+            <div class="admin-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/120px-Emblem_of_India.svg.png" alt="Government of India" class="gov-logo">
+                <h1 class="admin-title">Smart RTO - Admin Portal</h1>
+                <div class="admin-subtitle">Ministry of Road Transport & Highways</div>
+                <div class="security-level">CLASSIFIED ACCESS - LEVEL 5</div>
+            </div>
+            
+            <!-- Admin Login Form -->
+            <div class="admin-body">
+                <div class="text-center mb-4">
+                    <h3><i class="fas fa-user-shield text-primary me-2"></i>Administrator Login</h3>
+                    <p class="text-muted">Access restricted to authorized Senior Officers only</p>
+                </div>
+                
+                <form id="adminLoginForm" class="login-form">
+                    <!-- Username Field -->
+                    <div class="form-group">
+                        <label for="adminUsername" class="form-label">Admin Username</label>
+                        <div class="input-with-icon">
+                            <i class="input-icon fas fa-user"></i>
+                            <input type="text" id="adminUsername" class="form-control" placeholder="Enter admin username" required autocomplete="off">
+                        </div>
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label for="adminPassword" class="form-label">Admin Password</label>
+                        <div class="input-with-icon">
+                            <i class="input-icon fas fa-lock"></i>
+                            <input type="password" id="adminPassword" class="form-control" placeholder="Enter admin password" required>
+                        </div>
+                    </div>
+                    
+                    <!-- CAPTCHA Section -->
+                    <div class="form-group">
+                        <label class="form-label">Security Verification</label>
+                        <div class="captcha-container">
+                            <div class="captcha-text" id="captchaText">A3B8C2</div>
+                            <button type="button" class="captcha-refresh" id="refreshCaptcha">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                        <input type="text" id="captchaInput" class="captcha-input" placeholder="Enter CAPTCHA code" required maxlength="6">
+                    </div>
+                    
+                    <!-- Login Attempts Counter -->
+                    <div class="attempts-counter">
+                        Login Attempts: <span id="attemptCount">0</span>/5
+                        <div id="attemptWarning" class="attempts-warning" style="display: none;">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Warning: Multiple failed attempts detected
+                        </div>
+                    </div>
+                    
+                    <!-- Error Message -->
+                    <div class="error-message" id="errorMessage">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span id="errorText">Invalid credentials. Please try again.</span>
+                    </div>
+                    
+                    <!-- Login Button -->
+                    <button type="submit" class="btn-admin-login" id="loginButton">
+                        <i class="fas fa-sign-in-alt me-2"></i> Access Admin Dashboard
+                    </button>
+                </form>
+                
+                <!-- Security Notice -->
+                <div class="security-notice">
+                    <i class="fas fa-shield-alt me-2 text-primary"></i>
+                    <strong>Security Protocol:</strong> This portal is monitored and all access attempts are logged. 
+                    Unauthorized access is a criminal offense under the IT Act, 2000.
+                </div>
+                
+                <!-- Demo Credentials -->
+                <div class="mt-4 p-3 bg-light rounded">
+                    <h6 class="text-center mb-3"><i class="fas fa-key me-2"></i>Demo Credentials</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <small class="text-muted">Username:</small>
+                                <div class="font-monospace">admin</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <small class="text-muted">Password:</small>
+                                <div class="font-monospace">admin123</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="admin-footer">
+                    <div>
+                        <i class="fas fa-server me-2"></i> 
+                        Server: RTO-GOV-IN-ADMIN-01 | Status: <span class="text-success">●</span> ONLINE
+                    </div>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link" onclick="showHelp()">
+                            <i class="fas fa-question-circle me-1"></i> Help
+                        </a>
+                        <a href="#" class="footer-link" onclick="showForgotPassword()">
+                            <i class="fas fa-key me-1"></i> Forgot Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Back to Main Login -->
+        <div class="back-to-main">
+            <a href="role-based-login.html" class="btn-back">
+                <i class="fas fa-arrow-left me-2"></i> Back to Main Login Portal
+            </a>
+        </div>
+    </div>
+    
+    <!-- Login Success Overlay -->
+    <div class="login-success" id="loginSuccess">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="success-title">ACCESS GRANTED</h2>
+            <p class="success-message">Admin authentication successful. Welcome to the Smart RTO Admin Dashboard.</p>
+            
+            <div class="user-details">
+                <div class="user-detail-item">
+                    <div class="detail-label">Admin Name:</div>
+                    <div class="detail-value" id="successAdminName">Senior Admin Officer</div>
+                </div>
+                <div class="user-detail-item">
+                    <div class="detail-label">Access Level:</div>
+                    <div class="detail-value">LEVEL 5 - FULL ADMINISTRATIVE</div>
+                </div>
+                <div class="user-detail-item">
+                    <div class="detail-label">Department:</div>
+                    <div class="detail-value">RTO Headquarters</div>
+                </div>
+                <div class="user-detail-item">
+                    <div class="detail-label">Login Time:</div>
+                    <div class="detail-value" id="successLoginTime">Loading...</div>
+                </div>
+                <div class="user-detail-item">
+                    <div class="detail-label">Session ID:</div>
+                    <div class="detail-value">ADMIN-<span id="successSessionId">XXXXXX</span></div>
+                </div>
+            </div>
+            
+            <div>
+                <button class="btn-success-action" onclick="redirectToAdminDashboard()">
+                    <i class="fas fa-tachometer-alt me-2"></i> Proceed to Admin Dashboard
+                </button>
+                <button class="btn-success-action" style="background: linear-gradient(to right, #666, #999);" onclick="logoutAdmin()">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ============================================
+        // FIXED ADMIN CREDENTIALS
+        // ============================================
+        
+        // Only these exact credentials will work
+        const ADMIN_CREDENTIALS = {
+            username: "admin",
+            password: "admin123", // Fixed password - only this will work
+            fullName: "Senior Admin Officer",
+            department: "RTO Headquarters",
+            accessLevel: "LEVEL 5",
+            employeeId: "RTO-ADMIN-001"
+        };
+        
+        // ============================================
+        // APPLICATION STATE
+        // ============================================
+        
+        let loginAttempts = 0;
+        const MAX_ATTEMPTS = 5;
+        let currentCaptcha = "";
+        
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        const adminUsername = document.getElementById('adminUsername');
+        const adminPassword = document.getElementById('adminPassword');
+        const captchaText = document.getElementById('captchaText');
+        const captchaInput = document.getElementById('captchaInput');
+        const refreshCaptchaBtn = document.getElementById('refreshCaptcha');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const loginButton = document.getElementById('loginButton');
+        const attemptCount = document.getElementById('attemptCount');
+        const attemptWarning = document.getElementById('attemptWarning');
+        const loginSuccess = document.getElementById('loginSuccess');
+        const successAdminName = document.getElementById('successAdminName');
+        const successLoginTime = document.getElementById('successLoginTime');
+        const successSessionId = document.getElementById('successSessionId');
+        
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        
+        // Generate random CAPTCHA
+        function generateCaptcha() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            let captcha = "";
+            for (let i = 0; i < 6; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            currentCaptcha = captcha;
+            captchaText.textContent = captcha;
+            return captcha;
+        }
+        
+        // Update login attempts counter
+        function updateAttemptsCounter() {
+            attemptCount.textContent = loginAttempts;
+            
+            if (loginAttempts >= 3) {
+                attemptWarning.style.display = 'block';
+            } else {
+                attemptWarning.style.display = 'none';
+            }
+            
+            if (loginAttempts >= MAX_ATTEMPTS) {
+                loginButton.disabled = true;
+                loginButton.innerHTML = '<i class="fas fa-lock me-2"></i> Account Locked';
+                showErrorMessage("Too many failed attempts. Account has been locked for security reasons.");
+                return true; // Account is locked
+            }
+            return false; // Account is not locked
+        }
+        
+        // Show error message
+        function showErrorMessage(message) {
+            errorText.textContent = message;
+            errorMessage.classList.add('show');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Hide error message
+        function hideErrorMessage() {
+            errorMessage.classList.remove('show');
+        }
+        
+        // Generate session ID
+        function generateSessionId() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+        
+        // Show login success
+        function showLoginSuccess(adminData) {
+            successAdminName.textContent = adminData.fullName;
+            successLoginTime.textContent = new Date().toLocaleString('en-IN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+            });
+            successSessionId.textContent = generateSessionId();
+            
+            // Store admin session in localStorage
+            localStorage.setItem('smartRTOAdminSession', JSON.stringify({
+                ...adminData,
+                sessionId: successSessionId.textContent,
+                loginTime: successLoginTime.textContent,
+                isAuthenticated: true,
+                loginTimestamp: Date.now()
+            }));
+            
+            loginSuccess.classList.add('show');
+        }
+        
+        // ============================================
+        // VALIDATION FUNCTIONS
+        // ============================================
+        
+        // Validate CAPTCHA
+        function validateCaptcha(inputCaptcha) {
+            if (!inputCaptcha) {
+                return { valid: false, message: "Please enter CAPTCHA code" };
+            }
+            
+            if (inputCaptcha !== currentCaptcha) {
+                return { valid: false, message: "Invalid CAPTCHA code. Please try again." };
+            }
+            
+            return { valid: true, message: "" };
+        }
+        
+        // Validate credentials
+        function validateCredentials(username, password) {
+            if (!username || !password) {
+                return { valid: false, message: "Please enter both username and password" };
+            }
+            
+            if (username !== ADMIN_CREDENTIALS.username) {
+                return { valid: false, message: "Invalid admin username" };
+            }
+            
+            if (password !== ADMIN_CREDENTIALS.password) {
+                return { valid: false, message: "Invalid admin password" };
+            }
+            
+            // Only if both username AND password are correct
+            return { 
+                valid: true, 
+                message: "Authentication successful",
+                adminData: ADMIN_CREDENTIALS
+            };
+        }
+        
+        // ============================================
+        // EVENT HANDLERS
+        // ============================================
+        
+        // Handle form submission - FIXED VERSION
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            hideErrorMessage();
+            
+            // Check if account is locked
+            if (loginAttempts >= MAX_ATTEMPTS) {
+                showErrorMessage("Account is locked due to too many failed attempts.");
+                return;
+            }
+            
+            // Get form values
+            const username = adminUsername.value.trim();
+            const password = adminPassword.value;
+            const captcha = captchaInput.value.trim().toUpperCase();
+            
+            // Step 1: Validate CAPTCHA
+            const captchaValidation = validateCaptcha(captcha);
+            if (!captchaValidation.valid) {
+                loginAttempts++;
+                updateAttemptsCounter();
+                showErrorMessage(captchaValidation.message);
+                generateCaptcha(); // Generate new CAPTCHA
+                captchaInput.value = "";
+                captchaInput.focus();
+                return;
+            }
+            
+            // Step 2: Validate credentials
+            const credentialValidation = validateCredentials(username, password);
+            if (!credentialValidation.valid) {
+                loginAttempts++;
+                updateAttemptsCounter();
+                showErrorMessage(credentialValidation.message);
+                generateCaptcha(); // Generate new CAPTCHA for security
+                captchaInput.value = "";
+                
+                // Shake animation for security feedback
+                adminLoginForm.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    adminLoginForm.style.animation = '';
+                }, 500);
+                return;
+            }
+            
+            // Step 3: SUCCESS - Only reached if both CAPTCHA and credentials are correct
+            // Reset attempts counter
+            loginAttempts = 0;
+            updateAttemptsCounter();
+            
+            // Show success overlay
+            showLoginSuccess(credentialValidation.adminData);
+            
+            // Log the successful login
+            console.log(`Admin login successful: ${username} at ${new Date().toISOString()}`);
+            console.log(`Session ID: ${successSessionId.textContent}`);
+        }
+        
+        // Redirect to admin dashboard - FIXED VERSION
+        function redirectToAdminDashboard() {
+            // Close success overlay
+            loginSuccess.classList.remove('show');
+            
+            // Redirect to admin.html page
+            window.location.href = "admin.html";
+        }
+        
+        // Logout admin
+        function logoutAdmin() {
+            // Clear admin session
+            localStorage.removeItem('smartRTOAdminSession');
+            
+            // Close success overlay
+            loginSuccess.classList.remove('show');
+            
+            // Reset form
+            adminLoginForm.reset();
+            generateCaptcha();
+            loginAttempts = 0;
+            updateAttemptsCounter();
+            
+            // Show logout message
+            alert("Admin session ended successfully. You have been logged out.");
+        }
+        
+        // Show help modal
+        function showHelp() {
+            alert("Admin Login Help:\n\nUsername: admin\nPassword: admin123\n\nFor security reasons, these credentials are fixed and cannot be changed in this demo system.\n\nCAPTCHA is required for security verification.");
+        }
+        
+        // Show forgot password (admin specific)
+        function showForgotPassword() {
+            alert("Admin Password Recovery:\n\nFor security reasons, admin password recovery requires:\n1. Physical verification at RTO Headquarters\n2. Identity proof with photograph\n3. Written request to System Administrator\n\nContact: system.admin@rto.gov.in");
+        }
+        
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate initial CAPTCHA
+            generateCaptcha();
+            
+            // Set up form submission
+            adminLoginForm.addEventListener('submit', handleAdminLogin);
+            
+            // Set up CAPTCHA refresh
+            refreshCaptchaBtn.addEventListener('click', function() {
+                generateCaptcha();
+                captchaInput.value = "";
+                captchaInput.focus();
+            });
+            
+            // Update attempts counter
+            updateAttemptsCounter();
+            
+            // Auto-focus on username field
+            adminUsername.focus();
+            
+            // Check for existing admin session
+            const existingSession = localStorage.getItem('smartRTOAdminSession');
+            if (existingSession) {
+                try {
+                    const sessionData = JSON.parse(existingSession);
+                    const sessionAge = Date.now() - sessionData.loginTimestamp;
+                    const maxSessionAge = 30 * 60 * 1000; // 30 minutes
+                    
+                    if (sessionAge < maxSessionAge) {
+                        const continueSession = confirm(`Welcome back, ${sessionData.fullName}!\n\nYou have an existing admin session.\n\nDo you want to continue to the Admin Dashboard?`);
+                        
+                        if (continueSession) {
+                            // Redirect directly to admin dashboard
+                            window.location.href = "admin.html";
+                        } else {
+                            localStorage.removeItem('smartRTOAdminSession');
+                        }
+                    } else {
+                        // Session expired
+                        localStorage.removeItem('smartRTOAdminSession');
+                        alert("Your previous session has expired. Please login again.");
+                    }
+                } catch (error) {
+                    localStorage.removeItem('smartRTOAdminSession');
+                }
+            }
+            
+            // Add keyboard shortcuts for demo
+            document.addEventListener('keydown', function(event) {
+                // Ctrl+Alt+A to auto-fill CORRECT admin credentials (for demo)
+                if (event.ctrlKey && event.altKey && event.key === 'a') {
+                    adminUsername.value = ADMIN_CREDENTIALS.username;
+                    adminPassword.value = ADMIN_CREDENTIALS.password;
+                    captchaInput.value = currentCaptcha;
+                    alert("Demo credentials filled with CORRECT password.\n\nClick 'Access Admin Dashboard' to login successfully.");
+                }
+                
+                // Ctrl+R to refresh CAPTCHA
+                if (event.ctrlKey && event.key === 'r') {
+                    generateCaptcha();
+                    captchaInput.value = "";
+                }
+            });
+            
+            // Show demo hint
+            console.log("Admin Login System - FIXED VERSION");
+            console.log("==================================");
+            console.log("Only CORRECT credentials will work:");
+            console.log("Username: admin");
+            console.log("Password: admin123");
+            console.log("\nDemo Shortcut: Ctrl+Alt+A to auto-fill correct credentials");
+            
+            // Add input validation
+            adminUsername.addEventListener('input', function() {
+                if (this.value === ADMIN_CREDENTIALS.username) {
+                    this.style.borderColor = '#2e7d32';
+                } else {
+                    this.style.borderColor = '#e0e0e0';
+                }
+            });
+            
+            adminPassword.addEventListener('input', function() {
+                if (this.value === ADMIN_CREDENTIALS.password) {
+                    this.style.borderColor = '#2e7d32';
+                } else {
+                    this.style.borderColor = '#e0e0e0';
+                }
+            });
+            
+            // Clear any invalid session on page load
+            if (window.location.search.includes('logout=true')) {
+                localStorage.removeItem('smartRTOAdminSession');
+                alert("You have been successfully logged out.");
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+        
+        // Prevent browser back button after logout
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                const session = localStorage.getItem('smartRTOAdminSession');
+                if (!session) {
+                    window.location.reload();
+                }
+            }
+        };
+    </script>
+</body>
+</html>

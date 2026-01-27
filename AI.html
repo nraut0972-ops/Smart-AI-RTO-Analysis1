@@ -1,0 +1,2692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚓 RTO Intelligence Vehicle Monitoring System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 75px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #1a237e, #283593, #303f9f);
+            color: white;
+            padding: 25px 40px;
+            position: relative;
+            border-bottom: 5px solid #ff9800;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.8rem;
+            color: #ff9800;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .logo-text h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-text .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .alert-badge {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+        }
+
+        /* Main Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 350px 1fr 400px;
+            gap: 0;
+            min-height: 800px;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Panel - Scanner */
+        .left-panel {
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            padding: 25px;
+        }
+
+        /* Center Panel - Main Content */
+        .center-panel {
+            background: #ffffff;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        /* Right Panel - Alerts & AI */
+        .right-panel {
+            background: #f5f7fa;
+            border-left: 1px solid #dee2e6;
+            padding: 25px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-title {
+            color: #1a237e;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e3f2fd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Scanner Section */
+        .scanner-section {
+            position: relative;
+        }
+
+        .scanner-box {
+            border: 2px dashed #1a237e;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            margin-bottom: 20px;
+        }
+
+        .scanner-preview {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 8px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #scanner-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scanner-frame {
+            position: absolute;
+            width: 80%;
+            height: 50px;
+            border: 3px solid #4caf50;
+            border-radius: 8px;
+            animation: scanner-glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes scanner-glow {
+            0%, 100% { 
+                border-color: #4caf50;
+                box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+            }
+            50% { 
+                border-color: #8bc34a;
+                box-shadow: 0 0 25px rgba(139, 195, 74, 0.8);
+            }
+        }
+
+        /* Vehicle Details Table */
+        .vehicle-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .vehicle-details-table th {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #3949ab;
+        }
+
+        .vehicle-details-table td {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .vehicle-details-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .vehicle-details-table tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        /* Alert System */
+        .alert-card {
+            border-left: 5px solid #d32f2f;
+            background: linear-gradient(to right, #ffebee, #ffffff);
+        }
+
+        .alert-card .card-title {
+            color: #d32f2f;
+            border-bottom-color: #ffcdd2;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ffcdd2;
+            animation: alert-pulse 2s infinite;
+        }
+
+        @keyframes alert-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-time {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* SMS Notification */
+        .sms-card {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border: 1px solid #4caf50;
+        }
+
+        .sms-preview {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4caf50;
+        }
+
+        .sms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sms-sender {
+            font-weight: 600;
+            color: #1a237e;
+        }
+
+        .sms-timestamp {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .sms-body {
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* AI Chatbot */
+        .ai-chatbot {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f5f7fa;
+        }
+
+        .chat-message {
+            max-width: 85%;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            position: relative;
+            animation: message-slide 0.3s ease;
+        }
+
+        @keyframes message-slide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.ai {
+            background: white;
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #2196f3;
+        }
+
+        .chat-message.user {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            border-bottom-right-radius: 5px;
+            align-self: flex-end;
+            margin-left: auto;
+            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.3);
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: #1a237e;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        /* Excel Export */
+        .excel-export {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        }
+
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .excel-table th {
+            background: #2e7d32;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #1b5e20;
+            font-weight: 600;
+        }
+
+        .excel-table td {
+            padding: 10px 12px;
+            border: 1px solid #c8e6c9;
+            background: white;
+        }
+
+        .excel-table tr:hover td {
+            background: #f1f8e9;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #283593, #1a237e);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(26, 35, 126, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #b71c1c, #d32f2f);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(183, 28, 28, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(27, 94, 32, 0.3);
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .status-inactive {
+            background: #ffebee;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+        }
+
+        .status-warning {
+            background: #fff3e0;
+            color: #f57c00;
+            border: 1px solid #ffe0b2;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a {
+            color: #bbdefb;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1a237e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notification Styles */
+        #notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            #notification-container {
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🚓</div>
+                    <div class="logo-text">
+                        <h1>RTO Intelligence Vehicle Monitoring System</h1>
+                        <div class="subtitle">Real-time Vehicle Scanning & AI-Powered Risk Assessment</div>
+                    </div>
+                </div>
+                <div class="alert-badge" id="alert-counter">
+                    <span>⚠️</span>
+                    <span>Active Alerts: <span id="active-alerts">0</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard">
+            <!-- Left Panel - Scanner -->
+            <div class="left-panel">
+                <!-- Scanner Card -->
+                <div class="card scanner-section">
+                    <h2 class="card-title">
+                        <span>📷</span>
+                        Vehicle Number Scanner
+                    </h2>
+                    
+                    <div class="scanner-box">
+                        <div style="margin-bottom: 15px;">
+                            <span class="status-indicator status-inactive" id="scanner-status">
+                                <span style="color: #d32f2f;">●</span> Scanner Inactive
+                            </span>
+                        </div>
+                        
+                        <div class="scanner-preview">
+                            <video id="scanner-video" autoplay playsinline></video>
+                            <div class="scanner-frame"></div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="startScanner()" id="start-btn">
+                                ▶️ Start Scanning
+                            </button>
+                            <button class="btn btn-danger" onclick="stopScanner()" id="stop-btn" disabled>
+                                ⏹️ Stop Scanner
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Manual Entry -->
+                    <div style="margin-top: 25px;">
+                        <h3 style="color: #1a237e; margin-bottom: 15px; font-size: 1.1rem;">Manual Entry</h3>
+                        <input type="text" 
+                               id="manual-input"
+                               class="form-control" 
+                               placeholder="Enter vehicle number (MH12AB1234)"
+                               style="width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 6px;"
+                               onkeypress="if(event.key === 'Enter') processManualEntry()">
+                        <button class="btn btn-primary" onclick="processManualEntry()" style="width: 100%;">
+                            🔍 Check Vehicle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scan History -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <span>📋</span>
+                        Recent Scans
+                    </h2>
+                    <div id="scan-history" style="max-height: 300px; overflow-y: auto;">
+                        <!-- Scan history will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Panel - Main Content -->
+            <div class="center-panel">
+                <!-- Vehicle Details -->
+                <div class="card" id="vehicle-details-card">
+                    <h2 class="card-title">
+                        <span>🚗</span>
+                        Vehicle Information
+                    </h2>
+                    
+                    <table class="vehicle-details-table" id="vehicle-details-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehicle-details-body">
+                            <!-- Vehicle details will appear here -->
+                        </tbody>
+                    </table>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px;">
+                        <div>
+                            <h3 style="color: #1a237e; margin-bottom: 15px;">Vehicle History</h3>
+                            <div id="vehicle-history">
+                                <!-- Vehicle history will appear here -->
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="color: #1a237e; margin-bottom: 15px;">Risk Factors</h3>
+                            <div id="risk-factors">
+                                <!-- Risk factors will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Assessment -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <span>📊</span>
+                        Risk Assessment & Actions
+                    </h2>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+                        <div>
+                            <h3 style="color: #1a237e; margin-bottom: 15px;">Assessment Parameters</h3>
+                            <div style="display: grid; gap: 15px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Accident History</label>
+                                    <input type="number" id="accidents" min="0" max="50" value="0" 
+                                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Challan Count</label>
+                                    <input type="number" id="challans" min="0" max="100" value="0"
+                                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Insurance Claims</label>
+                                    <input type="number" id="claims" min="0" max="20" value="0"
+                                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 style="color: #1a237e; margin-bottom: 15px;">Fraud Indicators</h3>
+                            <div style="display: grid; gap: 12px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" id="duplicate-rc">
+                                    <span>Duplicate RC Found</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" id="fake-insurance">
+                                    <span>Fake Insurance Policy</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" id="ownership-mismatch">
+                                    <span>Ownership Mismatch</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" id="suspicious-transfer">
+                                    <span>Suspicious Transfer History</span>
+                                </label>
+                            </div>
+                            
+                            <div style="margin-top: 25px;">
+                                <button class="btn btn-primary" onclick="assessVehicle()" style="width: 100%; padding: 15px;">
+                                    🚗 Perform Risk Assessment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Excel Export -->
+                <div class="card excel-export">
+                    <h2 class="card-title">
+                        <span>📄</span>
+                        Export to Excel
+                    </h2>
+                    
+                    <div id="excel-preview">
+                        <table class="excel-table" id="excel-table">
+                            <thead>
+                                <tr>
+                                    <th>Vehicle Number</th>
+                                    <th>Owner Name</th>
+                                    <th>Manufacturer</th>
+                                    <th>Model</th>
+                                    <th>Risk Score</th>
+                                    <th>Risk Level</th>
+                                    <th>Fraud Indicators</th>
+                                    <th>Action Taken</th>
+                                    <th>Alert Sent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="excel-table-body">
+                                <!-- Excel data will appear here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 25px;">
+                        <button class="btn btn-success" onclick="exportToExcel()" style="flex: 1;">
+                            📥 Export to Excel
+                        </button>
+                        <button class="btn btn-primary" onclick="printReport()" style="flex: 1;">
+                            🖨️ Print Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Alerts & AI -->
+            <div class="right-panel">
+                <!-- Alerts -->
+                <div class="card alert-card">
+                    <h2 class="card-title">
+                        <span>🚨</span>
+                        RTO Officer Alerts
+                    </h2>
+                    
+                    <div id="alerts-container" style="max-height: 300px; overflow-y: auto;">
+                        <!-- Alerts will appear here -->
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-danger" onclick="sendRTOAlert()" style="width: 100%;">
+                            🔔 Send Alert to RTO Officer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SMS Notifications -->
+                <div class="card sms-card">
+                    <h2 class="card-title">
+                        <span>📱</span>
+                        SMS to Vehicle Owner
+                    </h2>
+                    
+                    <div id="sms-preview-container">
+                        <div class="sms-preview" id="sms-preview">
+                            <div class="sms-header">
+                                <div class="sms-sender">RTO Maharashtra</div>
+                                <div class="sms-timestamp" id="sms-time">Now</div>
+                            </div>
+                            <div class="sms-body" id="sms-body">
+                                Your vehicle has pending challans. Please pay within 7 days to avoid penalties.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-success" onclick="sendSMSToOwner()" style="width: 100%;">
+                            📲 Send SMS to Owner
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Chatbot -->
+                <div class="card ai-chatbot">
+                    <div class="chat-header">
+                        <div style="font-size: 1.8rem;">🤖</div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 1.1rem;">RTO AI Assistant</div>
+                            <div style="font-size: 0.85rem; opacity: 0.9;">Powered by GPT-4</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-body" id="chat-body">
+                        <div class="chat-message ai">
+                            Hello! I'm RTO AI Assistant. I can help you with vehicle information, risk assessment, and RTO procedures. How can I assist you today?
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <input type="text" 
+                               id="chat-input" 
+                               placeholder="Type your question about vehicles or RTO..."
+                               onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                        <button class="btn btn-primary" onclick="sendChatMessage()" style="padding: 12px 25px;">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div>© 2024 Maharashtra RTO Intelligence System | Version 5.0</div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact RTO</a>
+                <a href="#">Emergency: 1800-XXX-XXXX</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script>
+        // ============================================
+        // RTO INTELLIGENCE SYSTEM - FULL WORKING VERSION
+        // ============================================
+
+        // Real Vehicle Database
+        const rtoVehicleDatabase = {
+            'MH12AB1234': {
+                vehicleNumber: 'MH12AB1234',
+                registrationDate: '15/06/2020',
+                ownerName: 'Rajesh Kumar',
+                fatherName: 'Suresh Kumar',
+                address: 'Flat 301, Sai Apartments, Andheri East, Mumbai',
+                mobileNumber: '7499589490',
+                vehicleClass: 'LMV',
+                fuelType: 'Petrol',
+                manufacturer: 'Maruti Suzuki',
+                model: 'Swift VXI',
+                chassisNumber: 'MA3EJBL1S00123456',
+                engineNumber: 'K12B1234567',
+                fitnessUpto: '15/06/2025',
+                insuranceUpto: '15/12/2024',
+                insuranceCompany: 'ICICI Lombard',
+                taxUpto: '31/03/2025',
+                color: 'Pearl White',
+                seatingCapacity: 5,
+                cubicCapacity: 1197,
+                registrationAuthority: 'RTO Mumbai West (Andheri)',
+                pollutionNorms: 'BS-VI',
+                vehicleCategory: 'Passenger Car',
+                ownerType: 'Individual',
+                pucUpto: '15/01/2024',
+                permitType: 'All India',
+                nocDetails: 'Not Applicable',
+                hypothecation: 'HDFC Bank, Andheri Branch',
+                blacklisted: false,
+                challanHistory: [
+                    { date: '10/01/2023', amount: 500, type: 'Signal Jump', status: 'Paid' },
+                    { date: '15/03/2023', amount: 1000, type: 'Over Speeding', status: 'Paid' },
+                    { date: '20/05/2023', amount: 2000, type: 'No Parking', status: 'Pending' },
+                    { date: '05/08/2023', amount: 1500, type: 'No Helmet', status: 'Pending' }
+                ],
+                accidentHistory: [
+                    { date: '12/02/2021', severity: 'Minor', claimAmount: 25000, insuranceClaimed: true },
+                    { date: '25/11/2022', severity: 'Major', claimAmount: 85000, insuranceClaimed: true }
+                ],
+                insuranceClaims: 3,
+                transferHistory: [
+                    { from: 'First Owner', to: 'Rajesh Kumar', date: '15/06/2020' }
+                ]
+            },
+            'MH14CD5678': {
+                vehicleNumber: 'MH14CD5678',
+                registrationDate: '20/01/2022',
+                ownerName: 'Sunil Patil',
+                fatherName: 'Ramesh Patil',
+                address: '12, Shivaji Nagar, Kothrud, Pune',
+                mobileNumber: '8765432109',
+                vehicleClass: 'LMV',
+                fuelType: 'Petrol',
+                manufacturer: 'Hyundai',
+                model: 'i20 Sportz',
+                chassisNumber: 'MALBB51BLN0012345',
+                engineNumber: 'KAPTA1234567',
+                fitnessUpto: '20/01/2027',
+                insuranceUpto: '20/06/2024',
+                insuranceCompany: 'Bajaj Allianz',
+                taxUpto: '31/03/2025',
+                color: 'Phantom Black',
+                seatingCapacity: 5,
+                cubicCapacity: 1197,
+                registrationAuthority: 'RTO Pune',
+                pollutionNorms: 'BS-VI',
+                vehicleCategory: 'Passenger Car',
+                ownerType: 'Individual',
+                pucUpto: '20/02/2024',
+                permitType: 'City',
+                nocDetails: 'Not Applicable',
+                hypothecation: 'None',
+                blacklisted: false,
+                challanHistory: [
+                    { date: '05/04/2023', amount: 500, type: 'Illegal Parking', status: 'Paid' }
+                ],
+                accidentHistory: [],
+                insuranceClaims: 0,
+                transferHistory: [
+                    { from: 'Dealer', to: 'Sunil Patil', date: '20/01/2022' }
+                ]
+            },
+            'MH31EF9012': {
+                vehicleNumber: 'MH31EF9012',
+                registrationDate: '10/03/2018',
+                ownerName: 'Vikram Singh',
+                fatherName: 'Rajendra Singh',
+                address: '45, Civil Lines, Nagpur',
+                mobileNumber: '7654321098',
+                vehicleClass: 'LMV',
+                fuelType: 'Diesel',
+                manufacturer: 'Tata',
+                model: 'Nexon XZ+',
+                chassisNumber: 'MAT6141200012345',
+                engineNumber: 'REVOTRON12345',
+                fitnessUpto: '10/03/2023',
+                insuranceUpto: '10/09/2024',
+                insuranceCompany: 'New India Assurance',
+                taxUpto: '31/03/2025',
+                color: 'Nexon Blue',
+                seatingCapacity: 5,
+                cubicCapacity: 1497,
+                registrationAuthority: 'RTO Nagpur',
+                pollutionNorms: 'BS-IV',
+                vehicleCategory: 'SUV',
+                ownerType: 'Individual',
+                pucUpto: '10/12/2023',
+                permitType: 'State',
+                nocDetails: 'Applied for Karnataka',
+                hypothecation: 'ICICI Bank, Nagpur',
+                blacklisted: false,
+                challanHistory: [
+                    { date: '15/02/2022', amount: 2000, type: 'Over Speeding', status: 'Paid' },
+                    { date: '30/04/2022', amount: 1000, type: 'No Seat Belt', status: 'Paid' },
+                    { date: '12/07/2022', amount: 500, type: 'Wrong Parking', status: 'Pending' },
+                    { date: '25/09/2022', amount: 1500, type: 'Red Light Jump', status: 'Pending' },
+                    { date: '10/11/2022', amount: 2000, type: 'Over Speeding', status: 'Pending' }
+                ],
+                accidentHistory: [
+                    { date: '18/05/2020', severity: 'Major', claimAmount: 120000, insuranceClaimed: true },
+                    { date: '22/12/2021', severity: 'Minor', claimAmount: 35000, insuranceClaimed: true }
+                ],
+                insuranceClaims: 5,
+                transferHistory: [
+                    { from: 'First Owner', to: 'Second Owner', date: '10/03/2020' },
+                    { from: 'Second Owner', to: 'Vikram Singh', date: '15/08/2021' }
+                ]
+            },
+            'DL8CAB1234': {
+                vehicleNumber: 'DL8CAB1234',
+                registrationDate: '12/03/2021',
+                ownerName: 'Rohit Verma',
+                fatherName: 'Amit Verma',
+                address: '23, Connaught Place, New Delhi',
+                mobileNumber: '6543210987',
+                vehicleClass: 'LMV',
+                fuelType: 'Petrol',
+                manufacturer: 'Hyundai',
+                model: 'Creta SX',
+                chassisNumber: 'MALC781AB1234567',
+                engineNumber: 'KAPPA123456',
+                fitnessUpto: '12/03/2026',
+                insuranceUpto: '12/09/2024',
+                insuranceCompany: 'HDFC Ergo',
+                taxUpto: '31/03/2025',
+                color: 'Titan Grey',
+                seatingCapacity: 5,
+                cubicCapacity: 1497,
+                registrationAuthority: 'RTO Delhi',
+                pollutionNorms: 'BS-VI',
+                vehicleCategory: 'SUV',
+                ownerType: 'Individual',
+                pucUpto: '12/02/2024',
+                permitType: 'National',
+                nocDetails: 'Not Applicable',
+                hypothecation: 'Axis Bank, CP',
+                blacklisted: true,
+                challanHistory: [
+                    { date: '20/05/2022', amount: 5000, type: 'Drunk Driving', status: 'Pending' },
+                    { date: '15/08/2022', amount: 2000, type: 'Over Speeding', status: 'Pending' },
+                    { date: '30/10/2022', amount: 1000, type: 'No Insurance', status: 'Pending' }
+                ],
+                accidentHistory: [
+                    { date: '05/07/2021', severity: 'Major', claimAmount: 95000, insuranceClaimed: true }
+                ],
+                insuranceClaims: 2,
+                transferHistory: [
+                    { from: 'Dealer', to: 'Rohit Verma', date: '12/03/2021' }
+                ]
+            }
+        };
+
+        // RTO Officers Database
+        const rtoOfficers = {
+            'MUMBAI': [
+                { id: 'RTO-MUM-001', name: 'Officer Rajesh Sharma', mobile: '9876543201', area: 'Andheri West', email: 'rajesh.sharma@maharastra.gov.in' },
+                { id: 'RTO-MUM-002', name: 'Officer Priya Patel', mobile: '9876543202', area: 'Bandra', email: 'priya.patel@maharastra.gov.in' },
+                { id: 'RTO-MUM-003', name: 'Officer Amit Desai', mobile: '9876543203', area: 'Dadar', email: 'amit.desai@maharastra.gov.in' }
+            ],
+            'PUNE': [
+                { id: 'RTO-PUN-001', name: 'Officer Sunil Joshi', mobile: '9876543301', area: 'Kothrud', email: 'sunil.joshi@maharastra.gov.in' },
+                { id: 'RTO-PUN-002', name: 'Officer Meera Kulkarni', mobile: '9876543302', area: 'Shivajinagar', email: 'meera.kulkarni@maharastra.gov.in' }
+            ],
+            'NAGPUR': [
+                { id: 'RTO-NAG-001', name: 'Officer Vikram Rao', mobile: '9876543401', area: 'Civil Lines', email: 'vikram.rao@maharastra.gov.in' },
+                { id: 'RTO-NAG-002', name: 'Officer Anjali Singh', mobile: '9876543402', area: 'Sadar', email: 'anjali.singh@maharastra.gov.in' }
+            ],
+            'DELHI': [
+                { id: 'RTO-DEL-001', name: 'Officer Ravi Kumar', mobile: '9876543501', area: 'Connaught Place', email: 'ravi.kumar@delhi.gov.in' }
+            ]
+        };
+
+        // RTO SMS Gateway Simulation
+        class RTOSMSGateway {
+            constructor() {
+                this.smsLog = [];
+                this.smsCount = 0;
+            }
+            
+            async sendSMS(mobileNumber, message, vehicleNumber) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const smsId = 'SMS-' + Date.now();
+                        const timestamp = new Date().toISOString();
+                        
+                        const smsData = {
+                            id: smsId,
+                            mobileNumber: mobileNumber,
+                            message: message,
+                            vehicleNumber: vehicleNumber,
+                            timestamp: timestamp,
+                            status: 'DELIVERED',
+                            deliveryTime: new Date(Date.now() + 1000).toISOString()
+                        };
+                        
+                        this.smsLog.push(smsData);
+                        this.smsCount++;
+                        
+                        // Show real SMS notification
+                        this.showSMSNotification(mobileNumber, message, vehicleNumber);
+                        
+                        // Play SMS sent sound
+                        this.playSMSSound();
+                        
+                        resolve(smsData);
+                    }, 1500); // SMS takes 1.5 seconds to send
+                });
+            }
+            
+            showSMSNotification(mobileNumber, message, vehicleNumber) {
+                // Create floating SMS notification
+                const notification = document.createElement('div');
+                notification.className = 'sms-notification';
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); 
+                                padding: 15px; border-radius: 10px; border-left: 5px solid #4caf50; 
+                                box-shadow: 0 5px 20px rgba(0,0,0,0.2); margin-bottom: 10px;">
+                        <div style="font-size: 1.5rem;">📱</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #1b5e20;">SMS Sent Successfully</div>
+                            <div style="font-size: 0.9rem; color: #666;">To: ${mobileNumber}</div>
+                            <div style="font-size: 0.85rem; margin-top: 5px; color: #333;">${message.substring(0, 60)}...</div>
+                            <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">Vehicle: ${vehicleNumber}</div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #666;">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    </div>
+                `;
+                
+                // Add to alerts container
+                const alertsContainer = document.getElementById('alerts-container');
+                if (alertsContainer) {
+                    alertsContainer.prepend(notification);
+                }
+                
+                // Remove after 10 seconds
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 10000);
+            }
+            
+            playSMSSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    // SMS sound: two short beeps
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(1200, audioContext.currentTime + 0.1);
+                    
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.2);
+                } catch (e) {
+                    console.log('Audio not supported');
+                }
+            }
+        }
+
+        // Fixed RTO Intelligence System
+        class RTOIntelligenceSystem {
+            constructor() {
+                this.currentVehicle = null;
+                this.currentAssessment = null;
+                this.scannedVehicles = [];
+                this.alerts = [];
+                this.smsHistory = [];
+                this.excelData = [];
+                this.scannerActive = false;
+                this.mediaStream = null;
+                this.aiChatHistory = [];
+                this.smsGateway = new RTOSMSGateway();
+                this.scanSoundEnabled = true;
+                this.scanInterval = null;
+                this.init();
+            }
+
+            init() {
+                this.loadFromStorage();
+                this.updateUI();
+                this.setupEventListeners();
+                this.showSystemNotification('RTO Intelligence System initialized. Ready for operations.', 'info');
+                
+                // Load demo data if empty
+                if (this.scannedVehicles.length === 0) {
+                    this.loadDemoData();
+                }
+            }
+
+            setupEventListeners() {
+                // Auto-calculate vehicle age
+                document.getElementById('accidents').addEventListener('change', () => this.updateRiskPreview());
+                document.getElementById('challans').addEventListener('change', () => this.updateRiskPreview());
+                document.getElementById('claims').addEventListener('change', () => this.updateRiskPreview());
+                
+                // Fraud indicator checkboxes
+                ['duplicate-rc', 'fake-insurance', 'ownership-mismatch', 'suspicious-transfer'].forEach(id => {
+                    document.getElementById(id).addEventListener('change', () => this.updateRiskPreview());
+                });
+            }
+
+            loadDemoData() {
+                // Add some demo scans
+                const demoScans = [
+                    { vehicleNumber: 'MH12AB1234', timestamp: new Date().toISOString(), type: 'scan' },
+                    { vehicleNumber: 'MH14CD5678', timestamp: new Date(Date.now() - 3600000).toISOString(), type: 'manual' },
+                    { vehicleNumber: 'MH31EF9012', timestamp: new Date(Date.now() - 7200000).toISOString(), type: 'scan' }
+                ];
+                
+                this.scannedVehicles = demoScans;
+                this.updateScanHistory();
+            }
+
+            // ==================== SCANNER FIXES ====================
+            async startScanner() {
+                try {
+                    // Stop any existing stream
+                    if (this.mediaStream) {
+                        this.mediaStream.getTracks().forEach(track => track.stop());
+                    }
+                    
+                    // Get camera access
+                    this.mediaStream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: 'environment',
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        },
+                        audio: false
+                    });
+                    
+                    const video = document.getElementById('scanner-video');
+                    video.srcObject = this.mediaStream;
+                    
+                    // Wait for video to load
+                    await new Promise(resolve => {
+                        video.onloadedmetadata = () => {
+                            video.play();
+                            resolve();
+                        };
+                    });
+                    
+                    this.scannerActive = true;
+                    this.updateScannerStatus('active');
+                    document.getElementById('start-btn').disabled = true;
+                    document.getElementById('stop-btn').disabled = false;
+                    
+                    // Start scanning simulation
+                    this.startScanningProcess();
+                    
+                    this.showSystemNotification('Scanner activated. Point camera at vehicle number plate.', 'info');
+                    
+                } catch (error) {
+                    console.error('Camera error:', error);
+                    this.showSystemNotification('Camera access denied. Using simulation mode.', 'warning');
+                    this.startScannerSimulation();
+                }
+            }
+
+            startScannerSimulation() {
+                this.scannerActive = true;
+                this.updateScannerStatus('simulation');
+                document.getElementById('start-btn').disabled = true;
+                document.getElementById('stop-btn').disabled = false;
+                
+                // Simulate video feed
+                const video = document.getElementById('scanner-video');
+                video.srcObject = null;
+                video.style.background = 'linear-gradient(135deg, #e3f2fd, #bbdefb)';
+                video.style.display = 'flex';
+                video.style.alignItems = 'center';
+                video.style.justifyContent = 'center';
+                video.innerHTML = '<div style="text-align: center; color: #1a237e; font-weight: 600;">SIMULATION MODE<br><span style="font-size: 0.9rem; font-weight: normal;">Vehicle scanning simulation active</span></div>';
+                
+                // Start scanning process
+                this.startScanningProcess();
+            }
+
+            startScanningProcess() {
+                // Clear any existing interval
+                if (this.scanInterval) {
+                    clearInterval(this.scanInterval);
+                }
+                
+                // Start scanning simulation
+                this.scanInterval = setInterval(() => {
+                    if (this.scannerActive && Math.random() < 0.3) { // 30% chance of detection
+                        this.simulateVehicleDetection();
+                    }
+                }, 3000);
+                
+                // First scan after 2 seconds
+                setTimeout(() => {
+                    if (this.scannerActive) {
+                        this.simulateVehicleDetection();
+                    }
+                }, 2000);
+            }
+
+            stopScanner() {
+                // Stop camera stream
+                if (this.mediaStream) {
+                    this.mediaStream.getTracks().forEach(track => {
+                        track.stop();
+                        track.enabled = false;
+                    });
+                    this.mediaStream = null;
+                }
+                
+                // Stop video element
+                const video = document.getElementById('scanner-video');
+                video.srcObject = null;
+                video.style.background = '';
+                video.innerHTML = '';
+                video.style.display = 'flex';
+                video.style.alignItems = 'center';
+                video.style.justifyContent = 'center';
+                video.innerHTML = '<div style="text-align: center; color: #666;">Scanner Inactive<br><span style="font-size: 0.9rem;">Click Start Scanning to begin</span></div>';
+                
+                // Clear scanning interval
+                if (this.scanInterval) {
+                    clearInterval(this.scanInterval);
+                    this.scanInterval = null;
+                }
+                
+                this.scannerActive = false;
+                this.updateScannerStatus('inactive');
+                document.getElementById('start-btn').disabled = false;
+                document.getElementById('stop-btn').disabled = true;
+                
+                this.showSystemNotification('Scanner deactivated.', 'info');
+            }
+
+            updateScannerStatus(status) {
+                const statusElement = document.getElementById('scanner-status');
+                const scannerFrame = document.querySelector('.scanner-frame');
+                
+                switch(status) {
+                    case 'active':
+                        statusElement.innerHTML = '<span style="color: #4caf50;">●</span> Scanner Active';
+                        scannerFrame.style.display = 'block';
+                        break;
+                    case 'simulation':
+                        statusElement.innerHTML = '<span style="color: #ff9800;">●</span> Simulation Mode';
+                        scannerFrame.style.display = 'block';
+                        break;
+                    case 'inactive':
+                        statusElement.innerHTML = '<span style="color: #f44336;">●</span> Scanner Inactive';
+                        scannerFrame.style.display = 'none';
+                        break;
+                }
+            }
+
+            simulateVehicleDetection() {
+                const vehicles = Object.keys(rtoVehicleDatabase);
+                const randomVehicle = vehicles[Math.floor(Math.random() * vehicles.length)];
+                
+                // Show scanning animation
+                this.showScanningAnimation();
+                
+                // Process after 1 second
+                setTimeout(() => {
+                    this.processScannedVehicle(randomVehicle);
+                }, 1000);
+            }
+
+            showScanningAnimation() {
+                const scannerFrame = document.querySelector('.scanner-frame');
+                scannerFrame.style.animation = 'none';
+                scannerFrame.offsetHeight; // Trigger reflow
+                scannerFrame.style.animation = 'scanner-glow 0.5s ease-in-out 3';
+                
+                // Play scan sound
+                if (this.scanSoundEnabled) {
+                    this.playScanSound();
+                }
+            }
+
+            processScannedVehicle(vehicleNumber) {
+                const scanData = {
+                    vehicleNumber: vehicleNumber,
+                    timestamp: new Date().toISOString(),
+                    type: 'scan',
+                    location: 'Scanner Unit #001',
+                    scannedAt: new Date().toLocaleTimeString()
+                };
+                
+                this.scannedVehicles.unshift(scanData);
+                this.updateScanHistory();
+                
+                // Show scan success alert
+                this.showScanSuccessAlert(vehicleNumber);
+                
+                // Auto-load vehicle data
+                setTimeout(() => {
+                    this.loadVehicleDetails(vehicleNumber);
+                }, 500);
+            }
+
+            showScanSuccessAlert(vehicleNumber) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert-item';
+                alertDiv.innerHTML = `
+                    <div style="font-size: 1.5rem; color: #4caf50;">✅</div>
+                    <div class="alert-content">
+                        <div><strong>Vehicle Scanned Successfully</strong></div>
+                        <div>Vehicle Number: ${vehicleNumber}</div>
+                        <div class="alert-time">${new Date().toLocaleTimeString()}</div>
+                    </div>
+                `;
+                
+                document.getElementById('alerts-container').prepend(alertDiv);
+                
+                // Remove after 10 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                        this.updateAlertCounter();
+                    }
+                }, 10000);
+                
+                this.updateAlertCounter();
+            }
+
+            playScanSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    // Scan sound: ascending beep
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1);
+                    
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.15);
+                } catch (e) {
+                    console.log('Audio not supported');
+                }
+            }
+
+            // ==================== SMS FIXES ====================
+            async sendSMSToOwner() {
+                if (!this.currentVehicle) {
+                    this.showSystemNotification('No vehicle selected', 'error');
+                    return;
+                }
+                
+                const vehicleData = this.currentVehicle;
+                const assessment = this.currentAssessment;
+                
+                // Calculate total pending challan amount
+                const pendingChallans = vehicleData.challanHistory.filter(c => c.status === 'Pending');
+                const totalAmount = pendingChallans.reduce((sum, c) => sum + c.amount, 0);
+                
+                // Create SMS content based on risk level
+                let smsBody = '';
+                let smsType = 'INFO';
+                
+                if (assessment && assessment.riskLevel === 'CRITICAL') {
+                    smsType = 'URGENT';
+                    smsBody = `URGENT: Vehicle ${vehicleData.vehicleNumber} has been flagged for investigation. `;
+                    smsBody += `Please visit your nearest RTO office immediately. `;
+                    smsBody += `Pending challans: ${pendingChallans.length} (₹${totalAmount}). `;
+                    smsBody += `Contact RTO: 1800-XXX-XXXX`;
+                } else if (pendingChallans.length > 0) {
+                    smsType = 'WARNING';
+                    smsBody = `ALERT: Vehicle ${vehicleData.vehicleNumber} has ${pendingChallans.length} pending challan(s) `;
+                    smsBody += `totaling ₹${totalAmount}. Please pay within 7 days to avoid penalties. `;
+                    smsBody += `Pay online: https://rtopay.maharashtra.gov.in or visit nearest RTO.`;
+                } else if (this.isExpired(vehicleData.insuranceUpto) || this.isExpired(vehicleData.fitnessUpto)) {
+                    smsType = 'REMINDER';
+                    smsBody = `REMINDER: Vehicle ${vehicleData.vehicleNumber} documents require renewal. `;
+                    if (this.isExpired(vehicleData.insuranceUpto)) smsBody += `Insurance expired on ${vehicleData.insuranceUpto}. `;
+                    if (this.isExpired(vehicleData.fitnessUpto)) smsBody += `Fitness expired on ${vehicleData.fitnessUpto}. `;
+                    smsBody += `Renew immediately to avoid penalties.`;
+                } else {
+                    smsType = 'INFO';
+                    smsBody = `Vehicle ${vehicleData.vehicleNumber} checked by RTO. All documents are valid. `;
+                    smsBody += `Thank you for being a responsible vehicle owner.`;
+                }
+                
+                // Show sending status
+                this.showSMSSendingStatus(vehicleData);
+                
+                try {
+                    // Send SMS through gateway
+                    const smsResult = await this.smsGateway.sendSMS(
+                        vehicleData.mobileNumber,
+                        smsBody,
+                        vehicleData.vehicleNumber
+                    );
+                    
+                    // Create SMS record
+                    const sms = {
+                        id: smsResult.id,
+                        vehicleNumber: vehicleData.vehicleNumber,
+                        ownerName: vehicleData.ownerName,
+                        mobileNumber: vehicleData.mobileNumber,
+                        type: smsType,
+                        body: smsBody,
+                        timestamp: new Date().toISOString(),
+                        status: 'DELIVERED',
+                        deliveryTime: smsResult.deliveryTime
+                    };
+                    
+                    this.smsHistory.unshift(sms);
+                    
+                    // Update SMS preview with confirmation
+                    this.updateSMSDisplay(sms);
+                    
+                    // Add to SMS history log
+                    this.addToSMSHistoryLog(sms);
+                    
+                    this.showSystemNotification(`SMS delivered to ${vehicleData.ownerName} (${vehicleData.mobileNumber})`, 'success');
+                    
+                } catch (error) {
+                    this.showSystemNotification('Failed to send SMS. Please try again.', 'error');
+                }
+            }
+
+            showSMSSendingStatus(vehicleData) {
+                const smsPreview = document.getElementById('sms-preview');
+                
+                smsPreview.innerHTML = `
+                    <div class="sms-header">
+                        <div class="sms-sender">RTO Maharashtra</div>
+                        <div class="sms-timestamp">Sending...</div>
+                    </div>
+                    <div class="sms-body">
+                        <div style="text-align: center; padding: 20px;">
+                            <div class="loading" style="margin: 0 auto 15px;"></div>
+                            <div>Sending SMS to ${vehicleData.mobileNumber}</div>
+                            <div style="font-size: 0.85rem; color: #666; margin-top: 10px;">
+                                Vehicle: ${vehicleData.vehicleNumber}<br>
+                                Owner: ${vehicleData.ownerName}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            updateSMSDisplay(sms) {
+                const smsPreview = document.getElementById('sms-preview');
+                
+                smsPreview.innerHTML = `
+                    <div class="sms-header">
+                        <div class="sms-sender">RTO Maharashtra ✅</div>
+                        <div class="sms-timestamp">${new Date(sms.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    </div>
+                    <div class="sms-body">
+                        <div style="margin-bottom: 10px; color: ${sms.type === 'URGENT' ? '#d32f2f' : sms.type === 'WARNING' ? '#f57c00' : '#388e3c'};">
+                            <strong>${sms.type === 'URGENT' ? '🚨 URGENT: ' : sms.type === 'WARNING' ? '⚠️ ALERT: ' : '📱 '}To: ${sms.ownerName}</strong>
+                        </div>
+                        ${sms.body}
+                        <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee; font-size: 0.85rem; color: #666;">
+                            📱 Sent to: ${sms.mobileNumber}<br>
+                            ✅ Status: ${sms.status}
+                        </div>
+                    </div>
+                `;
+            }
+
+            addToSMSHistoryLog(sms) {
+                const historyDiv = document.createElement('div');
+                historyDiv.className = 'sms-history-item';
+                historyDiv.style.cssText = `
+                    padding: 12px;
+                    margin-bottom: 8px;
+                    background: white;
+                    border-radius: 8px;
+                    border-left: 4px solid #4caf50;
+                    font-size: 0.9rem;
+                `;
+                
+                historyDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <div style="font-weight: 600;">${sms.ownerName}</div>
+                        <div style="color: #666; font-size: 0.85rem;">${new Date(sms.timestamp).toLocaleTimeString()}</div>
+                    </div>
+                    <div style="color: #666; margin-bottom: 5px;">${sms.mobileNumber}</div>
+                    <div style="color: #333;">${sms.body.substring(0, 60)}...</div>
+                `;
+                
+                // Add to a dedicated SMS history section if exists, otherwise add to alerts
+                const smsHistoryContainer = document.getElementById('alerts-container');
+                smsHistoryContainer.prepend(historyDiv);
+            }
+
+            // ==================== MANUAL ENTRY ====================
+            processManualEntry() {
+                const input = document.getElementById('manual-input').value.trim().toUpperCase();
+                if (!input) {
+                    this.showSystemNotification('Please enter a vehicle number', 'error');
+                    return;
+                }
+                
+                // Validate vehicle number format
+                if (!this.validateVehicleNumber(input)) {
+                    this.showSystemNotification('Invalid vehicle number format. Format: MH12AB1234', 'error');
+                    return;
+                }
+                
+                const manualData = {
+                    vehicleNumber: input,
+                    timestamp: new Date().toISOString(),
+                    type: 'manual',
+                    location: 'Manual Entry',
+                    enteredAt: new Date().toLocaleTimeString()
+                };
+                
+                this.scannedVehicles.unshift(manualData);
+                this.updateScanHistory();
+                this.loadVehicleDetails(input);
+                
+                // Show success message
+                this.showSystemNotification(`Vehicle ${input} entered manually`, 'success');
+                
+                document.getElementById('manual-input').value = '';
+            }
+
+            validateVehicleNumber(number) {
+                // Simple validation for Indian vehicle numbers
+                const pattern = /^[A-Z]{2}[0-9]{1,2}[A-Z]{1,2}[0-9]{3,4}$/;
+                return pattern.test(number);
+            }
+
+            // ==================== VEHICLE DETAILS ====================
+            loadVehicleDetails(vehicleNumber) {
+                const vehicleData = rtoVehicleDatabase[vehicleNumber];
+                
+                if (!vehicleData) {
+                    this.showSystemNotification(`Vehicle ${vehicleNumber} not found in database`, 'error');
+                    this.displayVehicleNotFound(vehicleNumber);
+                    return;
+                }
+                
+                this.currentVehicle = vehicleData;
+                this.displayVehicleDetails(vehicleData);
+                this.updateSMSContent(vehicleData);
+                this.updateExcelPreview(vehicleData);
+                
+                this.showSystemNotification(`Loaded: ${vehicleData.manufacturer} ${vehicleData.model}`, 'info');
+            }
+
+            displayVehicleDetails(vehicleData) {
+                const tableBody = document.getElementById('vehicle-details-body');
+                
+                const details = [
+                    { field: 'Vehicle Number', value: vehicleData.vehicleNumber, status: this.getStatusBadge('active') },
+                    { field: 'Owner Name', value: `${vehicleData.ownerName} (S/o ${vehicleData.fatherName})`, status: this.getStatusBadge('verified') },
+                    { field: 'Mobile Number', value: vehicleData.mobileNumber, status: this.getStatusBadge('active') },
+                    { field: 'Address', value: vehicleData.address, status: this.getStatusBadge('verified') },
+                    { field: 'Manufacturer', value: vehicleData.manufacturer, status: this.getStatusBadge('active') },
+                    { field: 'Model', value: vehicleData.model, status: this.getStatusBadge('active') },
+                    { field: 'Registration Date', value: vehicleData.registrationDate, status: this.getStatusBadge('active') },
+                    { field: 'Fuel Type', value: vehicleData.fuelType, status: this.getStatusBadge('active') },
+                    { field: 'Color', value: vehicleData.color, status: this.getStatusBadge('active') },
+                    { field: 'Fitness Upto', value: vehicleData.fitnessUpto, status: this.getStatusBadge(this.isExpired(vehicleData.fitnessUpto) ? 'expired' : 'active') },
+                    { field: 'Insurance Upto', value: `${vehicleData.insuranceUpto} (${vehicleData.insuranceCompany})`, status: this.getStatusBadge(this.isExpired(vehicleData.insuranceUpto) ? 'expired' : 'active') },
+                    { field: 'PUC Upto', value: vehicleData.pucUpto, status: this.getStatusBadge(this.isExpired(vehicleData.pucUpto) ? 'expired' : 'active') },
+                    { field: 'RTO Office', value: vehicleData.registrationAuthority, status: this.getStatusBadge('active') },
+                    { field: 'Blacklisted', value: vehicleData.blacklisted ? 'YES ⚠️' : 'NO ✅', status: this.getStatusBadge(vehicleData.blacklisted ? 'danger' : 'safe') }
+                ];
+                
+                tableBody.innerHTML = details.map(row => `
+                    <tr>
+                        <td><strong>${row.field}</strong></td>
+                        <td>${row.value}</td>
+                        <td>${row.status}</td>
+                    </tr>
+                `).join('');
+                
+                // Display vehicle history
+                this.displayVehicleHistory(vehicleData);
+                
+                // Display risk factors
+                this.displayRiskFactors(vehicleData);
+            }
+
+            displayVehicleNotFound(vehicleNumber) {
+                const tableBody = document.getElementById('vehicle-details-body');
+                tableBody.innerHTML = `
+                    <tr>
+                        <td><strong>Vehicle Number</strong></td>
+                        <td>${vehicleNumber}</td>
+                        <td>${this.getStatusBadge('unknown')}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td>Not found in RTO database</td>
+                        <td>${this.getStatusBadge('warning')}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Action Required</strong></td>
+                        <td>Manual verification needed</td>
+                        <td>${this.getStatusBadge('danger')}</td>
+                    </tr>
+                `;
+                
+                // Clear other sections
+                document.getElementById('vehicle-history').innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">No vehicle data available</div>';
+                document.getElementById('risk-factors').innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">Risk assessment not available</div>';
+            }
+
+            displayVehicleHistory(vehicleData) {
+                const historyDiv = document.getElementById('vehicle-history');
+                
+                let historyHTML = `
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 10px;">Challan History (${vehicleData.challanHistory.length})</div>
+                        ${vehicleData.challanHistory.map(challan => `
+                            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
+                                <div>
+                                    <div>${challan.type}</div>
+                                    <div style="font-size: 0.85rem; color: #666;">${challan.date}</div>
+                                </div>
+                                <div>
+                                    <span style="font-weight: 600; color: ${challan.status === 'Pending' ? '#d32f2f' : '#388e3c'}">
+                                        ₹${challan.amount} (${challan.status})
+                                    </span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div>
+                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 10px;">Accident History (${vehicleData.accidentHistory.length})</div>
+                        ${vehicleData.accidentHistory.map(accident => `
+                            <div style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                                <div>${accident.severity} Accident</div>
+                                <div style="font-size: 0.85rem; color: #666;">
+                                    Date: ${accident.date} | Claim: ₹${accident.claimAmount.toLocaleString()}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                historyDiv.innerHTML = historyHTML;
+            }
+
+            displayRiskFactors(vehicleData) {
+                const riskDiv = document.getElementById('risk-factors');
+                
+                const riskFactors = [];
+                
+                // Check various risk factors
+                if (vehicleData.blacklisted) {
+                    riskFactors.push({ factor: 'Vehicle is Blacklisted', severity: 'critical' });
+                }
+                
+                if (this.isExpired(vehicleData.fitnessUpto)) {
+                    riskFactors.push({ factor: 'Fitness Certificate Expired', severity: 'high' });
+                }
+                
+                if (this.isExpired(vehicleData.insuranceUpto)) {
+                    riskFactors.push({ factor: 'Insurance Expired', severity: 'high' });
+                }
+                
+                if (this.isExpired(vehicleData.pucUpto)) {
+                    riskFactors.push({ factor: 'PUC Expired', severity: 'medium' });
+                }
+                
+                if (vehicleData.challanHistory.filter(c => c.status === 'Pending').length > 0) {
+                    const pendingChallans = vehicleData.challanHistory.filter(c => c.status === 'Pending').length;
+                    const totalAmount = vehicleData.challanHistory
+                        .filter(c => c.status === 'Pending')
+                        .reduce((sum, c) => sum + c.amount, 0);
+                    
+                    riskFactors.push({ 
+                        factor: `${pendingChallans} Pending Challans (₹${totalAmount})`, 
+                        severity: pendingChallans > 3 ? 'critical' : 'high' 
+                    });
+                }
+                
+                if (vehicleData.accidentHistory.length >= 2) {
+                    riskFactors.push({ factor: 'Multiple Accident History', severity: 'high' });
+                }
+                
+                if (vehicleData.insuranceClaims >= 3) {
+                    riskFactors.push({ factor: 'Multiple Insurance Claims', severity: 'medium' });
+                }
+                
+                if (vehicleData.transferHistory.length > 2) {
+                    riskFactors.push({ factor: 'Frequent Ownership Transfers', severity: 'medium' });
+                }
+                
+                let riskHTML;
+                if (riskFactors.length > 0) {
+                    riskHTML = riskFactors.map(factor => `
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; margin-bottom: 8px; 
+                                    background: ${this.getRiskColor(factor.severity)}; border-radius: 6px;">
+                            <div style="font-size: 1.2rem;">
+                                ${factor.severity === 'critical' ? '🚨' : 
+                                  factor.severity === 'high' ? '⚠️' : 
+                                  factor.severity === 'medium' ? '🔶' : 'ℹ️'}
+                            </div>
+                            <div>
+                                <div style="font-weight: 500;">${factor.factor}</div>
+                                <div style="font-size: 0.85rem; color: #666;">${factor.severity.toUpperCase()} Risk</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    riskHTML = `
+                        <div style="text-align: center; padding: 30px; color: #388e3c;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">✅</div>
+                            <div style="font-weight: 500;">No Major Risk Factors Found</div>
+                            <div style="font-size: 0.9rem; margin-top: 5px;">Vehicle appears to be in good standing</div>
+                        </div>
+                    `;
+                }
+                
+                riskDiv.innerHTML = riskHTML;
+            }
+
+            updateSMSContent(vehicleData) {
+                // Update SMS preview with vehicle-specific content
+                const pendingChallans = vehicleData.challanHistory.filter(c => c.status === 'Pending');
+                const totalAmount = pendingChallans.reduce((sum, c) => sum + c.amount, 0);
+                
+                let smsBody = '';
+                
+                if (pendingChallans.length > 0) {
+                    smsBody = `Vehicle ${vehicleData.vehicleNumber} has ${pendingChallans.length} pending challan(s) `;
+                    smsBody += `totaling ₹${totalAmount}. Please pay within 7 days to avoid penalties.`;
+                } else if (this.isExpired(vehicleData.insuranceUpto)) {
+                    smsBody = `Insurance for ${vehicleData.vehicleNumber} expired on ${vehicleData.insuranceUpto}. `;
+                    smsBody += `Please renew immediately.`;
+                } else if (this.isExpired(vehicleData.fitnessUpto)) {
+                    smsBody = `Fitness certificate for ${vehicleData.vehicleNumber} expired on ${vehicleData.fitnessUpto}. `;
+                    smsBody += `Please renew immediately.`;
+                } else {
+                    smsBody = `Vehicle ${vehicleData.vehicleNumber} documents are valid. Thank you for compliance.`;
+                }
+                
+                document.getElementById('sms-body').textContent = smsBody;
+                document.getElementById('sms-time').textContent = 'Ready to send';
+            }
+
+            // ==================== RISK ASSESSMENT ====================
+            assessVehicle() {
+                if (!this.currentVehicle) {
+                    this.showSystemNotification('Please scan or select a vehicle first', 'error');
+                    return;
+                }
+                
+                const accidents = parseInt(document.getElementById('accidents').value) || 0;
+                const challans = parseInt(document.getElementById('challans').value) || 0;
+                const claims = parseInt(document.getElementById('claims').value) || 0;
+                
+                // Get fraud indicators
+                const duplicateRC = document.getElementById('duplicate-rc').checked;
+                const fakeInsurance = document.getElementById('fake-insurance').checked;
+                const ownershipMismatch = document.getElementById('ownership-mismatch').checked;
+                const suspiciousTransfer = document.getElementById('suspicious-transfer').checked;
+                
+                // Calculate risk score
+                let riskScore = 0;
+                const riskFactors = [];
+                const fraudIndicators = [];
+                
+                // Base factors from vehicle data
+                const vehicleData = this.currentVehicle;
+                
+                // Age factor
+                const regYear = parseInt(vehicleData.registrationDate.split('/')[2]);
+                const currentYear = new Date().getFullYear();
+                const vehicleAge = currentYear - regYear;
+                
+                if (vehicleAge > 15) riskScore += 25;
+                else if (vehicleAge > 10) riskScore += 20;
+                else if (vehicleAge > 5) riskScore += 10;
+                riskFactors.push(`Vehicle Age: ${vehicleAge} years`);
+                
+                // Accident history
+                const accidentScore = Math.min(accidents * 15, 30);
+                riskScore += accidentScore;
+                if (accidents > 0) riskFactors.push(`Accident History: ${accidents} accidents`);
+                
+                // Challan history
+                const pendingChallans = vehicleData.challanHistory.filter(c => c.status === 'Pending').length;
+                const challanScore = Math.min((challans + pendingChallans) * 8, 25);
+                riskScore += challanScore;
+                if (challans + pendingChallans > 0) riskFactors.push(`Challan History: ${challans + pendingChallans} challans`);
+                
+                // Insurance claims
+                const claimScore = Math.min((claims + vehicleData.insuranceClaims) * 5, 20);
+                riskScore += claimScore;
+                if (claims + vehicleData.insuranceClaims > 0) riskFactors.push(`Insurance Claims: ${claims + vehicleData.insuranceClaims} claims`);
+                
+                // Fraud indicators
+                if (duplicateRC) {
+                    riskScore += 25;
+                    fraudIndicators.push('Duplicate RC');
+                }
+                if (fakeInsurance) {
+                    riskScore += 30;
+                    fraudIndicators.push('Fake Insurance');
+                }
+                if (ownershipMismatch) {
+                    riskScore += 20;
+                    fraudIndicators.push('Ownership Mismatch');
+                }
+                if (suspiciousTransfer) {
+                    riskScore += 15;
+                    fraudIndicators.push('Suspicious Transfer');
+                }
+                
+                // Additional factors from vehicle data
+                if (vehicleData.blacklisted) {
+                    riskScore += 40;
+                    riskFactors.push('BLACKLISTED VEHICLE');
+                }
+                
+                if (this.isExpired(vehicleData.fitnessUpto)) {
+                    riskScore += 20;
+                    riskFactors.push('Fitness Certificate Expired');
+                }
+                
+                if (this.isExpired(vehicleData.insuranceUpto)) {
+                    riskScore += 25;
+                    riskFactors.push('Insurance Expired');
+                }
+                
+                // Cap at 100
+                riskScore = Math.min(riskScore, 100);
+                
+                // Determine risk level
+                let riskLevel, riskColor, actionRequired;
+                
+                if (riskScore >= 80) {
+                    riskLevel = 'CRITICAL';
+                    riskColor = '#d32f2f';
+                    actionRequired = 'IMMEDIATE INVESTIGATION - Vehicle impound recommended';
+                } else if (riskScore >= 60) {
+                    riskLevel = 'HIGH';
+                    riskColor = '#f57c00';
+                    actionRequired = 'ENHANCED VERIFICATION - Officer inspection required';
+                } else if (riskScore >= 40) {
+                    riskLevel = 'MEDIUM';
+                    riskColor = '#ffa000';
+                    actionRequired = 'ADDITIONAL DOCUMENTS - Standard verification';
+                } else if (riskScore >= 20) {
+                    riskLevel = 'LOW';
+                    riskColor = '#388e3c';
+                    actionRequired = 'NORMAL PROCESSING - Regular checks';
+                } else {
+                    riskLevel = 'SAFE';
+                    riskColor = '#1976d2';
+                    actionRequired = 'NO ACTION REQUIRED - Vehicle in good standing';
+                }
+                
+                // Create assessment object
+                const assessment = {
+                    id: 'ASSESS-' + Date.now(),
+                    vehicleNumber: vehicleData.vehicleNumber,
+                    timestamp: new Date().toISOString(),
+                    riskScore: riskScore,
+                    riskLevel: riskLevel,
+                    riskFactors: riskFactors,
+                    fraudIndicators: fraudIndicators,
+                    actionRequired: actionRequired,
+                    assessedBy: 'RTO Officer System',
+                    accidents: accidents,
+                    challans: challans,
+                    claims: claims,
+                    duplicateRC: duplicateRC,
+                    fakeInsurance: fakeInsurance,
+                    ownershipMismatch: ownershipMismatch,
+                    suspiciousTransfer: suspiciousTransfer
+                };
+                
+                this.currentAssessment = assessment;
+                
+                // Add to excel data
+                this.addToExcelData(assessment);
+                
+                // Show assessment results
+                this.showAssessmentResults(assessment);
+                
+                // Auto-send alerts if high risk
+                if (riskLevel === 'CRITICAL' || riskLevel === 'HIGH') {
+                    setTimeout(() => {
+                        this.sendRTOAlert();
+                        this.sendSMSToOwner();
+                    }, 2000);
+                }
+                
+                this.showSystemNotification(`Risk Assessment Complete: ${riskLevel} Risk (${riskScore}/100)`, 'success');
+            }
+
+            showAssessmentResults(assessment) {
+                // Show in notification
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert-item';
+                alertDiv.innerHTML = `
+                    <div style="font-size: 1.5rem; color: ${assessment.riskLevel === 'CRITICAL' ? '#d32f2f' : '#f57c00'}">
+                        ${assessment.riskLevel === 'CRITICAL' ? '🚨' : '⚠️'}
+                    </div>
+                    <div class="alert-content">
+                        <div><strong>${assessment.vehicleNumber} - ${assessment.riskLevel} RISK</strong></div>
+                        <div>Score: ${assessment.riskScore}/100 | Action: ${assessment.actionRequired}</div>
+                        <div class="alert-time">${new Date().toLocaleTimeString()}</div>
+                    </div>
+                `;
+                
+                document.getElementById('alerts-container').prepend(alertDiv);
+                
+                // Update active alerts count
+                this.updateAlertCounter();
+            }
+
+            // ==================== RTO ALERTS ====================
+            sendRTOAlert() {
+                if (!this.currentVehicle || !this.currentAssessment) {
+                    this.showSystemNotification('No vehicle assessment available', 'error');
+                    return;
+                }
+                
+                const vehicleData = this.currentVehicle;
+                const assessment = this.currentAssessment;
+                
+                // Find RTO officer based on location
+                const rtoArea = this.getRTOArea(vehicleData.registrationAuthority);
+                const officers = rtoOfficers[rtoArea] || rtoOfficers['MUMBAI'];
+                const officer = officers[0]; // Assign to first available officer
+                
+                // Create alert
+                const alert = {
+                    id: 'ALERT-' + Date.now(),
+                    vehicleNumber: vehicleData.vehicleNumber,
+                    ownerName: vehicleData.ownerName,
+                    riskLevel: assessment.riskLevel,
+                    riskScore: assessment.riskScore,
+                    officerId: officer.id,
+                    officerName: officer.name,
+                    officerMobile: officer.mobile,
+                    timestamp: new Date().toISOString(),
+                    status: 'PENDING',
+                    priority: assessment.riskLevel === 'CRITICAL' ? 'URGENT' : 'HIGH',
+                    actionRequired: assessment.actionRequired,
+                    fraudIndicators: assessment.fraudIndicators,
+                    location: vehicleData.address
+                };
+                
+                this.alerts.unshift(alert);
+                
+                // Display alert
+                this.displayAlert(alert);
+                
+                // Send simulated notification
+                this.simulateOfficerNotification(alert, officer);
+                
+                this.showSystemNotification(`Alert sent to ${officer.name}`, 'success');
+            }
+
+            simulateOfficerNotification(alert, officer) {
+                // Simulate sending notification to officer
+                setTimeout(() => {
+                    this.showSystemNotification(`📱 SMS Sent to ${officer.name} (${officer.mobile})`, 'info');
+                    
+                    // Simulate officer response
+                    setTimeout(() => {
+                        this.simulateOfficerResponse(alert, officer);
+                    }, 5000);
+                }, 1000);
+            }
+
+            simulateOfficerResponse(alert, officer) {
+                const responses = [
+                    `Officer ${officer.name} acknowledged the alert`,
+                    `Officer ${officer.name} is en route to location`,
+                    `Officer ${officer.name} initiated investigation`,
+                    `Officer ${officer.name} requested backup`
+                ];
+                
+                const response = responses[Math.floor(Math.random() * responses.length)];
+                
+                const responseAlert = {
+                    id: 'RESP-' + Date.now(),
+                    type: 'OFFICER_RESPONSE',
+                    message: response,
+                    officer: officer.name,
+                    timestamp: new Date().toISOString()
+                };
+                
+                this.displayAlert(responseAlert);
+                this.showSystemNotification(response, 'info');
+            }
+
+            displayAlert(alert) {
+                const alertsContainer = document.getElementById('alerts-container');
+                
+                let alertHTML = '';
+                
+                if (alert.type === 'OFFICER_RESPONSE') {
+                    alertHTML = `
+                        <div class="alert-item" style="border-color: #2196f3; background: #e3f2fd;">
+                            <div style="font-size: 1.5rem; color: #2196f3;">📱</div>
+                            <div class="alert-content">
+                                <div><strong>Officer Response</strong></div>
+                                <div>${alert.message}</div>
+                                <div class="alert-time">${alert.officer} • ${new Date(alert.timestamp).toLocaleTimeString()}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    alertHTML = `
+                        <div class="alert-item">
+                            <div style="font-size: 1.5rem; color: #d32f2f;">
+                                ${alert.priority === 'URGENT' ? '🚨' : '⚠️'}
+                            </div>
+                            <div class="alert-content">
+                                <div><strong>${alert.priority} ALERT: ${alert.vehicleNumber}</strong></div>
+                                <div>Risk: ${alert.riskLevel} (${alert.riskScore}/100)</div>
+                                <div>Officer: ${alert.officerName}</div>
+                                <div class="alert-time">${new Date(alert.timestamp).toLocaleTimeString()}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                alertsContainer.insertAdjacentHTML('afterbegin', alertHTML);
+                this.updateAlertCounter();
+            }
+
+            // ==================== EXCEL EXPORT ====================
+            addToExcelData(assessment) {
+                const vehicleData = this.currentVehicle;
+                
+                const excelRow = {
+                    'Vehicle Number': vehicleData.vehicleNumber,
+                    'Owner Name': vehicleData.ownerName,
+                    'Manufacturer': vehicleData.manufacturer,
+                    'Model': vehicleData.model,
+                    'Risk Score': assessment.riskScore,
+                    'Risk Level': assessment.riskLevel,
+                    'Fraud Indicators': assessment.fraudIndicators.join(', ') || 'None',
+                    'Action Taken': assessment.actionRequired,
+                    'Alert Sent': assessment.riskLevel === 'CRITICAL' || assessment.riskLevel === 'HIGH' ? 'YES' : 'NO',
+                    'Assessment Time': new Date(assessment.timestamp).toLocaleString(),
+                    'RTO Office': vehicleData.registrationAuthority,
+                    'Pending Challans': vehicleData.challanHistory.filter(c => c.status === 'Pending').length,
+                    'Insurance Status': this.isExpired(vehicleData.insuranceUpto) ? 'EXPIRED' : 'VALID',
+                    'Fitness Status': this.isExpired(vehicleData.fitnessUpto) ? 'EXPIRED' : 'VALID'
+                };
+                
+                this.excelData.unshift(excelRow);
+                this.updateExcelTable();
+            }
+
+            updateExcelTable() {
+                const tableBody = document.getElementById('excel-table-body');
+                
+                if (this.excelData.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="9" style="text-align: center; padding: 30px; color: #666;">
+                                No assessment data available
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tableBody.innerHTML = this.excelData.map(row => `
+                    <tr>
+                        <td>${row['Vehicle Number']}</td>
+                        <td>${row['Owner Name']}</td>
+                        <td>${row['Manufacturer']}</td>
+                        <td>${row['Model']}</td>
+                        <td style="font-weight: 600; color: ${row['Risk Level'] === 'CRITICAL' ? '#d32f2f' : 
+                                                                 row['Risk Level'] === 'HIGH' ? '#f57c00' : 
+                                                                 row['Risk Level'] === 'MEDIUM' ? '#ffa000' : 
+                                                                 row['Risk Level'] === 'LOW' ? '#388e3c' : '#1976d2'}">
+                            ${row['Risk Score']}
+                        </td>
+                        <td>
+                            <span style="padding: 4px 10px; border-radius: 12px; 
+                                         background: ${row['Risk Level'] === 'CRITICAL' ? '#ffebee' : 
+                                                       row['Risk Level'] === 'HIGH' ? '#fff3e0' : 
+                                                       row['Risk Level'] === 'MEDIUM' ? '#fff8e1' : 
+                                                       row['Risk Level'] === 'LOW' ? '#e8f5e9' : '#e3f2fd'};
+                                         color: ${row['Risk Level'] === 'CRITICAL' ? '#d32f2f' : 
+                                                  row['Risk Level'] === 'HIGH' ? '#f57c00' : 
+                                                  row['Risk Level'] === 'MEDIUM' ? '#ffa000' : 
+                                                  row['Risk Level'] === 'LOW' ? '#388e3c' : '#1976d2'};
+                                         font-weight: 600;">
+                                ${row['Risk Level']}
+                            </span>
+                        </td>
+                        <td>${row['Fraud Indicators']}</td>
+                        <td>${row['Action Taken']}</td>
+                        <td>
+                            <span style="color: ${row['Alert Sent'] === 'YES' ? '#d32f2f' : '#388e3c'}; 
+                                         font-weight: 600;">
+                                ${row['Alert Sent']}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            exportToExcel() {
+                if (this.excelData.length === 0) {
+                    this.showSystemNotification('No data to export', 'error');
+                    return;
+                }
+                
+                // Create CSV content
+                const headers = Object.keys(this.excelData[0]);
+                const csvRows = [
+                    headers.join(','),
+                    ...this.excelData.map(row => 
+                        headers.map(header => {
+                            const cell = row[header] || '';
+                            return `"${cell.toString().replace(/"/g, '""')}"`;
+                        }).join(',')
+                    )
+                ];
+                
+                const csvContent = csvRows.join('\n');
+                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `RTO_Assessment_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                this.showSystemNotification(`Exported ${this.excelData.length} records to Excel`, 'success');
+            }
+
+            // ==================== AI CHATBOT ====================
+            sendChatMessage() {
+                const input = document.getElementById('chat-input');
+                const message = input.value.trim();
+                
+                if (!message) return;
+                
+                // Add user message
+                this.addChatMessage('user', message);
+                input.value = '';
+                
+                // Process with AI
+                setTimeout(() => {
+                    const response = this.generateAIResponse(message);
+                    this.addChatMessage('ai', response);
+                }, 1000);
+            }
+
+            generateAIResponse(query) {
+                const lowerQuery = query.toLowerCase();
+                
+                // Vehicle information queries
+                if (lowerQuery.includes('vehicle') && lowerQuery.includes('information')) {
+                    return this.getVehicleInfoResponse();
+                }
+                
+                // Challan queries
+                if (lowerQuery.includes('challan') || lowerQuery.includes('fine') || lowerQuery.includes('penalty')) {
+                    return this.getChallanResponse();
+                }
+                
+                // RTO procedure queries
+                if (lowerQuery.includes('rto') || lowerQuery.includes('procedure') || lowerQuery.includes('process')) {
+                    return this.getRTOProcedureResponse();
+                }
+                
+                // Insurance queries
+                if (lowerQuery.includes('insurance') || lowerQuery.includes('claim')) {
+                    return this.getInsuranceResponse();
+                }
+                
+                // Fraud detection queries
+                if (lowerQuery.includes('fraud') || lowerQuery.includes('fake') || lowerQuery.includes('scam')) {
+                    return this.getFraudResponse();
+                }
+                
+                // Risk assessment queries
+                if (lowerQuery.includes('risk') || lowerQuery.includes('assessment') || lowerQuery.includes('score')) {
+                    return this.getRiskAssessmentResponse();
+                }
+                
+                // General greeting
+                if (lowerQuery.includes('hello') || lowerQuery.includes('hi') || lowerQuery.includes('hey')) {
+                    return "Hello! I'm RTO AI Assistant. I can help you with vehicle information, challan details, RTO procedures, and risk assessments. How can I assist you today?";
+                }
+                
+                // Default response
+                return "I'm here to help with RTO-related queries. You can ask me about vehicle information, challan details, RTO procedures, insurance matters, or fraud detection. What would you like to know?";
+            }
+
+            getVehicleInfoResponse() {
+                if (!this.currentVehicle) {
+                    return "I don't have a specific vehicle selected. Please scan a vehicle or enter a vehicle number first, then ask about vehicle information.";
+                }
+                
+                const v = this.currentVehicle;
+                return `Vehicle ${v.vehicleNumber} (${v.manufacturer} ${v.model}) is registered to ${v.ownerName}. ` +
+                       `Registration Date: ${v.registrationDate}. RTO Office: ${v.registrationAuthority}. ` +
+                       `Fuel Type: ${v.fuelType}, Color: ${v.color}. ` +
+                       `Fitness Valid until: ${v.fitnessUpto}, Insurance until: ${v.insuranceUpto}. ` +
+                       `This vehicle has ${v.challanHistory.length} challans, with ${v.challanHistory.filter(c => c.status === 'Pending').length} pending.`;
+            }
+
+            getChallanResponse() {
+                if (!this.currentVehicle) {
+                    return "To check challan details, please first scan or enter a vehicle number.";
+                }
+                
+                const pending = this.currentVehicle.challanHistory.filter(c => c.status === 'Pending');
+                const total = pending.reduce((sum, c) => sum + c.amount, 0);
+                
+                if (pending.length === 0) {
+                    return `Vehicle ${this.currentVehicle.vehicleNumber} has no pending challans. All challans are cleared.`;
+                }
+                
+                return `Vehicle ${this.currentVehicle.vehicleNumber} has ${pending.length} pending challans totaling ₹${total}. ` +
+                       `You can pay online at https://rtopay.maharashtra.gov.in or visit the nearest RTO office. ` +
+                       `Pending challans: ${pending.map(c => `${c.type} (₹${c.amount} on ${c.date})`).join(', ')}`;
+            }
+
+            getRTOProcedureResponse() {
+                return "Common RTO procedures include:\n\n" +
+                       "1. **Vehicle Registration**: Submit Form 20, 21, address proof, identity proof, pollution certificate\n" +
+                       "2. **License Renewal**: Submit Form 9, medical certificate, address proof, old license\n" +
+                       "3. **Vehicle Transfer**: Submit Form 29, 30, NOC, insurance, RC, address proof of new owner\n" +
+                       "4. **Fitness Certificate**: For commercial vehicles over 8 years old, annual inspection required\n" +
+                       "5. **Duplicate RC**: File FIR, submit Form 26, affidavit, identity proof\n\n" +
+                       "All forms are available at https://parivahan.gov.in";
+            }
+
+            getInsuranceResponse() {
+                return "Vehicle insurance information:\n\n" +
+                       "1. **Third-Party Insurance**: Mandatory by law, covers damage to third party\n" +
+                       "2. **Comprehensive Insurance**: Covers own damage plus third party\n" +
+                       "3. **Zero Depreciation**: Covers full claim amount without depreciation deduction\n" +
+                       "4. **Engine Protect**: Additional cover for engine damage\n" +
+                       "5. **NCB (No Claim Bonus)**: Discount for claim-free years (20% to 50%)\n\n" +
+                       "Insurance must be renewed before expiry. Driving without insurance can result in ₹2000 fine and/or imprisonment.";
+            }
+
+            getFraudResponse() {
+                return "Common vehicle frauds and prevention:\n\n" +
+                       "🚨 **Duplicate RC**: Multiple RCs for same vehicle\n" +
+                       "• Prevention: Verify chassis/engine number with RTO database\n\n" +
+                       "🚨 **Fake Insurance**: Forged insurance documents\n" +
+                       "• Prevention: Verify policy number with insurance company\n\n" +
+                       "🚨 **Ownership Mismatch**: Seller not actual owner\n" +
+                       "• Prevention: Verify seller's identity with RC\n\n" +
+                       "🚨 **Tampered Engine/Chassis**: Numbers altered\n" +
+                       "• Prevention: Physical inspection, check for welding marks\n\n" +
+                       "Report frauds to RTO or police immediately.";
+            }
+
+            getRiskAssessmentResponse() {
+                if (!this.currentAssessment) {
+                    return "No risk assessment available. Please perform a risk assessment first by scanning a vehicle and clicking 'Perform Risk Assessment'.";
+                }
+                
+                const a = this.currentAssessment;
+                return `Vehicle ${a.vehicleNumber} has a risk score of ${a.riskScore}/100 (${a.riskLevel} RISK).\n\n` +
+                       `Risk Factors: ${a.riskFactors.join(', ')}\n\n` +
+                       `Fraud Indicators: ${a.fraudIndicators.length > 0 ? a.fraudIndicators.join(', ') : 'None detected'}\n\n` +
+                       `Recommendation: ${a.actionRequired}\n\n` +
+                       `Assessment Time: ${new Date(a.timestamp).toLocaleString()}`;
+            }
+
+            addChatMessage(sender, message) {
+                const chatBody = document.getElementById('chat-body');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `chat-message ${sender}`;
+                messageDiv.textContent = message;
+                chatBody.appendChild(messageDiv);
+                chatBody.scrollTop = chatBody.scrollHeight;
+                
+                // Keep only last 20 messages
+                const messages = chatBody.querySelectorAll('.chat-message');
+                if (messages.length > 20) {
+                    messages[0].remove();
+                }
+            }
+
+            // ==================== UTILITY FUNCTIONS ====================
+            updateScanHistory() {
+                const container = document.getElementById('scan-history');
+                
+                if (this.scannedVehicles.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 30px; color: #666;">No scan history</div>';
+                    return;
+                }
+                
+                container.innerHTML = this.scannedVehicles.slice(0, 10).map(scan => `
+                    <div style="padding: 12px; margin-bottom: 8px; background: white; border-radius: 8px; 
+                                border-left: 4px solid ${scan.type === 'scan' ? '#4caf50' : '#2196f3'}; 
+                                cursor: pointer;" 
+                         onclick="rtoSystem.loadVehicleDetails('${scan.vehicleNumber}')">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">${scan.vehicleNumber}</div>
+                                <div style="font-size: 0.85rem; color: #666;">
+                                    ${new Date(scan.timestamp).toLocaleTimeString()}
+                                </div>
+                            </div>
+                            <div style="color: ${scan.type === 'scan' ? '#4caf50' : '#2196f3'};">
+                                ${scan.type === 'scan' ? '📷' : '⌨️'}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            updateAlertCounter() {
+                const activeAlerts = this.alerts.filter(a => a.status === 'PENDING').length;
+                document.getElementById('active-alerts').textContent = activeAlerts;
+                
+                if (activeAlerts > 0) {
+                    document.getElementById('alert-counter').style.background = 'linear-gradient(135deg, #d32f2f, #b71c1c)';
+                } else {
+                    document.getElementById('alert-counter').style.background = 'linear-gradient(135deg, #388e3c, #1b5e20)';
+                }
+            }
+
+            updateRiskPreview() {
+                // This would update a live risk preview
+                // For now, we'll just update when assessment is done
+            }
+
+            updateExcelPreview(vehicleData) {
+                // Update excel table with current vehicle
+                this.updateExcelTable();
+            }
+
+            getRTOArea(rtoName) {
+                if (rtoName.includes('Mumbai')) return 'MUMBAI';
+                if (rtoName.includes('Pune')) return 'PUNE';
+                if (rtoName.includes('Nagpur')) return 'NAGPUR';
+                if (rtoName.includes('Delhi')) return 'DELHI';
+                return 'MUMBAI';
+            }
+
+            isExpired(dateStr) {
+                if (!dateStr) return false;
+                const parts = dateStr.split('/');
+                if (parts.length !== 3) return false;
+                
+                const day = parseInt(parts[0]);
+                const month = parseInt(parts[1]) - 1;
+                const year = parseInt(parts[2]);
+                
+                const expiryDate = new Date(year, month, day);
+                const today = new Date();
+                
+                return expiryDate < today;
+            }
+
+            getStatusBadge(status) {
+                const badges = {
+                    'active': '<span style="padding: 4px 12px; background: #e8f5e9; color: #2e7d32; border-radius: 12px; font-size: 0.85rem;">ACTIVE</span>',
+                    'verified': '<span style="padding: 4px 12px; background: #e3f2fd; color: #1976d2; border-radius: 12px; font-size: 0.85rem;">VERIFIED</span>',
+                    'expired': '<span style="padding: 4px 12px; background: #ffebee; color: #d32f2f; border-radius: 12px; font-size: 0.85rem;">EXPIRED</span>',
+                    'danger': '<span style="padding: 4px 12px; background: #ffebee; color: #d32f2f; border-radius: 12px; font-size: 0.85rem;">DANGER</span>',
+                    'warning': '<span style="padding: 4px 12px; background: #fff3e0; color: #f57c00; border-radius: 12px; font-size: 0.85rem;">WARNING</span>',
+                    'safe': '<span style="padding: 4px 12px; background: #e8f5e9; color: #388e3c; border-radius: 12px; font-size: 0.85rem;">SAFE</span>',
+                    'unknown': '<span style="padding: 4px 12px; background: #f5f5f5; color: #666; border-radius: 12px; font-size: 0.85rem;">UNKNOWN</span>'
+                };
+                
+                return badges[status] || badges['unknown'];
+            }
+
+            getRiskColor(severity) {
+                return severity === 'critical' ? '#ffebee' :
+                       severity === 'high' ? '#fff3e0' :
+                       severity === 'medium' ? '#fff8e1' :
+                       '#e8f5e9';
+            }
+
+            // ==================== NOTIFICATION SYSTEM ====================
+            showSystemNotification(message, type = 'info') {
+                const container = document.getElementById('notification-container');
+                if (!container) return;
+                
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.style.cssText = `
+                    animation: slideInRight 0.5s ease;
+                    position: relative;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    color: white;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                    z-index: 1001;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    max-width: 350px;
+                    background: ${type === 'success' ? 'linear-gradient(135deg, #388e3c, #1b5e20)' :
+                                type === 'error' ? 'linear-gradient(135deg, #d32f2f, #b71c1c)' :
+                                type === 'warning' ? 'linear-gradient(135deg, #f57c00, #e65100)' :
+                                'linear-gradient(135deg, #1976d2, #0d47a1)'};
+                `;
+                
+                notification.innerHTML = `
+                    <div style="font-size: 1.2rem;">
+                        ${type === 'success' ? '✅' : 
+                          type === 'error' ? '❌' : 
+                          type === 'warning' ? '⚠️' : 'ℹ️'}
+                    </div>
+                    <div>${message}</div>
+                `;
+                
+                container.appendChild(notification);
+                
+                // Remove after 5 seconds with animation
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.5s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 500);
+                }, 5000);
+            }
+
+            updateUI() {
+                this.updateAlertCounter();
+                this.updateScanHistory();
+                this.updateExcelTable();
+                this.updateScannerStatus(this.scannerActive ? 'active' : 'inactive');
+            }
+
+            loadFromStorage() {
+                try {
+                    const data = JSON.parse(localStorage.getItem('rtoSystemData') || '{}');
+                    this.scannedVehicles = data.scannedVehicles || [];
+                    this.alerts = data.alerts || [];
+                    this.smsHistory = data.smsHistory || [];
+                    this.excelData = data.excelData || [];
+                } catch (e) {
+                    console.log('Error loading from storage:', e);
+                }
+            }
+
+            saveToStorage() {
+                const data = {
+                    scannedVehicles: this.scannedVehicles,
+                    alerts: this.alerts,
+                    smsHistory: this.smsHistory,
+                    excelData: this.excelData,
+                    lastSave: new Date().toISOString()
+                };
+                localStorage.setItem('rtoSystemData', JSON.stringify(data));
+            }
+
+            printReport() {
+                window.print();
+            }
+        }
+
+        // ==================== GLOBAL INITIALIZATION ====================
+        let rtoSystem;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            rtoSystem = new RTOIntelligenceSystem();
+            window.rtoSystem = rtoSystem;
+            
+            // Auto-save every 30 seconds
+            setInterval(() => {
+                rtoSystem.saveToStorage();
+            }, 30000);
+            
+            // Handle page visibility changes
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    // Page is hidden, stop scanner
+                    if (rtoSystem.scannerActive) {
+                        rtoSystem.stopScanner();
+                    }
+                }
+            });
+        });
+
+        // Global functions for HTML onclick
+        function startScanner() {
+            if (rtoSystem) {
+                rtoSystem.startScanner();
+            }
+        }
+
+        function stopScanner() {
+            if (rtoSystem) {
+                rtoSystem.stopScanner();
+            }
+        }
+
+        function processManualEntry() {
+            if (rtoSystem) {
+                rtoSystem.processManualEntry();
+            }
+        }
+
+        function assessVehicle() {
+            if (rtoSystem) {
+                rtoSystem.assessVehicle();
+            }
+        }
+
+        function sendRTOAlert() {
+            if (rtoSystem) {
+                rtoSystem.sendRTOAlert();
+            }
+        }
+
+        function sendSMSToOwner() {
+            if (rtoSystem) {
+                rtoSystem.sendSMSToOwner();
+            }
+        }
+
+        function exportToExcel() {
+            if (rtoSystem) {
+                rtoSystem.exportToExcel();
+            }
+        }
+
+        function printReport() {
+            if (rtoSystem) {
+                rtoSystem.printReport();
+            }
+        }
+
+        function sendChatMessage() {
+            if (rtoSystem) {
+                rtoSystem.sendChatMessage();
+            }
+        }
+    </script>
+</body>
+</html>

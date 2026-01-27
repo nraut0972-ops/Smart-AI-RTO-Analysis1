@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VehicleInfo - RTO & Vehicle Details</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fafb;
+      color: #2c3e50;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Container */
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 0;
+      flex: 1;
+    }
+
+    /* Header */
+    header {
+      background: #34495e;
+      padding: 20px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ecf0f1;
+      letter-spacing: 2px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+    nav ul li a {
+      color: #ecf0f1;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    nav ul li a:hover {
+      background-color: #2c3e50;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: url('https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
+      border-radius: 10px;
+      margin: 30px 0;
+      box-shadow: inset 0 0 0 1000px rgba(0,0,0,0.4);
+    }
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      font-weight: 500;
+    }
+    .hero input[type="text"] {
+      width: 60%;
+      max-width: 400px;
+      padding: 15px 20px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 6px 0 0 6px;
+      outline: none;
+      
+    }
+    .hero button {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 0 6px 6px 0;
+      background-color: #27ae60;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .hero button:hover {
+      background-color: #219150;
+    }
+
+    /* Info Sections */
+    section.info {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+    }
+    section.info h2 {
+      color: #34495e;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 2rem;
+      border-left: 5px solid #27ae60;
+      padding-left: 15px;
+    }
+    section.info p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    /* Cards Container */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 25px;
+    }
+    .card {
+      background: #ecf0f1;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(39,174,96,0.15);
+      transition: box-shadow 0.3s ease;
+    }
+    .card:hover {
+      box-shadow: 0 6px 20px rgba(39,174,96,0.3);
+    }
+    .card h3 {
+      color: #27ae60;
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .card p {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.4;
+    }
+
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 0.95rem;
+    }
+    thead {
+      background-color: #27ae60;
+      color: white;
+    }
+    thead th {
+      padding: 12px 15px;
+      text-align: left;
+    }
+    tbody tr {
+      border-bottom: 1px solid #ddd;
+      transition: background-color 0.2s ease;
+    }
+    tbody tr:hover {
+      background-color: #d1f2eb;
+    }
+    tbody td {
+      padding: 10px 15px;
+    }
+
+    /* Footer */
+    footer {
+      background: #34495e;
+      color: #ecf0f1;
+      text-align: center;
+      padding: 20px 10px;
+      font-size: 0.9rem;
+      margin-top: auto;
+      border-top: 3px solid #27ae60;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero input[type="text"] {
+        width: 100%;
+        border-radius: 6px 6px 0 0;
+      }
+      .hero button {
+        width: 100%;
+        border-radius: 0 0 6px 6px;
+        margin-top: 8px;
+      }
+      nav ul {
+        flex-direction: column;
+        gap: 10px;
+      }
+      header .container {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="logo">VehicleInfo</div>
+      <nav>
+        <ul>
+          
+          <li><a href="#">Home</a></li>
+          <li><a href="rtodetails.html">RTO Details</a></li>
+          <li><a href="vehicledetails.html">Vehicle Search</a></li>
+          <li><a href="Contact.html">Contact</a></li>
+          <li><a href="registration.html">Add & Update Vehicle</a></li>
+             <li><a href="rules.html">Rules & Challan</a></li>
+               <li><a href="nevigate.html"></a></li>
+          
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Check Vehicle & RTO Information Instantly</h1>
+      <p>Enter your vehicle number below to get detailed registration, owner, and RTO details.</p>
+      <form onsubmit="event.preventDefault(); alert('Search functionality not implemented');" aria-label="Vehicle number search">
+        <input type="text" placeholder="Enter Vehicle Number" aria-label="Vehicle Number" required />
+      <button type="submit">Search</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="info container">
+    <h2>About VehicleInfo</h2>
+    <p>
+      VehicleInfo is your one-stop platform to find detailed information about vehicles registered in India. From RTO office addresses to vehicle registration details and document status, we aim to provide accurate and up-to-date data.
+    </p>
+  </section>
+
+  <section class="info container">
+    <h2>Popular RTO Offices</h2>
+    <div class="cards" aria-label="Popular RTO offices">
+      <div class="card" tabindex="0">
+        <h3>Mumbai Central (MH 01)</h3>
+        <p>Dr. Ambedkar Bhavan, Opp. Bank of India, Mumbai - 400001</p>
+        <p><strong>Phone:</strong> 022-22634567</p>
+      </div>
+      <div class="card" tabindex="0">
+        <h3>Pune City (MH 12)</h3>
+        <p>RTO Building, Shivajinagar, Pune - 411005</p>
+        <p><strong>Phone:</strong> 020-25501234</p>
+      </div>
+      <div class="card" tabindex="0">
+        <h3>Nashik (MH 15)</h3>
+        <p>New Administrative Building, Gangapur Road, Nashik - 422013</p>
+        <p><strong>Phone:</strong> 0253-2601234</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="info container">
+    <h2>Vehicle Registration Data Example</h2>
+    <table aria-label="Vehicle Registration Table">
+      <thead>
+        <tr>
+          <th>Vehicle Number</th>
+          <th>Owner Name</th>
+          <th>Model</th>
+          <th>RTO Office</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MH45Q9441</td>
+          <td>Balaji Awchar</td>
+          <td>Hero Honda </td>
+          <td>Akluj (MH 45)</td>
+        </tr>
+        <tr>
+          <td>MH01XY5678</td>
+          <td>Jane Smith</td>
+          <td>Honda Civic</td>
+          <td>Mumbai Central (MH 01)</td>
+        </tr>
+        <tr>
+          <td>MH15CD9012</td>
+          <td>Raj Patel</td>
+          <td>Hyundai Verna</td>
+          <td>Nashik (MH 15)</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+  2025 VehicleInfo App | All rights reserved | <a href="#">Privacy Policy</a>
+  </footer>
+
+</body>
+</html>

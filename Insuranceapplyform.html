@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New Insurance Application</title>
+  <style>
+    body {
+      background-color: #eef2f3;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 25px;
+      background-color: #003366;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #0059b3;
+    }
+
+    .success-message {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>New Insurance Application Form</h2>
+
+    <form id="insuranceForm" onsubmit="submitForm(event)">
+      <!-- Personal Info -->
+      <label for="name">Full Name</label>
+      <input type="text" id="name" required>
+
+      <label for="mobile">Mobile Number</label>
+      <input type="tel" id="mobile" pattern="[0-9]{10}" required>
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" required>
+
+      <!-- Vehicle Info -->
+      <label for="vehicleNo">Vehicle Number</label>
+      <input type="text" id="vehicleNo" placeholder="MH12AB1234" required>
+
+      <label for="vehicleType">Vehicle Type</label>
+      <select id="vehicleType" required>
+        <option value="">--Select--</option>
+        <option value="Two Wheeler">Two Wheeler</option>
+        <option value="Four Wheeler">Four Wheeler</option>
+        <option value="Commercial">Commercial Vehicle</option>
+      </select>
+
+      <label for="vehicleModel">Vehicle Model</label>
+      <input type="text" id="vehicleModel" required>
+
+      <!-- Insurance Info -->
+      <label for="startDate">Insurance Start Date</label>
+      <input type="date" id="startDate" required>
+
+      <label for="duration">Duration (in Years)</label>
+      <select id="duration" required>
+        <option value="">--Select--</option>
+        <option value="1">1 Year</option>
+        <option value="2">2 Years</option>
+        <option value="3">3 Years</option>
+      </select>
+
+      <button type="submit">Submit Application</button>
+
+      <div class="success-message" id="successMsg">
+        ✅ Application Submitted Successfully!
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function submitForm(event) {
+      event.preventDefault();
+      document.getElementById("successMsg").style.display = "block";
+      document.getElementById("insuranceForm").reset();
+    }
+  </script>
+
+</body>
+</html>

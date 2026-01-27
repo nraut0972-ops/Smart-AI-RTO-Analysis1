@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTO Application Status Checker</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #1a5276;
+            --secondary-color: #2874a6;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #f5f5f5;
+            --dark-color: #333;
+            --text-color: #444;
+            --border-radius: 5px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .logo-container img {
+            height: 60px;
+            margin-right: 1rem;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Form Section */
+        .status-form {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Status Display */
+        .status-result {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .status-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            background: #f8f9fa;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .status-title {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-processing {
+            background-color: #f1c40f;
+            color: #000;
+        }
+
+        .badge-approved {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .badge-rejected {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .status-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: var(--dark-color);
+        }
+
+        /* Sample Applications */
+        .sample-applications {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .sample-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .sample-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .sample-card {
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .sample-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .sample-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .sample-card p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .status-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8edfb12d-9dc8-4852-8efb-eb3f22e1a8e7.png" alt="Official government seal with national emblem in gold and blue colors" />
+            <div>
+                <h1>RTO Application Status Checker</h1>
+                <p>Government of India | Ministry of Road Transport and Highways</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="status-form">
+            <h2 class="form-title">Check Your Application Status</h2>
+            <form id="applicationForm">
+                <div class="form-group">
+                    <label for="applicationNumber">Application Number</label>
+                    <input type="text" id="applicationNumber" placeholder="Enter your 12-digit application number" required>
+                </div>
+                <button type="submit" class="btn">Check Status</button>
+            </form>
+        </section>
+
+        <section class="status-result" id="statusResult">
+            <h2 class="form-title">Application Status Details</h2>
+            <div class="status-card">
+                <div class="status-header">
+                    <h3 class="status-title">License Application</h3>
+                    <span class="status-badge badge-processing" id="statusBadge">Processing</span>
+                </div>
+                <div class="status-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Application Number</div>
+                        <div class="detail-value" id="appNumber">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Applicant Name</div>
+                        <div class="detail-value" id="appName">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Application Type</div>
+                        <div class="detail-value" id="appType">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Date of Application</div>
+                        <div class="detail-value" id="appDate">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Current Status</div>
+                        <div class="detail-value" id="appStatus">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Last Updated</div>
+                        <div class="detail-value" id="lastUpdated">-</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sample-applications">
+            <h2 class="sample-title">Sample Application Numbers</h2>
+            <div class="sample-list">
+                <div class="sample-card">
+                    <h3>Driving License</h3>
+                    <p>Try: DL2023MH123456</p>
+                </div>
+                <div class="sample-card">
+                    <h3>Vehicle Registration</h3>
+                    <p>Try: VR2023KA789012</p>
+                </div>
+                <div class="sample-card">
+                    <h3>Learner's License</h3>
+                    <p>Try: LL2023TN345678</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>For any queries, please contact your local RTO office</p>
+        <p>© 2023 Ministry of Road Transport and Highways. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const applicationNumber = document.getElementById('applicationNumber').value.trim();
+            
+            if (!applicationNumber) {
+                alert('Please enter your application number');
+                return;
+            }
+
+            // In a real application, this would be an API call
+            simulateStatusCheck(applicationNumber);
+        });
+
+        function simulateStatusCheck(appNumber) {
+            // Sample data - in real app this would come from API
+            const sampleData = {
+                'DL2023MH123456': {
+                    name: 'Rajesh Kumar',
+                    type: 'Driving License',
+                    date: '15/07/2023',
+                    status: 'Processing',
+                    updated: '01/11/2023'
+                },
+                'VR2023KA789012': {
+                    name: 'Priya Sharma',
+                    type: 'Vehicle Registration',
+                    date: '22/08/2023',
+                    status: 'Approved',
+                    updated: '15/10/2023'
+                },
+                'LL2023TN345678': {
+                    name: 'Arun Varma',
+                    type: "Learner's License",
+                    date: '05/09/2023',
+                    status: 'Rejected',
+                    updated: '25/09/2023'
+                }
+            };
+
+            const resultContainer = document.getElementById('statusResult');
+            const result = sampleData[appNumber];
+            
+            if (result) {
+                document.getElementById('appNumber').textContent = appNumber;
+                document.getElementById('appName').textContent = result.name;
+                document.getElementById('appType').textContent = result.type;
+                document.getElementById('appDate').textContent = result.date;
+                document.getElementById('appStatus').textContent = result.status;
+                document.getElementById('lastUpdated').textContent = result.updated;
+                
+                const badge = document.getElementById('statusBadge');
+                badge.className = 'status-badge';
+                
+                if (result.status === 'Approved') {
+                    badge.classList.add('badge-approved');
+                } else if (result.status === 'Rejected') {
+                    badge.classList.add('badge-rejected');
+                } else {
+                    badge.classList.add('badge-processing');
+                }
+                
+                resultContainer.style.display = 'block';
+                resultContainer.classList.add('fade-in');
+            } else {
+                alert('Application not found. Please check your application number and try again.');
+            }
+        }
+    </script>
+</body>
+</html>
+

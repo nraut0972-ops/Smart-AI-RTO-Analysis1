@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vehicle Repassing Form</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .success {
+      margin-top: 20px;
+      color: green;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Vehicle Repassing Application Form</h2>
+
+  <form id="repassingForm">
+    <div class="form-group">
+      <label for="vehicleNumber">Vehicle Number</label>
+      <input type="text" id="vehicleNumber" placeholder=" MH12AB1234" required />
+    </div>
+
+    <div class="form-group">
+      <label for="ownerName">Owner's Full Name</label>
+      <input type="text" id="ownerName" required />
+    </div>
+
+    <div class="form-group">
+      <label for="vehicleType">Vehicle Type</label>
+      <select id="vehicleType" required>
+        <option value="">-- Select Type --</option>
+        <option value="2-wheeler">2-Wheeler</option>
+        <option value="3-wheeler">3-Wheeler</option>
+        <option value="4-wheeler">4-Wheeler</option>
+        <option value="commercial">Commercial Vehicle</option>
+        <option value="others">Others</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="chassisNumber">Chassis Number</label>
+      <input type="text" id="chassisNumber" required />
+    </div>
+
+    <div class="form-group">
+      <label for="engineNumber">Engine Number</label>
+      <input type="text" id="engineNumber" required />
+    </div>
+
+    <div class="form-group">
+      <label for="lastRepassingDate">Last Repassing Date</label>
+      <input type="date" id="lastRepassingDate" required />
+    </div>
+
+    <div class="form-group">
+      <label for="inspectionDate">Inspection Date</label>
+      <input type="date" id="inspectionDate" required />
+    </div>
+
+    <div class="form-group">
+      <label for="remarks">Inspector Remarks</label>
+      <textarea id="remarks" rows="4" placeholder="e.g. Tyres need replacement, lights functioning properly, etc."></textarea>
+    </div>
+
+    <button type="submit">Submit Repassing Form</button>
+
+    <div class="success" id="confirmationMessage"></div>
+  </form>
+
+  <script>
+    document.getElementById("repassingForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const vehicleNo = document.getElementById("vehicleNumber").value;
+      const ownerName = document.getElementById("ownerName").value;
+
+      const confirmation = document.getElementById("confirmationMessage");
+      confirmation.innerText = `✅ Repassing form for ${vehicleNo} (Owner: ${ownerName}) has been submitted successfully.`;
+
+      // Here you could send the data to a backend or API if required
+      // Example:
+      // fetch('/submit', { method: 'POST', body: JSON.stringify(formData) })
+
+      // Reset form (optional)
+      // this.reset();
+    });
+  </script>
+</body>
+</html>

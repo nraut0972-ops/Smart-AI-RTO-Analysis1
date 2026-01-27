@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart AI RTO Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #9b59b6;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --danger: #e74c3c;
+            --gray: #95a5a6;
+            --light-gray: #bdc3c7;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a2530 100%);
+            color: white;
+            padding: 25px 0;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.8rem;
+            color: var(--secondary);
+        }
+
+        .logo-text h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            color: var(--light-gray);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .ai-badge {
+            background-color: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .current-time {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .time-display {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .date-display {
+            font-size: 0.9rem;
+            color: var(--light-gray);
+            margin-top: 5px;
+        }
+
+        /* Scanner Status Section */
+        .scanner-status {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .status-dot.offline {
+            background-color: var(--danger);
+        }
+
+        /* Scanner Container */
+        .scanner-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+
+        .scanner-section {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .scanner-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .scanner-input-area {
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--light);
+        }
+
+        .scanner-box {
+            border: 3px dashed var(--secondary);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 25px;
+            background-color: white;
+        }
+
+        .scanner-box.active {
+            border-color: var(--success);
+            background-color: rgba(39, 174, 96, 0.05);
+            animation: scanAnimation 2s infinite;
+        }
+
+        @keyframes scanAnimation {
+            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(39, 174, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+
+        .scanner-box i {
+            font-size: 4rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .scanner-box.active i {
+            color: var(--success);
+        }
+
+        .scanner-box h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .scanner-box p {
+            color: var(--gray);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .scanner-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .recent-scans {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light);
+        }
+
+        .recent-scans h4 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .scan-history {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .scan-tag {
+            padding: 6px 12px;
+            background-color: var(--light);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .scan-tag:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        /* Vehicle Details Display */
+        .vehicle-display {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            height: 100%;
+        }
+
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .vehicle-number {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .risk-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .risk-low {
+            background-color: #d5f4e6;
+            color: var(--success);
+        }
+
+        .risk-medium {
+            background-color: #fcf3cf;
+            color: #f39c12;
+        }
+
+        .risk-high {
+            background-color: #fadbd8;
+            color: var(--danger);
+        }
+
+        .vehicle-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-card {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-card.warning {
+            background-color: #fef5e7;
+            border-left: 4px solid var(--warning);
+        }
+
+        .info-card.danger {
+            background-color: #fbeeee;
+            border-left: 4px solid var(--danger);
+        }
+
+        .info-card.success {
+            background-color: #eafaf1;
+            border-left: 4px solid var(--success);
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .compliance-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .compliance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .compliance-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .status-valid {
+            background-color: var(--success);
+        }
+
+        .status-expiring {
+            background-color: var(--warning);
+        }
+
+        .status-expired {
+            background-color: var(--danger);
+        }
+
+        .compliance-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .compliance-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light);
+        }
+
+        .compliance-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .insurance-icon {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .puc-icon {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .challan-icon {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        /* Analytics Section */
+        .analytics-section {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .analytics-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .chart-container {
+            height: 250px;
+            position: relative;
+            margin-top: 15px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--light-gray);
+            margin-top: 40px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .scanner-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .vehicle-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-car-alt"></i>
+                    <div class="logo-text">
+                        <h1>Smart AI RTO Analysis <span class="ai-badge">AI-Powered</span></h1>
+                        <p>Real-time Vehicle Analytics & Monitoring System</p>
+                    </div>
+                </div>
+                <div class="current-time">
+                    <div class="time-display" id="current-time">00:00:00</div>
+                    <div class="date-display" id="current-date">January 1, 2024</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scanner Status -->
+        <div class="scanner-status">
+            <div class="status-header">
+                <div>
+                    <h2 class="section-title">
+                        <i class="fas fa-qrcode"></i> Vehicle Number Scanner
+                    </h2>
+                    <p>Scan vehicle number plate to fetch complete information from RTO database</p>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>Scanner Active</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scanner Section -->
+        <div class="scanner-container">
+            <div class="scanner-section">
+                <!-- Scanner Input Area -->
+                <div class="scanner-input-area">
+                    <div class="scanner-box" id="scanner-box">
+                        <i class="fas fa-camera"></i>
+                        <h3>Click to Scan Vehicle Number</h3>
+                        <p>Simulate scanning or enter vehicle number manually</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vehicle-number">
+                            <i class="fas fa-car"></i> Enter Vehicle Number
+                        </label>
+                        <input type="text" class="form-control" id="vehicle-number" 
+                               placeholder="Enter MH12AB1234 format" autocomplete="off">
+                    </div>
+                    
+                    <div class="scanner-buttons">
+                        <button class="btn btn-primary" id="scan-btn">
+                            <i class="fas fa-search"></i> Scan Vehicle
+                        </button>
+                        <button class="btn btn-success" id="auto-scan-btn">
+                            <i class="fas fa-bolt"></i> Auto Test Scan
+                        </button>
+                        <button class="btn btn-warning" id="simulate-low-risk">
+                            <i class="fas fa-shield-alt"></i> Low Risk Test
+                        </button>
+                        <button class="btn btn-danger" id="simulate-high-risk">
+                            <i class="fas fa-exclamation-triangle"></i> High Risk Test
+                        </button>
+                    </div>
+                    
+                    <!-- Recent Scans -->
+                    <div class="recent-scans">
+                        <h4><i class="fas fa-history"></i> Recent Scans</h4>
+                        <div class="scan-history" id="scan-history">
+                            <!-- Recent scans will appear here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vehicle Details Display -->
+                <div class="vehicle-display" id="vehicle-display">
+                    <div class="no-vehicle" style="text-align: center; padding: 40px; color: var(--gray);">
+                        <i class="fas fa-car" style="font-size: 4rem; margin-bottom: 20px; display: block; color: var(--light-gray); opacity: 0.5;"></i>
+                        <h3>No Vehicle Scanned</h3>
+                        <p>Scan a vehicle number to view detailed information here</p>
+                        <p style="margin-top: 15px; font-size: 0.9rem;">
+                            <strong>Test Vehicles:</strong> MH45Q9441, MH45AU6344, MH45AQ9944, MH13EK4639
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div class="analytics-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-bar"></i> Scan Analytics
+            </h2>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3><i class="fas fa-chart-line"></i> Daily Scan Activity</h3>
+                    <div class="chart-container">
+                        <canvas id="scanActivityChart"></canvas>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <h3><i class="fas fa-exclamation-circle"></i> Risk Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="riskDistributionChart"></canvas>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <h3><i class="fas fa-car"></i> Vehicle Category Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="vehicleCategoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Smart AI RTO Analysis System © 2024 | Real-time Vehicle Analytics & Monitoring</p>
+            <p>Connected to Maharashtra RTO Database | Last sync: <span id="last-sync">Just now</span></p>
+        </footer>
+    </div>
+
+    <!-- Vehicle Database Modal -->
+    <div class="modal" id="database-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-db-modal">&times;</button>
+            <h2 style="color: var(--primary); margin-bottom: 20px;">
+                <i class="fas fa-database"></i> Vehicle Database
+            </h2>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: var(--primary); color: white;">
+                            <th style="padding: 12px; text-align: left;">Vehicle Number</th>
+                            <th style="padding: 12px; text-align: left;">Owner</th>
+                            <th style="padding: 12px; text-align: left;">Category</th>
+                            <th style="padding: 12px; text-align: left;">Color</th>
+                            <th style="padding: 12px; text-align: left;">Risk Score</th>
+                            <th style="padding: 12px; text-align: left;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="database-table">
+                        <!-- Will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Vehicle Database
+        const vehicleDatabase = {
+            "MH45Q9441": {
+                owner: 'Balaji Awachar',
+                address: 'Sapatane(Bhose), Awachar Colony',
+                mobileno: '8208452624',
+                model: 'Hero Honda',
+                registeredrto: 'Tahshil, Malshiras, Solapur - 413101',
+                registrationDate: '2012-04-05',
+                rto: 'Akalij RTO - MH12',
+                status: 'Active',
+                fuelType: 'Petrol',
+                color: 'Black',
+                category: 'Motorcycle',
+                insuranceValid: '2024-10-15',
+                pucValid: '2024-11-30',
+                challans: 1,
+                challanAmount: 500,
+                riskScore: 45
+            },
+            "MH45AU6344": {
+                owner: 'Shahrukh rasul mundher',
+                address: 'Sapatane(Bhose), Awachar Colony',
+                mobileno: '7972999692',
+                model: 'Swift',
+                registeredrto: 'Tahshil, Malshiras, Solapur - 413101',
+                registrationDate: '2022-04-23',
+                rto: 'Akalij RTO - MH45',
+                status: 'Active',
+                fuelType: 'Petrol',
+                color: 'White',
+                category: 'Hatchback',
+                insuranceValid: '2024-11-30',
+                pucValid: '2025-02-15',
+                challans: 2,
+                challanAmount: 2800,
+                riskScore: 68
+            },
+            "MH45AQ9944": {
+                owner: 'Shankar Hanumant Ugale',
+                address: 'Shrial, Tembhurni, Bhairavnath Temple',
+                mobileno: '8668364097',
+                model: 'KIA SONET',
+                registeredrto: 'KIA Showroom, Solapur - 413101',
+                registrationDate: '2022-02-09',
+                rto: 'Akalij RTO - MH45',
+                status: 'Active',
+                fuelType: 'Petrol',
+                color: 'Red',
+                category: 'Compact SUV',
+                insuranceValid: '2025-06-30',
+                pucValid: '2025-01-20',
+                challans: 0,
+                challanAmount: 0,
+                riskScore: 25
+            },
+            "MH13EK4639": {
+                owner: 'Vishal Namdeo Baad',
+                address: 'Near Shahnai Garden, Karad Road, Pandharpur',
+                mobileno: '9970020084',
+                model: 'Maruti Suzuki Dzire',
+                registeredrto: 'Maruti Suzuki Showroom, Solapur - 413101',
+                registrationDate: '2024-07-09',
+                rto: 'Solapur - MH13',
+                status: 'Active',
+                fuelType: 'CNG/Petrol',
+                color: 'Silver',
+                category: 'Sedan',
+                insuranceValid: '2025-07-09',
+                pucValid: '2025-07-09',
+                challans: 1,
+                challanAmount: 500,
+                riskScore: 35
+            },
+            "MH12DZ8311": {
+                owner: 'Yashodhan Bansode',
+                address: 'Pune Waraje',
+                mobileno: '7517489672',
+                model: 'Hero Honda',
+                registeredrto: 'Tahshil, Malshiras, Solapur - 413101',
+                registrationDate: '2018',
+                rto: 'Pune RTO - MH12',
+                status: 'Active',
+                fuelType: 'Petrol',
+                color: 'Black',
+                category: 'Motorcycle',
+                insuranceValid: '2024-09-15',
+                pucValid: '2024-12-10',
+                challans: 5,
+                challanAmount: 7500,
+                riskScore: 82
+            },
+            "MH13ES4071": {
+                owner: 'Vikram Hanumantrao Londhe',
+                address: 'Tembhurni',
+                mobileno: '9975763843',
+                model: 'TATA NEXON',
+                registeredrto: 'RTO SOLAPUR, Solapur - 413101',
+                registrationDate: '2025-04-30',
+                rto: 'Solapur - MH13',
+                status: 'Active',
+                fuelType: 'CNG',
+                color: 'Blue',
+                category: 'SUV',
+                insuranceValid: '2026-04-30',
+                pucValid: '2026-04-30',
+                challans: 0,
+                challanAmount: 0,
+                riskScore: 15
+            },
+            "MH12CK4211": {
+                owner: 'Pravin Tathe',
+                address: 'Pandharpur',
+                mobileno: '9225538338',
+                model: 'MARUTI SUZUKI ALTO',
+                registeredrto: 'RTO Solapur, Solapur - 413101',
+                registrationDate: '2004-09-02',
+                rto: 'Solapur - MH12',
+                status: 'Active',
+                fuelType: 'Petrol',
+                color: 'White',
+                category: 'Hatchback',
+                insuranceValid: '2023-12-31',
+                pucValid: '2023-11-30',
+                challans: 3,
+                challanAmount: 4200,
+                riskScore: 90
+            }
+        };
+
+        // Simulation profiles for quick testing
+        const simulationProfiles = {
+            lowRisk: "MH45AQ9944",
+            mediumRisk: "MH45AU6344",
+            highRisk: "MH12CK4211",
+            electric: "MH13ES4071",
+            motorcycle: "MH45Q9441",
+            sedan: "MH13EK4639",
+            suv: "MH13ES4071"
+        };
+
+        // Global variables
+        let scanHistory = [];
+        let scanCharts = {};
+        let lastScan = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize scanner
+            initScanner();
+            
+            // Initialize charts
+            initCharts();
+            
+            // Initialize event listeners
+            initEventListeners();
+            
+            // Set up clock
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // Load recent scans from localStorage
+            loadScanHistory();
+            
+            // Show welcome message
+            setTimeout(() => {
+                showNotification('Scanner ready! Enter a vehicle number or use test buttons.');
+            }, 1000);
+        });
+
+        // Initialize scanner
+        function initScanner() {
+            const scannerBox = document.getElementById('scanner-box');
+            const vehicleInput = document.getElementById('vehicle-number');
+            
+            // Scanner box click simulation
+            scannerBox.addEventListener('click', () => {
+                simulateScanning();
+            });
+            
+            // Auto-focus on input when scanner box is clicked
+            scannerBox.addEventListener('click', () => {
+                vehicleInput.focus();
+            });
+            
+            // Enter key support
+            vehicleInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performScan();
+                }
+            });
+            
+            // Input validation for vehicle number format
+            vehicleInput.addEventListener('input', function() {
+                const value = this.value.toUpperCase().trim();
+                // Auto-format vehicle number
+                if (value.length === 10) {
+                    this.value = formatVehicleNumber(value);
+                }
+            });
+        }
+
+        // Format vehicle number to MH12AB1234 format
+        function formatVehicleNumber(number) {
+            number = number.toUpperCase().replace(/\s+/g, '');
+            if (number.length === 10) {
+                return number.substring(0, 2) + ' ' + 
+                       number.substring(2, 4) + ' ' + 
+                       number.substring(4, 6) + ' ' + 
+                       number.substring(6);
+            }
+            return number;
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Scan Activity Chart
+            const scanActivityCtx = document.getElementById('scanActivityChart').getContext('2d');
+            scanCharts.activity = new Chart(scanActivityCtx, {
+                type: 'line',
+                data: {
+                    labels: ['9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM'],
+                    datasets: [{
+                        label: 'Scans per hour',
+                        data: [8, 12, 15, 18, 14, 20, 22, 19],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Risk Distribution Chart
+            const riskCtx = document.getElementById('riskDistributionChart').getContext('2d');
+            scanCharts.risk = new Chart(riskCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Low Risk', 'Medium Risk', 'High Risk'],
+                    datasets: [{
+                        data: [60, 30, 10],
+                        backgroundColor: [
+                            '#27ae60',
+                            '#f39c12',
+                            '#e74c3c'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Vehicle Category Chart
+            const categoryCtx = document.getElementById('vehicleCategoryChart').getContext('2d');
+            scanCharts.category = new Chart(categoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['SUV', 'Sedan', 'Hatchback', 'Motorcycle', 'Compact SUV'],
+                    datasets: [{
+                        label: 'Vehicle Count',
+                        data: [12, 25, 18, 32, 8],
+                        backgroundColor: [
+                            '#3498db',
+                            '#9b59b6',
+                            '#2ecc71',
+                            '#e74c3c',
+                            '#f39c12'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize event listeners
+        function initEventListeners() {
+            // Scan button
+            document.getElementById('scan-btn').addEventListener('click', performScan);
+            
+            // Auto test scan
+            document.getElementById('auto-scan-btn').addEventListener('click', () => {
+                autoTestScan();
+            });
+            
+            // Low risk test
+            document.getElementById('simulate-low-risk').addEventListener('click', () => {
+                testScan(simulationProfiles.lowRisk);
+            });
+            
+            // High risk test
+            document.getElementById('simulate-high-risk').addEventListener('click', () => {
+                testScan(simulationProfiles.highRisk);
+            });
+            
+            // Database view button
+            document.getElementById('view-database-btn')?.addEventListener('click', showDatabase);
+            
+            // Close database modal
+            document.getElementById('close-db-modal')?.addEventListener('click', () => {
+                document.getElementById('database-modal').style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (event) => {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+        }
+
+        // Perform scan
+        function performScan() {
+            const vehicleNumber = document.getElementById('vehicle-number').value.trim().toUpperCase();
+            
+            if (!vehicleNumber) {
+                showNotification('Please enter a vehicle number', 'warning');
+                return;
+            }
+            
+            // Validate vehicle number format
+            if (!isValidVehicleNumber(vehicleNumber)) {
+                showNotification('Invalid vehicle number format. Use MH12AB1234 format', 'error');
+                return;
+            }
+            
+            // Check if vehicle exists in database
+            if (!vehicleDatabase[vehicleNumber.replace(/\s+/g, '')]) {
+                showNotification(`Vehicle ${vehicleNumber} not found in database`, 'error');
+                showVehicleNotFound(vehicleNumber);
+                return;
+            }
+            
+            // Simulate scanning animation
+            simulateScanning();
+            
+            // Show scanning in progress
+            showNotification(`Scanning vehicle ${vehicleNumber}...`, 'info');
+            
+            // Process scan after short delay (simulating API call)
+            setTimeout(() => {
+                processScan(vehicleNumber.replace(/\s+/g, ''));
+            }, 1500);
+        }
+
+        // Validate vehicle number format
+        function isValidVehicleNumber(number) {
+            // Remove spaces for validation
+            const cleanNumber = number.replace(/\s+/g, '');
+            
+            // Basic validation: Should be 10 characters, starting with 2 letters, then 2 digits, then 2 letters, then 4 digits
+            const pattern = /^[A-Z]{2}\d{2}[A-Z]{2}\d{4}$/;
+            return pattern.test(cleanNumber) && cleanNumber.length === 10;
+        }
+
+        // Simulate scanning animation
+        function simulateScanning() {
+            const scannerBox = document.getElementById('scanner-box');
+            const scannerIcon = scannerBox.querySelector('i');
+            
+            // Add active class
+            scannerBox.classList.add('active');
+            scannerIcon.className = 'fas fa-spinner fa-spin';
+            
+            // Reset after 2 seconds
+            setTimeout(() => {
+                scannerBox.classList.remove('active');
+                scannerIcon.className = 'fas fa-camera';
+            }, 2000);
+        }
+
+        // Process scan
+        function processScan(vehicleNumber) {
+            const vehicleData = vehicleDatabase[vehicleNumber];
+            
+            if (!vehicleData) {
+                showVehicleNotFound(vehicleNumber);
+                return;
+            }
+            
+            // Add to scan history
+            addToScanHistory(vehicleNumber, vehicleData);
+            
+            // Display vehicle details
+            displayVehicleDetails(vehicleNumber, vehicleData);
+            
+            // Update analytics
+            updateAnalytics();
+            
+            // Show success notification
+            showNotification(`Successfully scanned ${vehicleNumber}`, 'success');
+            
+            // Clear input field
+            document.getElementById('vehicle-number').value = '';
+            
+            // Store last scan
+            lastScan = vehicleNumber;
+        }
+
+        // Display vehicle details
+        function displayVehicleDetails(vehicleNumber, vehicleData) {
+            const displayArea = document.getElementById('vehicle-display');
+            
+            // Determine risk category
+            let riskCategory = 'risk-medium';
+            let riskLabel = 'Medium Risk';
+            let riskIcon = 'fa-exclamation-circle';
+            
+            if (vehicleData.riskScore <= 40) {
+                riskCategory = 'risk-low';
+                riskLabel = 'Low Risk';
+                riskIcon = 'fa-check-circle';
+            } else if (vehicleData.riskScore >= 70) {
+                riskCategory = 'risk-high';
+                riskLabel = 'High Risk';
+                riskIcon = 'fa-exclamation-triangle';
+            }
+            
+            // Format dates
+            const insuranceDate = new Date(vehicleData.insuranceValid);
+            const pucDate = new Date(vehicleData.pucValid);
+            const regDate = new Date(vehicleData.registrationDate);
+            const today = new Date();
+            
+            // Determine insurance status
+            let insuranceStatus = 'status-valid';
+            let insuranceStatusText = 'Valid';
+            const daysUntilInsuranceExpiry = Math.floor((insuranceDate - today) / (1000 * 60 * 60 * 24));
+            
+            if (daysUntilInsuranceExpiry < 0) {
+                insuranceStatus = 'status-expired';
+                insuranceStatusText = 'Expired';
+            } else if (daysUntilInsuranceExpiry < 30) {
+                insuranceStatus = 'status-expiring';
+                insuranceStatusText = 'Expiring Soon';
+            }
+            
+            // Determine PUC status (only for non-electric vehicles)
+            let pucStatus = 'status-valid';
+            let pucStatusText = 'Valid';
+            let pucRequired = vehicleData.category !== 'Electric' && vehicleData.fuelType !== 'Electric';
+            
+            if (pucRequired) {
+                const daysUntilPUCExpiry = Math.floor((pucDate - today) / (1000 * 60 * 60 * 24));
+                if (daysUntilPUCExpiry < 0) {
+                    pucStatus = 'status-expired';
+                    pucStatusText = 'Expired';
+                } else if (daysUntilPUCExpiry < 15) {
+                    pucStatus = 'status-expiring';
+                    pucStatusText = 'Expiring Soon';
+                }
+            } else {
+                pucStatus = 'status-valid';
+                pucStatusText = 'Not Required (EV)';
+            }
+            
+            displayArea.innerHTML = `
+                <div class="vehicle-header">
+                    <div class="vehicle-number">${formatVehicleNumber(vehicleNumber)}</div>
+                    <div class="risk-badge ${riskCategory}">
+                        <i class="fas ${riskIcon}"></i> ${riskLabel} (Score: ${vehicleData.riskScore})
+                    </div>
+                </div>
+                
+                <div class="vehicle-info-grid">
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-user"></i> Owner
+                        </div>
+                        <div class="info-value">${vehicleData.owner}</div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-car"></i> Vehicle Model
+                        </div>
+                        <div class="info-value">${vehicleData.model}</div>
+                        <div style="font-size: 0.9rem; color: ${vehicleData.color.toLowerCase() === 'red' ? '#e74c3c' : 
+                                            vehicleData.color.toLowerCase() === 'blue' ? '#3498db' : 
+                                            vehicleData.color.toLowerCase() === 'green' ? '#27ae60' : 'var(--dark)'}; 
+                                  margin-top: 5px;">
+                            <i class="fas fa-palette"></i> ${vehicleData.color}
+                        </div>
+                    </div>
+                    
+                    <div class="info-card ${vehicleData.challans > 2 ? 'danger' : vehicleData.challans > 0 ? 'warning' : 'success'}">
+                        <div class="info-label">
+                            <i class="fas fa-traffic-light"></i> Challan Status
+                        </div>
+                        <div class="info-value">${vehicleData.challans} pending</div>
+                        <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+                            Amount: ₹${vehicleData.challanAmount.toLocaleString()}
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-tag"></i> Category
+                        </div>
+                        <div class="info-value">${vehicleData.category}</div>
+                        <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+                            ${vehicleData.fuelType}
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-map-marker-alt"></i> RTO Office
+                        </div>
+                        <div class="info-value">${vehicleData.rto}</div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-alt"></i> Registration Date
+                        </div>
+                        <div class="info-value">${regDate.toLocaleDateString('en-IN')}</div>
+                        <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+                            ${getYearsSince(regDate)} years old
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-phone"></i> Contact
+                        </div>
+                        <div class="info-value">${vehicleData.mobileno}</div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-home"></i> Address
+                        </div>
+                        <div class="info-value" style="font-size: 1rem;">${vehicleData.address}</div>
+                    </div>
+                </div>
+                
+                <div class="compliance-section">
+                    <div class="compliance-header">
+                        <h3 style="color: var(--primary);">
+                            <i class="fas fa-file-contract"></i> Compliance Status
+                        </h3>
+                        <div class="compliance-status">
+                            <div class="status-icon ${insuranceStatus}">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">${insuranceStatusText}</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">Insurance</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="compliance-details">
+                        <div class="compliance-item">
+                            <div class="compliance-icon insurance-icon">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: var(--dark);">Insurance</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">
+                                    ${insuranceStatusText === 'Expired' ? 'Expired on ' : 'Valid until '}
+                                    ${insuranceDate.toLocaleDateString('en-IN')}
+                                </div>
+                                <div style="font-size: 0.8rem; color: ${insuranceStatus === 'status-expired' ? '#e74c3c' : 
+                                                        insuranceStatus === 'status-expiring' ? '#f39c12' : '#27ae60'}; 
+                                      margin-top: 3px;">
+                                    ${insuranceStatus === 'status-expired' ? '⚠️ Immediate renewal required' : 
+                                      insuranceStatus === 'status-expiring' ? '⚠️ Renewal due soon' : '✅ Up to date'}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="compliance-item">
+                            <div class="compliance-icon puc-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: var(--dark);">PUC Certificate</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">
+                                    ${pucRequired ? 
+                                        `${pucStatusText === 'Expired' ? 'Expired on ' : 
+                                          pucStatusText === 'Expiring Soon' ? 'Valid until ' : 'Valid until '}
+                                        ${pucDate.toLocaleDateString('en-IN')}` 
+                                        : 'Not required for electric vehicles'}
+                                </div>
+                                <div style="font-size: 0.8rem; color: ${pucStatus === 'status-expired' ? '#e74c3c' : 
+                                                        pucStatus === 'status-expiring' ? '#f39c12' : '#27ae60'}; 
+                                      margin-top: 3px;">
+                                    ${pucRequired ? 
+                                        (pucStatus === 'status-expired' ? '⚠️ Immediate renewal required' : 
+                                         pucStatus === 'status-expiring' ? '⚠️ Renewal due soon' : '✅ Up to date') 
+                                        : '✅ Electric vehicle exemption'}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="compliance-item">
+                            <div class="compliance-icon challan-icon">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: var(--dark);">Challan History</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">
+                                    ${vehicleData.challans} pending challan${vehicleData.challans !== 1 ? 's' : ''}
+                                </div>
+                                <div style="font-size: 0.8rem; color: ${vehicleData.challans > 0 ? '#e74c3c' : '#27ae60'}; 
+                                      margin-top: 3px;">
+                                    ${vehicleData.challans > 0 ? 
+                                        `⚠️ Total due: ₹${vehicleData.challanAmount.toLocaleString()}` 
+                                        : '✅ No pending challans'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background-color: white; border-radius: var(--border-radius); 
+                          border-left: 4px solid ${riskCategory === 'risk-high' ? '#e74c3c' : 
+                                            riskCategory === 'risk-medium' ? '#f39c12' : '#27ae60'};">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-robot" style="color: var(--secondary);"></i>
+                            <div style="font-weight: 600; color: var(--dark);">AI Risk Assessment</div>
+                        </div>
+                        <div style="color: var(--gray); font-size: 0.95rem;">
+                            ${getRiskAssessmentMessage(vehicleData.riskScore, vehicleData)}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px; display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="printDetails('${vehicleNumber}')">
+                        <i class="fas fa-print"></i> Print Report
+                    </button>
+                    <button class="btn btn-success" onclick="viewFullHistory('${vehicleNumber}')">
+                        <i class="fas fa-history"></i> View Full History
+                    </button>
+                    <button class="btn" style="background-color: var(--light-gray);" onclick="closeDetails()">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+            `;
+        }
+
+        // Get risk assessment message
+        function getRiskAssessmentMessage(riskScore, vehicleData) {
+            if (riskScore <= 40) {
+                return `✅ Low risk profile. Vehicle compliance is excellent. Insurance and PUC are valid. 
+                       ${vehicleData.challans === 0 ? 'No traffic violations recorded.' : 'Minor infractions noted.'}`;
+            } else if (riskScore <= 70) {
+                return `⚠️ Medium risk profile. ${vehicleData.challans > 0 ? `${vehicleData.challans} pending challan(s). ` : ''}
+                       ${new Date(vehicleData.insuranceValid) < new Date() ? 'Insurance has expired. ' : 
+                         new Date(vehicleData.insuranceValid) < new Date(Date.now() + 30*24*60*60*1000) ? 'Insurance expiring soon. ' : ''}
+                       Monitor compliance status regularly.`;
+            } else {
+                return `🚨 High risk profile. Multiple compliance issues detected. 
+                       ${vehicleData.challans} pending challan(s) totaling ₹${vehicleData.challanAmount}. 
+                       ${new Date(vehicleData.insuranceValid) < new Date() ? 'Insurance expired. ' : ''}
+                       ${new Date(vehicleData.pucValid) < new Date() ? 'PUC certificate expired. ' : ''}
+                       Immediate action required for compliance restoration.`;
+            }
+        }
+
+        // Get years since date
+        function getYearsSince(date) {
+            const today = new Date();
+            const years = today.getFullYear() - date.getFullYear();
+            const monthDiff = today.getMonth() - date.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < date.getDate())) {
+                return years - 1;
+            }
+            return years;
+        }
+
+        // Show vehicle not found
+        function showVehicleNotFound(vehicleNumber) {
+            const displayArea = document.getElementById('vehicle-display');
+            displayArea.innerHTML = `
+                <div style="text-align: center; padding: 50px 20px;">
+                    <div style="font-size: 5rem; color: var(--danger); margin-bottom: 20px;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 style="color: var(--danger); margin-bottom: 15px;">Vehicle Not Found</h3>
+                    <p style="color: var(--gray); margin-bottom: 20px; font-size: 1.1rem;">
+                        Vehicle number <strong>${formatVehicleNumber(vehicleNumber)}</strong> 
+                        is not registered in the Maharashtra RTO database.
+                    </p>
+                    <div style="background-color: #f8f9fa; border-radius: var(--border-radius); 
+                          padding: 20px; margin: 25px 0; text-align: left;">
+                        <h4 style="color: var(--primary); margin-bottom: 15px;">
+                            <i class="fas fa-lightbulb"></i> Possible Reasons:
+                        </h4>
+                        <ul style="color: var(--gray); line-height: 1.6; padding-left: 20px;">
+                            <li>Vehicle registration from different state</li>
+                            <li>New registration not yet updated in system</li>
+                            <li>Incorrect vehicle number entered</li>
+                            <li>Registration cancelled or transferred</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top: 25px;">
+                        <button class="btn btn-primary" onclick="tryAgainScan()">
+                            <i class="fas fa-redo"></i> Try Again
+                        </button>
+                        <button class="btn" style="background-color: var(--light-gray); margin-left: 10px;" 
+                                onclick="viewDatabase()">
+                            <i class="fas fa-database"></i> View Database
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add to scan history
+        function addToScanHistory(vehicleNumber, vehicleData) {
+            const timestamp = new Date().toISOString();
+            const scanEntry = {
+                vehicleNumber: vehicleNumber,
+                timestamp: timestamp,
+                owner: vehicleData.owner,
+                category: vehicleData.category,
+                riskScore: vehicleData.riskScore
+            };
+            
+            // Add to beginning of array
+            scanHistory.unshift(scanEntry);
+            
+            // Keep only last 10 scans
+            if (scanHistory.length > 10) {
+                scanHistory = scanHistory.slice(0, 10);
+            }
+            
+            // Update localStorage
+            localStorage.setItem('rto_scan_history', JSON.stringify(scanHistory));
+            
+            // Update UI
+            updateScanHistory();
+        }
+
+        // Load scan history from localStorage
+        function loadScanHistory() {
+            const savedHistory = localStorage.getItem('rto_scan_history');
+            if (savedHistory) {
+                scanHistory = JSON.parse(savedHistory);
+                updateScanHistory();
+            }
+        }
+
+        // Update scan history UI
+        function updateScanHistory() {
+            const historyContainer = document.getElementById('scan-history');
+            historyContainer.innerHTML = '';
+            
+            scanHistory.forEach(scan => {
+                const timeAgo = getTimeAgo(new Date(scan.timestamp));
+                const riskClass = scan.riskScore <= 40 ? 'risk-low' : 
+                                scan.riskScore <= 70 ? 'risk-medium' : 'risk-high';
+                
+                const scanTag = document.createElement('div');
+                scanTag.className = 'scan-tag';
+                scanTag.innerHTML = `
+                    <div style="font-weight: 600; font-size: 0.8rem;">${formatVehicleNumber(scan.vehicleNumber)}</div>
+                    <div style="font-size: 0.7rem; color: var(--gray); margin-top: 2px;">
+                        <span class="${riskClass}" style="padding: 1px 6px; border-radius: 10px; font-size: 0.65rem;">
+                            ${scan.riskScore}
+                        </span> • ${timeAgo}
+                    </div>
+                `;
+                
+                scanTag.addEventListener('click', () => {
+                    document.getElementById('vehicle-number').value = scan.vehicleNumber;
+                    performScan();
+                });
+                
+                historyContainer.appendChild(scanTag);
+            });
+        }
+
+        // Update analytics
+        function updateAnalytics() {
+            // Update risk distribution chart based on scan history
+            const lowRisk = scanHistory.filter(s => s.riskScore <= 40).length;
+            const mediumRisk = scanHistory.filter(s => s.riskScore > 40 && s.riskScore <= 70).length;
+            const highRisk = scanHistory.filter(s => s.riskScore > 70).length;
+            
+            if (scanCharts.risk) {
+                scanCharts.risk.data.datasets[0].data = [lowRisk, mediumRisk, highRisk];
+                scanCharts.risk.update();
+            }
+            
+            // Update last sync time
+            updateLastSync();
+        }
+
+        // Update last sync time
+        function updateLastSync() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-IN', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('last-sync').textContent = timeStr;
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove any existing notification
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background-color: ${type === 'success' ? '#27ae60' : 
+                                 type === 'error' ? '#e74c3c' : 
+                                 type === 'warning' ? '#f39c12' : '#3498db'};
+                color: white;
+                border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            const icon = type === 'success' ? 'fa-check-circle' :
+                        type === 'error' ? 'fa-exclamation-circle' :
+                        type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+            
+            notification.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+            
+            // Add CSS animations
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Auto test scan
+        function autoTestScan() {
+            const vehicleNumbers = Object.keys(vehicleDatabase);
+            const randomIndex = Math.floor(Math.random() * vehicleNumbers.length);
+            const randomVehicle = vehicleNumbers[randomIndex];
+            
+            document.getElementById('vehicle-number').value = randomVehicle;
+            performScan();
+        }
+
+        // Test scan with specific vehicle
+        function testScan(vehicleNumber) {
+            document.getElementById('vehicle-number').value = vehicleNumber;
+            performScan();
+        }
+
+        // Get time ago
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            return date.toLocaleDateString('en-IN');
+        }
+
+        // Update clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = 
+                now.toLocaleTimeString('en-IN', {hour12: false});
+            document.getElementById('current-date').textContent = 
+                now.toLocaleDateString('en-IN', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+        }
+
+        // Show database
+        function showDatabase() {
+            const modal = document.getElementById('database-modal');
+            const tableBody = document.getElementById('database-table');
+            
+            tableBody.innerHTML = '';
+            
+            Object.entries(vehicleDatabase).forEach(([number, data]) => {
+                const riskClass = data.riskScore <= 40 ? 'risk-low' : 
+                                data.riskScore <= 70 ? 'risk-medium' : 'risk-high';
+                
+                const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid var(--light)';
+                row.innerHTML = `
+                    <td style="padding: 12px;">
+                        <strong>${formatVehicleNumber(number)}</strong>
+                    </td>
+                    <td style="padding: 12px;">${data.owner}</td>
+                    <td style="padding: 12px;">${data.category}</td>
+                    <td style="padding: 12px;">
+                        <span style="display: inline-flex; align-items: center; gap: 5px;">
+                            <div style="width: 12px; height: 12px; border-radius: 50%; 
+                                 background-color: ${data.color.toLowerCase() === 'red' ? '#e74c3c' : 
+                                                    data.color.toLowerCase() === 'blue' ? '#3498db' : 
+                                                    data.color.toLowerCase() === 'green' ? '#27ae60' : 
+                                                    data.color.toLowerCase() === 'black' ? '#000' : 
+                                                    data.color.toLowerCase() === 'white' ? '#fff' : 
+                                                    data.color.toLowerCase() === 'silver' ? '#c0c0c0' : '#808080'};
+                                 border: 1px solid #ccc;"></div>
+                            ${data.color}
+                        </span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span class="${riskClass}" style="padding: 3px 8px; border-radius: 12px; font-size: 0.85rem;">
+                            ${data.riskScore}
+                        </span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span style="color: ${data.status === 'Active' ? '#27ae60' : '#e74c3c'};">
+                            ${data.status}
+                        </span>
+                    </td>
+                `;
+                
+                // Make row clickable to scan that vehicle
+                row.style.cursor = 'pointer';
+                row.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    document.getElementById('vehicle-number').value = number;
+                    performScan();
+                });
+                
+                tableBody.appendChild(row);
+            });
+            
+            modal.style.display = 'flex';
+        }
+
+        // Global functions for button actions
+        window.printDetails = function(vehicleNumber) {
+            alert(`Printing report for ${vehicleNumber}`);
+            // In real implementation, this would open print dialog
+        };
+
+        window.viewFullHistory = function(vehicleNumber) {
+            const vehicleData = vehicleDatabase[vehicleNumber];
+            if (vehicleData) {
+                alert(`Full history for ${vehicleNumber}:\n\nOwner: ${vehicleData.owner}\nModel: ${vehicleData.model}\nRegistration: ${vehicleData.registrationDate}\nChallans: ${vehicleData.challans}\nRisk Score: ${vehicleData.riskScore}`);
+            }
+        };
+
+        window.closeDetails = function() {
+            document.getElementById('vehicle-display').innerHTML = `
+                <div class="no-vehicle" style="text-align: center; padding: 40px; color: var(--gray);">
+                    <i class="fas fa-car" style="font-size: 4rem; margin-bottom: 20px; display: block; color: var(--light-gray); opacity: 0.5;"></i>
+                    <h3>No Vehicle Scanned</h3>
+                    <p>Scan a vehicle number to view detailed information here</p>
+                </div>
+            `;
+        };
+
+        window.tryAgainScan = function() {
+            document.getElementById('vehicle-number').focus();
+        };
+
+        window.viewDatabase = function() {
+            showDatabase();
+        };
+
+        // Initialize sync time
+        updateLastSync();
+    </script>
+</body>
+</html>

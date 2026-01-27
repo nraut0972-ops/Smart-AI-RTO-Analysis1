@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RTO नियम आणि फाईन्स | RTO Rules and Fines</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f7f7f7;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #00529b;
+    }
+    select {
+      display: block;
+      margin: 0 auto 20px auto;
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+    table {
+      width: 90%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background-color: white;
+    }
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #00529b;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f9ff;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>RTO नियम आणि फाईन्स | RTO Rules and Fines</h1>
+  
+  <label for="language-select" style="text-align:center; display:block; margin-bottom:10px;">
+    भाषा निवडा / Select Language:
+  </label>
+
+  <select id="language-select">
+    <option value="mr">मराठी</option>
+    <option value="en">English</option>
+  </select>
+  
+  <table id="rules-table">
+    <!-- नियम आणि फाईन येथे दिसतील -->
+  </table>
+  
+  <script>
+    const rules = {
+      mr: [
+        { नियम: "विना परवाना वाहन चालवणे", फाईन: "₹5000" },
+        { नियम: "सीट बेल्ट न लावणे", फाईन: "₹1000" },
+        { नियम: "वेग मर्यादा उल्लंघन", फाईन: "₹2000" },
+        { नियम: "दूरध्वनी वापरताना वाहन चालवणे", फाईन: "₹1500" },
+        { नियम: "वाहनाची नोंदणी करणे न करणं", फाईन: "₹3000" },
+        { नियम: "ट्रॅफिक सिग्नल तोडणे", फाईन: "₹2000" },
+        { नियम: "वाहनावर ओव्हरलोड", फाईन: "₹5000" },
+        { नियम: "दुर्दैवी जागेत पार्किंग", फाईन: "₹1000" },
+        { नियम: "वाहन न वापरता कॅलिफिकेशन न घेणे", फाईन: "₹2500" },
+        { नियम: "प्रदूषण नियंत्रण नियमांचे उल्लंघन", फाईन: "₹2000" }
+      ],
+      en: [
+        { Rule: "Driving without license", Fine: "₹5000" },
+        { Rule: "Not wearing seatbelt", Fine: "₹1000" },
+        { Rule: "Speed limit violation", Fine: "₹2000" },
+        { Rule: "Using mobile while driving", Fine: "₹1500" },
+        { Rule: "Not registering vehicle", Fine: "₹3000" },
+        { Rule: "Breaking traffic signals", Fine: "₹2000" },
+        { Rule: "Vehicle overload", Fine: "₹5000" },
+        { Rule: "Illegal parking", Fine: "₹1000" },
+        { Rule: "Driving without valid fitness certificate", Fine: "₹2500" },
+        { Rule: "Violation of pollution control norms", Fine: "₹2000" }
+      ]
+    };
+
+    const languageSelect = document.getElementById('language-select');
+    const table = document.getElementById('rules-table');
+
+    function renderTable(lang) {
+      table.innerHTML = '';
+      if (lang === 'mr') {
+        const header = document.createElement('tr');
+        header.innerHTML = `<th>नियम</th><th>फाईन</th>`;
+        table.appendChild(header);
+        rules.mr.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${item.नियम}</td><td>${item.फाईन}</td>`;
+          table.appendChild(row);
+        });
+      } else {
+        const header = document.createElement('tr');
+        header.innerHTML = `<th>Rule</th><th>Fine</th>`;
+        table.appendChild(header);
+        rules.en.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${item.Rule}</td><td>${item.Fine}</td>`;
+          table.appendChild(row);
+        });
+      }
+    }
+
+    renderTable('mr'); // default language
+
+    languageSelect.addEventListener('change', (e) => {
+      renderTable(e.target.value);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RTO Seized Vehicles Information</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .filter-section {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .vehicle-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .vehicle-card {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 300px;
+      padding: 10px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .vehicle-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .vehicle-info {
+      margin-top: 10px;
+    }
+
+    .vehicle-info h3 {
+      margin: 0;
+      color: #444;
+    }
+
+    .vehicle-info p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+    .buy-btn {
+  background-color: #4CAF50; /* Green color */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 10px 0 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.buy-btn:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+
+    select {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    #google_translate_element {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🚗 RTO Seized Vehicles Information</h1>
+
+<!-- Google Translate Widget -->
+<div id="google_translate_element"></div>
+
+<!-- Dropdown for Model Filter -->
+<div class="filter-section">
+  <label for="modelSelect">Select Vehicle Model: </label>
+  <select id="modelSelect" onchange="filterVehicles()">
+    <option value="All">All</option>
+    <option value="Honda">Honda</option>
+    <option value="Maruti">Maruti</option>
+    <option value="Tata">Tata</option>
+    
+  </select>
+</div>
+
+<!-- Vehicle List -->
+<div class="vehicle-section" id="vehicleList">
+  <!-- Vehicle Cards -->
+  <div class="vehicle-card" data-model="Honda">
+    <img src="C:\Users\rautn\Desktop\Nikhil Raut\hondacity.jpg" alt="Honda City">
+    <div class="vehicle-info">
+      <h3>Honda City</h3>
+      <p>Seized Date: 2025-07-20</p>
+      <p>Sale Price: ₹3,50,000</p>
+      <p>Days Since Seized: <span class="days-since" data-date="2025-07-20"></span></p>
+            <a href="C:\Users\rautn\Desktop\RTO Analysis UI\Buycarsale.html"><button class="buy-btn" onclick="openBuyModal('Honda City', 350000)">Buy Now</button></a>
+    </div>
+  </div>
+
+  <div class="vehicle-card" data-model="Maruti">
+    <img src="C:\Users\rautn\Desktop\Nikhil Raut\MarutiSwift.jpg" alt="Maruti Swift">
+    <div class="vehicle-info">
+      <h3>Maruti Swift</h3>
+      <p>Seized Date: 2025-07-15</p>
+      <p>Sale Price: ₹2,80,000</p>
+      <p>Days Since Seized: <span class="days-since" data-date="2025-07-15"></span></p>
+           <a href="C:\Users\rautn\Desktop\RTO Analysis UI\Buycarsale.html"> <button class="buy-btn" onclick="openBuyModal('Honda City', 350000)">Buy Now</button></a>
+    </div>
+  </div>
+
+  <div class="vehicle-card" data-model="Tata">
+    <img src="C:\Users\rautn\Desktop\Nikhil Raut\TataNexon.jpg" alt="Tata Nexon">
+    <div class="vehicle-info">
+      <h3>Tata Nexon</h3>
+      <p>Seized Date: 2025-06-25</p>
+      <p>Sale Price: ₹4,00,000</p>
+      <p>Days Since Seized: <span class="days-since" data-date="2025-06-25"></span></p>
+      <a href="C:\Users\rautn\Desktop\RTO Analysis UI\Buycarsale.html"> <button class="buy-btn" onclick="openBuyModal('Honda City', 350000)">
+Buy Now</button></a>
+    </div>
+   
+  </div>
+</div>
+
+<!-- Script to Calculate Days & Filter Vehicles -->
+<script>
+  // Calculate number of days since vehicle was seized
+  document.querySelectorAll(".days-since").forEach(function(el) {
+    const seizedDate = new Date(el.dataset.date);
+    const today = new Date();
+    const diffTime = Math.abs(today - seizedDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    el.innerText = `${diffDays} Days`;
+  });
+
+  // Filter vehicles by selected model
+  function filterVehicles() {
+    const selectedModel = document.getElementById("modelSelect").value;
+    document.querySelectorAll(".vehicle-card").forEach(function(card) {
+      if (selectedModel === "All" || card.dataset.model === selectedModel) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
+</script>
+
+<!-- Google Translate Script -->
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {
+        pageLanguage: 'en',
+        includedLanguages: 'en,mr',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      },
+      'google_translate_element'
+    );
+  }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>

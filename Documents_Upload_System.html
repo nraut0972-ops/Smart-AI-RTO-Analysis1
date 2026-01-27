@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTO Document Upload Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #f5f5f5;
+            --text: #333333;
+            --light-text: #757575;
+            --border: #e0e0e0;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info span {
+            margin-right: 15px;
+        }
+
+        .profile-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        /* Language toggle styling */
+        .language-toggle {
+            display: flex;
+            margin-right: 15px;
+            gap: 8px;
+        }
+        
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 4px;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .lang-btn.active {
+            background: rgba(255,255,255,0.3);
+            font-weight: 500;
+        }
+
+        main {
+            margin-top: 30px;
+        }
+
+        .upload-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .document-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .document-card {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .document-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .doc-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .doc-title {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .doc-description {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .upload-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .pending {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .verified {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .rejected {
+            background-color: var(--error);
+            color: white;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 6px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            margin-bottom: 15px;
+        }
+
+        .upload-hint {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .preview-section {
+            margin-top: 40px;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .preview-card {
+            width: 200px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .preview-info {
+            padding: 10px;
+        }
+
+        .preview-name {
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 5px;
+        }
+
+        .preview-size {
+            font-size: 0.8rem;
+            color: var(--light-text);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .preview-card:hover .delete-btn {
+            opacity: 1;
+        }
+
+        .verification-banner {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .verification-icon {
+            font-size: 1.5rem;
+            color: var(--success);
+            margin-right: 15px;
+        }
+
+        .verification-text {
+            flex: 1;
+        }
+
+        .verification-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .verification-subtitle {
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .document-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-info {
+                margin-top: 15px;
+            }
+            
+            .preview-card {
+                width: 100%;
+            }
+        }
+
+        /* Icon styles (using Unicode characters as pseudo-elements) */
+        .icon-driver::before {
+            content: "🚗";
+        }
+        
+        .icon-vehicle::before {
+            content: "🚙";
+        }
+        
+        .icon-id::before {
+            content: "🆔";
+        }
+        
+        .icon-insurance::before {
+            content: "🏥";
+        }
+        
+        .icon-upload::before {
+            content: "📤";
+        }
+        
+        .icon-check::before {
+            content: "✓";
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/05a0babb-8d05-4509-a092-bc11f3f623e2.png" alt="RTO Maharashtra logo featuring a wheel emblem with blue and white colors">
+                <h1>RTO Document Portal</h1>
+            </div>
+            <div class="language-toggle">
+                <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <section class="upload-section">
+                <h2 class="section-title">Upload Required Documents</h2>
+                
+                <div class="document-grid">
+                    <div class="document-card">
+                        <div class="status pending">Pending</div>
+                        <div class="doc-icon icon-driver"></div>
+                        <h3 class="doc-title">Driving License</h3>
+                        <p class="doc-description">Upload your valid driving license copy (front and back)</p>
+                        <button class="upload-btn" onclick="document.getElementById('license-upload').click()">Upload</button>
+                        <input type="file" id="license-upload" class="file-input" accept="image/*,.pdf">
+                    </div>
+                    
+                    <div class="document-card">
+                        <div class="status pending">Pending</div>
+                        <div class="doc-icon icon-vehicle"></div>
+                        <h3 class="doc-title">Vehicle Registration</h3>
+                        <p class="doc-description">Upload RC book copy (first and last page)</p>
+                        <button class="upload-btn" onclick="document.getElementById('rc-upload').click()">Upload</button>
+                        <input type="file" id="rc-upload" class="file-input" accept="image/*,.pdf">
+                    </div>
+                    
+                    <div class="document-card">
+                        <div class="status pending">Pending</div>
+                        <div class="doc-icon icon-id"></div>
+                        <h3 class="doc-title">Identity Proof</h3>
+                        <p class="doc-description">Upload Aadhaar Card, PAN Card, or Passport</p>
+                        <button class="upload-btn" onclick="document.getElementById('id-upload').click()">Upload</button>
+                        <input type="file" id="id-upload" class="file-input" accept="image/*,.pdf">
+                    </div>
+                    
+                    <div class="document-card">
+                        <div class="status pending">Pending</div>
+                        <div class="doc-icon icon-insurance"></div>
+                        <h3 class="doc-title">Insurance Certificate</h3>
+                        <p class="doc-description">Upload valid car insurance documents</p>
+                        <button class="upload-btn" onclick="document.getElementById('insurance-upload').click()">Upload</button>
+                        <input type="file" id="insurance-upload" class="file-input" accept="image/*,.pdf">
+                    </div>
+                </div>
+                
+                <div class="upload-area" id="drag-drop-area">
+                    <div class="upload-icon icon-upload"></div>
+                    <div class="upload-text">Drag & drop files here or click to browse</div>
+                    <div class="upload-hint">Supported formats: JPG, PNG, PDF (Max 5MB each)</div>
+                </div>
+            </section>
+            
+            <section class="upload-section preview-section">
+                <h2 class="section-title">Uploaded Documents</h2>
+                
+                <div class="preview-container" id="preview-container">
+                    <!-- Preview cards will be added here dynamically -->
+                </div>
+                
+                <div class="verification-banner">
+                    <div class="verification-icon icon-check"></div>
+                    <div class="verification-text">
+                        <div class="verification-title">Auto-Verification Activated</div>
+                        <div class="verification-subtitle">Your documents will be automatically verified. Usually takes 24-48 hours.</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle file selection for all buttons
+            const fileInputs = document.querySelectorAll('.file-input');
+            const dragDropArea = document.getElementById('drag-drop-area');
+            const previewContainer = document.getElementById('preview-container');
+            
+            fileInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    handleFiles(this.files);
+                });
+            });
+            
+            // Drag and drop functionality
+            dragDropArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'var(--primary)';
+                this.style.backgroundColor = 'rgba(26, 115, 232, 0.05)';
+            });
+            
+            dragDropArea.addEventListener('dragleave', function() {
+                this.style.borderColor = 'var(--border)';
+                this.style.backgroundColor = 'transparent';
+            });
+            
+            dragDropArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'var(--border)';
+                this.style.backgroundColor = 'transparent';
+                
+                if (e.dataTransfer.files.length) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+            
+            dragDropArea.addEventListener('click', function() {
+                // Trigger the first file input when clicking the drag-drop area
+                if (fileInputs.length) {
+                    fileInputs[0].click();
+                }
+            });
+            
+            // Handle uploaded files
+            function handleFiles(files) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    // Check file size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File too large! Maximum size is 5MB.');
+                        continue;
+                    }
+                    
+                    // Check file type
+                    const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+                    if (!validTypes.includes(file.type)) {
+                        alert('Invalid file type! Only JPG, PNG, and PDF are allowed.');
+                        continue;
+                    }
+                    
+                    // Create preview card
+                    const previewCard = document.createElement('div');
+                    previewCard.className = 'preview-card';
+                    
+                    const imgWrapper = document.createElement('div');
+                    
+                    if (file.type.includes('image')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'preview-img';
+                            img.alt = `Uploaded preview of ${file.name}`;
+                            imgWrapper.appendChild(img);
+                            
+                            // Add file info
+                            const previewInfo = document.createElement('div');
+                            previewInfo.className = 'preview-info';
+                            
+                            const fileName = document.createElement('div');
+                            fileName.className = 'preview-name';
+                            fileName.textContent = file.name;
+                            
+                            const fileSize = document.createElement('div');
+                            fileSize.className = 'preview-size';
+                            fileSize.textContent = formatFileSize(file.size);
+                            
+                            // Add delete button
+                            const deleteBtn = document.createElement('button');
+                            deleteBtn.className = 'delete-btn';
+                            deleteBtn.innerHTML = '&times;';
+                            deleteBtn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                previewCard.remove();
+                            });
+                            
+                            previewInfo.appendChild(fileName);
+                            previewInfo.appendChild(fileSize);
+                            previewCard.appendChild(imgWrapper);
+                            previewCard.appendChild(previewInfo);
+                            previewCard.appendChild(deleteBtn);
+                            
+                            previewContainer.appendChild(previewCard);
+                        };
+                        reader.readAsDataURL(file);
+                    } else if (file.type === 'application/pdf') {
+                        // For PDF files, show a PDF icon
+                        imgWrapper.innerHTML = `
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ccd1b851-eb50-4673-b21a-c26b4652a7ab.png" alt="PDF document thumbnail" class="preview-img" />
+                        `;
+                        
+                        // Add file info
+                        const previewInfo = document.createElement('div');
+                        previewInfo.className = 'preview-info';
+                        
+                        const fileName = document.createElement('div');
+                        fileName.className = 'preview-name';
+                        fileName.textContent = file.name;
+                        
+                        const fileSize = document.createElement('div');
+                        fileSize.className = 'preview-size';
+                        fileSize.textContent = formatFileSize(file.size);
+                        
+                        // Add delete button
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-btn';
+                        deleteBtn.innerHTML = '&times;';
+                        deleteBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            previewCard.remove();
+                        });
+                        
+                        previewInfo.appendChild(fileName);
+                        previewInfo.appendChild(fileSize);
+                        previewCard.appendChild(imgWrapper);
+                        previewCard.appendChild(previewInfo);
+                        previewCard.appendChild(deleteBtn);
+                        
+                        previewContainer.appendChild(previewCard);
+                    }
+                }
+            }
+            
+            // Helper function to format file size
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' bytes';
+                else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                else return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+            
+            // Simulate verification status changes (for demo purposes)
+            setTimeout(() => {
+                const statuses = document.querySelectorAll('.status');
+                if (statuses.length >= 4) {
+                    statuses[0].textContent = 'Verified';
+                    statuses[0].className = 'status verified';
+                    
+                    statuses[1].textContent = 'Processing';
+                    statuses[1].className = 'status pending';
+                    
+                    statuses[2].textContent = 'Rejected';
+                    statuses[2].className = 'status rejected';
+                }
+            }, 2000);
+        });
+    </script>
+    <script>
+        function setLanguage(lang) {
+            // Toggle active button state
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            // Translate text elements
+            if(lang === 'mr') {
+                // Marathi translations
+                document.querySelector('.logo h1').textContent = 'RTO कागदपत्र पोर्टल';
+                document.querySelector('.section-title').textContent = 'आवश्यक कागदपत्रे अपलोड करा';
+                document.querySelector('.doc-title').textContent = 'ड्रायव्हिंग लायसन्स';
+                document.querySelector('.doc-description').textContent = 'तुमची वैध ड्रायव्हिंग लायसन्स कॉपी अपलोड करा (समोर आणि मागील)';
+                document.querySelector('.upload-text').textContent = 'फाइल्स येथे ड्रॅग आणि ड्रॉप करा किंवा ब्राउझ करण्यासाठी क्लिक करा';
+                document.querySelector('.upload-hint').textContent = 'समर्थित स्वरूप: JPG, PNG, PDF (प्रत्येकी जास्तीत जास्त 5MB)';
+            } else {
+                // English translations
+                document.querySelector('.logo h1').textContent = 'RTO Document Portal';
+                document.querySelector('.section-title').textContent = 'Upload Required Documents';
+                document.querySelector('.doc-title').textContent = 'Driving License';
+                document.querySelector('.doc-description').textContent = 'Upload your valid driving license copy (front and back)';
+                document.querySelector('.upload-text').textContent = 'Drag & drop files here or click to browse';
+                document.querySelector('.upload-hint').textContent = 'Supported formats: JPG, PNG, PDF (Max 5MB each)';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Seizure and Sale Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 80px;
+        }
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+        .col {
+            flex: 1;
+        }
+        .signature-section {
+            margin-top: 30px;
+        }
+        .signature-line {
+            border-top: 1px solid #333;
+            width: 300px;
+            margin-top: 40px;
+        }
+        .signature-label {
+            margin-top: 5px;
+            font-style: italic;
+        }
+        .btn-submit {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .btn-submit:hover {
+            background-color: #1a252f;
+        }
+        .required:after {
+            content: " *";
+            color: red;
+        }
+        .section-title {
+            background-color: #eaeaea;
+            padding: 8px;
+            margin: 20px 0 10px 0;
+            border-left: 4px solid #2c3e50;
+            font-weight: bold;
+        }
+        .translate-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .marathi {
+            display: none;
+            font-family: 'Arial Unicode MS', 'Krutidev', sans-serif;
+        }
+        .active-lang {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="translate-btn" onclick="toggleLanguage()">मराठी / English</button>
+        
+        <div class="header">
+            <h1 class="english active-lang">Vehicle Seized  and Sale Form</h1>
+            <h1 class="marathi">वाहन जप्ती आणि विक्री फॉर्म</h1>
+            <p class="english active-lang">Form for processing seized vehicle sale</p>
+            <p class="marathi">जप्त केलेल्या वाहनाच्या विक्रीसाठी फॉर्म</p>
+        </div>
+
+        <form>
+            <div class="section-title">
+                <span class="english active-lang">Seizure Details</span>
+                <span class="marathi">जप्ती तपशील</span>
+            </div>
+            
+            <div class="row">
+                <div class="col form-group">
+                    <label for="seizure-date" class="required">
+                        <span class="english active-lang">Seized  Date</span>
+                        <span class="marathi">जप्तीची तारीख</span>
+                    </label>
+                    <input type="date" id="seizure-date" name="seizure-date" required>
+                </div>
+                <div class="col form-group">
+                    <label for="seizure-location" class="required">
+                        <span class="english active-lang">Seized  Location</span>
+                        <span class="marathi">जप्तीचे ठिकाण</span>
+                    </label>
+                    <input type="text" id="seizure-location" name="seizure-location" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="seizure-reason" class="required">
+                    <span class="english active-lang">Reason for Seized </span>
+                    <span class="marathi">जप्तीचे कारण</span>
+                </label>
+                <textarea id="seizure-reason" name="seizure-reason" required></textarea>
+            </div>
+
+            <div class="section-title">
+                <span class="english active-lang">Vehicle Information</span>
+                <span class="marathi">वाहन माहिती</span>
+            </div>
+            
+            <div class="row">
+                <div class="col form-group">
+                    <label for="vehicle-number" class="required">
+                        <span class="english active-lang">Vehicle Registration Number</span>
+                        <span class="marathi">वाहन नोंदणी क्रमांक</span>
+                    </label>
+                    <input type="text" id="vehicle-number" name="vehicle-number" required>
+                </div>
+                <div class="col form-group">
+                    <label for="vehicle-type" class="required">
+                        <span class="english active-lang">Vehicle Type</span>
+                        <span class="marathi">वाहन प्रकार</span>
+                    </label>
+                    <select id="vehicle-type" name="vehicle-type" required>
+                        <option value="">
+                            <span class="english active-lang">Select</span>
+                            <span class="marathi">निवडा</span>
+                        </option>
+                        <option value="car">
+                            <span class="english active-lang">Car</span>
+                            <span class="marathi">कार</span>
+                        </option>
+                        <option value="bike">
+                            <span class="english active-lang">Bike</span>
+                            <span class="marathi">बाइक</span>
+                        </option>
+                        <option value="truck">
+                            <span class="english active-lang">Truck</span>
+                            <span class="marathi">ट्रक</span>
+                        </option>
+                        <option value="bus">
+                            <span class="english active-lang">Bus</span>
+                            <span class="marathi">बस</span>
+                        </option>
+                        <option value="other">
+                            <span class="english active-lang">Other</span>
+                            <span class="marathi">इतर</span>
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col form-group">
+                    <label for="make" class="required">
+                        <span class="english active-lang">Make</span>
+                        <span class="marathi">वाहनाची कंपनी</span>
+                    </label>
+                    <input type="text" id="make" name="make" required>
+                </div>
+                <div class="col form-group">
+                    <label for="model" class="required">
+                        <span class="english active-lang">Model</span>
+                        <span class="marathi">मॉडेल</span>
+                    </label>
+                    <input type="text" id="model" name="model" required>
+                </div>
+                <div class="col form-group">
+                    <label for="year" class="required">
+                        <span class="english active-lang">Year</span>
+                        <span class="marathi">वर्ष</span>
+                    </label>
+                    <input type="number" id="year" name="year" min="1900" max="2099" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col form-group">
+                    <label for="color">
+                        <span class="english active-lang">Color</span>
+                        <span class="marathi">रंग</span>
+                    </label>
+                    <input type="text" id="color" name="color">
+                </div>
+                <div class="col form-group">
+                    <label for="engine-number" class="required">
+                        <span class="english active-lang">Engine Number</span>
+                        <span class="marathi">इंजिन क्रमांक</span>
+                    </label>
+                    <input type="text" id="engine-number" name="engine-number" required>
+                </div>
+                <div class="col form-group">
+                    <label for="chassis-number" class="required">
+                        <span class="english active-lang">Chassis Number</span>
+                        <span class="marathi">चेसिस क्रमांक</span>
+                    </label>
+                    <input type="text" id="chassis-number" name="chassis-number" required>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <span class="english active-lang">Owner Details</span>
+                <span class="marathi">मालकाचे तपशील</span>
+            </div>
+            
+            <div class="row">
+                <div class="col form-group">
+                    <label for="owner-name" class="required">
+                        <span class="english active-lang">Owner Name</span>
+                        <span class="marathi">मालकाचे नाव</span>
+                    </label>
+                    <input type="text" id="owner-name" name="owner-name" required>
+                </div>
+                <div class="col form-group">
+                    <label for="owner-contact">
+                        <span class="english active-lang">Contact Number</span>
+                        <span class="marathi">संपर्क क्रमांक</span>
+                    </label>
+                    <input type="text" id="owner-contact" name="owner-contact">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="owner-address">
+                    <span class="english active-lang">Address</span>
+                    <span class="marathi">पत्ता</span>
+                </label>
+                <textarea id="owner-address" name="owner-address"></textarea>
+            </div>
+
+            <div class="section-title">
+                <span class="english active-lang">Sale Information</span>
+                <span class="marathi">विक्री माहिती</span>
+            </div>
+            
+            <div class="row">
+                <div class="col form-group">
+                    <label for="sale-date" class="required">
+                        <span class="english active-lang">Sale Date</span>
+                        <span class="marathi">विक्रीची तारीख</span>
+                    </label>
+                    <input type="date" id="sale-date" name="sale-date" required>
+                </div>
+                <div class="col form-group">
+                    <label for="sale-amount" class="required">
+                        <span class="english active-lang">Sale Amount</span>
+                        <span class="marathi">विक्री रक्कम</span>
+                    </label>
+                    <input type="number" id="sale-amount" name="sale-amount" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="buyer-name" class="required">
+                    <span class="english active-lang">Buyer Name</span>
+                    <span class="marathi">खरेदीदाराचे नाव</span>
+                </label>
+                <input type="text" id="buyer-name" name="buyer-name" required>
+            </div>
+
+            <div class="row">
+                <div class="col form-group">
+                    <label for="buyer-contact" class="required">
+                        <span class="english active-lang">Buyer Contact</span>
+                        <span class="marathi">खरेदीदाराचा संपर्क</span>
+                    </label>
+                    <input type="text" id="buyer-contact" name="buyer-contact" required>
+                </div>
+                <div class="col form-group">
+                    <label for="buyer-id">
+                        <span class="english active-lang">Buyer ID Proof</span>
+                        <span class="marathi">खरेदीदाराचे ओळखपत्र</span>
+                    </label>
+                    <input type="text" id="buyer-id" name="buyer-id">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sale-remarks">
+                    <span class="english active-lang">Remarks</span>
+                    <span class="marathi">शेरा</span>
+                </label>
+                <textarea id="sale-remarks" name="sale-remarks"></textarea>
+            </div>
+
+            <div class="signature-section">
+                <div class="row">
+                    <div class="col">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">
+                            <span class="english active-lang">Authorized Officer Signature</span>
+                            <span class="marathi">अधिकृत अधिकाऱ्याची सही</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">
+                            <span class="english active-lang">Buyer Signature</span>
+                            <span class="marathi">खरेदीदाराची सही</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 30px;">
+                <label>
+                    <input type="checkbox" name="declaration" required>
+                    <span class="english active-lang">I declare that all the information provided above is true and correct to the best of my knowledge.</span>
+                    <span class="marathi">मी घोषित करतो/करते की वरील सर्व माहिती माझ्या ज्ञानात खरी आणि योग्य आहे.</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <span class="english active-lang">Submit Form</span>
+                <span class="marathi">फॉर्म सबमिट करा</span>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function toggleLanguage() {
+            const englishElements = document.querySelectorAll('.english');
+            const marathiElements = document.querySelectorAll('.marathi');
+            const btn = document.querySelector('.translate-btn');
+            
+            englishElements.forEach(el => {
+                el.classList.toggle('active-lang');
+            });
+            
+            marathiElements.forEach(el => {
+                el.classList.toggle('active-lang');
+            });
+            
+            if (btn.textContent === 'मराठी / English') {
+                btn.textContent = 'English / मराठी';
+            } else {
+                btn.textContent = 'मराठी / English';
+            }
+        }
+    </script>
+</body>
+</html>

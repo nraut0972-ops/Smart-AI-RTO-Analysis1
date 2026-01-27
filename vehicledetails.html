@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vehicle Search</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #eef2f7;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .search-container {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      width: 400px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0056b3;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus {
+      border-color: #0073e6;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      background-color: #0073e6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      min-height: 120px;
+    }
+
+    .result p {
+      margin: 8px 0;
+      font-size: 1em;
+      color: #444;
+    }
+
+    .not-found {
+      color: #d9534f;
+      font-weight: 600;
+      text-align: center;
+      font-size: 1.1em;
+  .small-img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+
+    }
+  </style>
+</head>
+<body>
+
+  <div class="search-container">
+    <h1>Vehicle Search</h1>
+    <label for="vehicleNumber">Enter Vehicle Number:</label>
+    <input type="text" id="vehicleNumber" placeholder="Enter Vehicle Number" />
+    <button onclick="searchVehicle()">Search</button>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    // Sample vehicle database
+    const vehicleData = {
+      "DL01AB1234": {
+        owner: "Rajesh Kumar",
+        model: "Honda City",
+        registrationDate: "2018-03-15",
+        rto: "Delhi RTO - DL01",
+        status: "Active"
+      },
+      "MH12XY9876": {
+        owner: "Anjali Mehta",
+        model: "Toyota Innova",
+        registrationDate: "2020-11-22",
+        rto: "Pune RTO - MH12",
+        status: "Active"
+      },
+      "KA05PQ4321": {
+        owner: "Suresh Patil",
+        model: "Maruti Swift",
+        registrationDate: "2017-06-05",
+        rto: "Bangalore RTO - KA05",
+        status: "Expired"
+      },
+      "MH45Q9441": {
+  image: '<img src="C:\Users\rautn\Pictures\267169.jpg" alt="" class="small-img">',
+  owner: 'Balaji Awachar',
+  address: 'Sapatane(Bhose), Awachar Colony',
+  mobileno: '8208452624',
+  model: 'Hero Honda',
+  registeredrto: 'Tahshil, Malshiras, Solapur - 413101',
+  registrationDate: '2012-4-5',
+  rto: 'Akalij RTO - MH12',
+  status: 'Active'
+},
+"MH45AU6344": {
+
+  image: '<img src="c:\Users\rautn\Pictures\Class_Photo.jpg" alt="" class="small-img">',
+  owner: 'Shahrukh rasul mundher',
+  address: 'Sapatane(Bhose), Awachar Colony',
+  mobileno: '7972999692',
+  model: 'Swift ',
+  registeredrto: 'Tahshil, Malshiras, Solapur - 413101',
+  registrationDate: '2022-4-23',
+  rto: 'Akalij RTO - MH45',
+  status: 'Active'
+},
+"MH45AQ9944": {
+  
+  image: '<img src="c:\Users\rautn\Pictures\Class_Photo.jpg" alt="" class="small-img">',
+  owner: 'Shankar Hanumant Ugale ',
+  address: 'Shrial ,Tembhurni, Bhairavnath Temple',
+  mobileno: '8668364097',
+  model: 'KIA SONET ',
+  registeredrto: 'KIA Shoroom, Solapur - 413101',
+  registrationDate: '2022-2-9',
+  rto: 'Akalij RTO - MH45',
+  status: 'Active'
+},
+"MH13EK4639": {
+  
+  image: '<img src="c:\Users\rautn\Pictures\Class_Photo.jpg" alt="" class="small-img">',
+  owner: 'Vishal Namdeo Baad ',
+  address: 'near shahnai garden, Karad Road, pandharpur',
+  mobileno: '9970020084',
+  model: 'Maruti Suzuki ,Dzire Shift CNG/Petroal ',
+  registeredrto: 'Maruti Suzuki Shoroom, Solapur - 413101',
+  registrationDate: '2024-7-9',
+  rto: 'Solapur - MH13',
+  status: 'Active'
+},
+"MH12DZ8311": {
+  
+  image: '<img src="c:\Users\rautn\Pictures\Class_Photo.jpg" alt="" class="small-img">',
+  owner: 'Yashodhan Bansode',
+  address: 'Pune Waraje',
+  mobileno: '7517489672',
+  model: 'Hero Hondat ',
+  registeredrto: 'Tahshil, Malshiras, Solapur - 413101',
+  registrationDate: '2018',
+  rto: 'Pune RTO - MH45',
+  status: 'Active'
+},
+"MH13ES4071":{
+  image: '<img src="c:\Users\rautn\Pictures\Class_Photo.jpg" alt="" class="small-img">',
+  owner: 'Vikram Hanumantrao Londhe',
+  address: 'Tembhurni',
+  mobileno: '9975763843',
+  model: 'TATA NEXON PURE+PMT/CNG',
+  registeredrto: 'RTO SOLAPUR, Solapur - 413101',
+  registrationDate: '2025-4-30',
+  rto: 'Solapur - MH13',
+  status: 'Active'
+},
+ "MH12CK4211":{
+image: '<img src="c:\Users\rautn\Pictures\Class_Photo.jpg" alt="" class="small-img">',
+  owner: 'Pravin Tathe',
+  address: 'Pandharpur',
+  mobileno: '9225538338',
+  model: 'MARUTI SUZUKI, ALTO ',
+  registeredrto: 'RTO Solapur, Solapur - 413101',
+  registrationDate: '2004-9-2',
+  rto: 'Solapur - MH12',
+  status: 'Active'
+ },
+"MH13EK4639": {
+  
+  image: '<img src="c:\Users\rautn\Pictures\Class_Photo.jpg" alt="" class="small-img">',
+  owner: 'Vishal Namdeo Baad ',
+  address: 'near shahnai garden, Karad Road, pandharpur',
+  mobileno: '9970020084',
+  model: 'Maruti Suzuki ,Dzire Shift CNG/Petroal ',
+  registeredrto: 'Maruti Suzuki Shoroom, Solapur - 413101',
+  registrationDate: '2024-7-9',
+  rto: 'Solapur - MH13',
+  status: 'Active'
+},
+
+    };
+
+
+    function searchVehicle() {
+      const input = document.getElementById('vehicleNumber').value.trim().toUpperCase();
+      const resultDiv = document.getElementById('result');
+
+      if (!input) {
+        resultDiv.innerHTML = '<p class="not-found">Please enter a vehicle number.</p>';
+        return;
+      }
+
+      if (vehicleData[input]) {
+        const details = vehicleData[input];
+        resultDiv.innerHTML = `
+         <p><strong>Photo:</strong> ${details.image}</p>
+          <p><strong>Owner Name:</strong> ${details.owner}</p>
+          <p><strong>Address:</strong> ${details.address}</p>
+          <p><strong> Mobile No:</strong> ${details. mobileno}</p>
+          <p><strong>Vehicle Model:</strong> ${details.model}</p>
+<p><strong>Registration RTO:</strong> ${details. registeredrto}</p>
+          <p><strong>Registration Date:</strong> ${details.registrationDate}</p>
+          <p><strong>RTO Office:</strong> ${details.rto}</p>
+          <p><strong>Status:</strong> ${details.status}</p>
+        `;
+      } else {
+        resultDiv.innerHTML = `<p class="not-found">No records found for vehicle number "${input}".</p>`;
+      }
+    }
+  </script>
+
+</body>
+</html>

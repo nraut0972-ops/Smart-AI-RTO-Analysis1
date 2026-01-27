@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RTO कर्मचारी कमतरता - उपाय | Staff Shortage Solutions</title>
+  <style>
+    :root {
+      --primary: #1a237e;
+      --secondary: #ffab00;
+      --accent: #d32f2f;
+      --light: #f5f5f5;
+      --dark: #121212;
+      --success: #388e3c;
+      --card-bg: #ffffff;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Yantramanav:wght@400;700&display=swap');
+    
+    body {
+      font-family: 'Yantramanav', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      color: #333;
+      min-height: 100vh;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, #283593 100%);
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      position: relative;
+      clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+      margin-bottom: 3rem;
+    }
+    
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .header-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .header-subtitle {
+      opacity: 0.9;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      font-weight: 400;
+    }
+    
+    .header-decoration {
+      position: absolute;
+      bottom: -50px;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' fill='%23f5f7fa' opacity='.25'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' fill='%23f5f7fa' opacity='.5'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23f5f7fa'/%3E%3C/svg%3E");
+      background-size: cover;
+      z-index: 1;
+    }
+    
+    main {
+      max-width: 1100px;
+      margin: -50px auto 0;
+      padding: 0 20px 50px;
+      position: relative;
+      z-index: 3;
+    }
+    
+    h2 {
+      color: var(--primary);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      margin: 2.5rem 0 1.5rem;
+      position: relative;
+      padding-left: 1.5rem;
+      font-size: 1.8rem;
+    }
+    
+    h2:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 6px;
+      background: var(--secondary);
+      border-radius: 3px;
+    }
+    
+    ul {
+      padding-left: 1.5rem;
+    }
+    
+    li {
+      margin-bottom: 1rem;
+      position: relative;
+      padding-left: 1.8rem;
+    }
+    
+    li:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.7rem;
+      height: 8px;
+      width: 8px;
+      background: var(--secondary);
+      border-radius: 50%;
+      transform: rotate(45deg);
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      border-bottom: 2px solid var(--secondary);
+      padding-bottom: 2px;
+    }
+    
+    a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    
+    .solution-card {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border-top: 4px solid var(--secondary);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .solution-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+    
+    .solution-card h3 {
+      margin-top: 0;
+      color: var(--dark);
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .solution-icon {
+      font-size: 1.8rem;
+      color: var(--secondary);
+    }
+    
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .link-card {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .link-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      border-left-color: var(--accent);
+    }
+    
+    .link-icon {
+      font-size: 2rem;
+      color: var(--primary);
+      min-width: 50px;
+      height: 50px;
+      background: rgba(26, 35, 126, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .link-card:hover .link-icon {
+      background: rgba(211, 47, 47, 0.1);
+      color: var(--accent);
+    }
+    
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: linear-gradient(135deg, var(--dark) 0%, #000000 100%);
+      color: white;
+      margin-top: 5rem;
+      clip-path: polygon(0 20%, 100% 0, 100% 100%, 0 100%);
+      padding-top: 4rem;
+    }
+    
+    /* Translator Styles */
+    .translator-container {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      display: flex;
+      gap: 1rem;
+      z-index: 4;
+    }
+    
+    .translate-btn {
+      background-color: white;
+      color: var(--primary);
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: all 0.3s;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+    }
+    
+    .translate-btn:hover {
+      background-color: var(--secondary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+    
+    .language-icon {
+      font-size: 1.2rem;
+    }
+    
+    /* Floating Elements */
+    .floating-shape {
+      position: absolute;
+      opacity: 0.1;
+      z-index: -1;
+    }
+    
+    .shape-1 {
+      top: 10%;
+      left: 5%;
+      width: 200px;
+      height: 200px;
+      background: var(--primary);
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      animation: float 8s ease-in-out infinite;
+    }
+    
+    .shape-2 {
+      bottom: 10%;
+      right: 5%;
+      width: 150px;
+      height: 150px;
+      background: var(--accent);
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      animation: float 10s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+        padding-bottom: 3rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .header-subtitle {
+        font-size: 1rem;
+      }
+      
+      .translator-container {
+        position: relative;
+        top: auto;
+        right: auto;
+        justify-content: center;
+        margin: 1rem 0;
+      }
+      
+      .solution-card {
+        padding: 1.5rem;
+      }
+      
+      footer {
+        clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+        padding-top: 3rem;
+      }
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    section {
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+    
+    section:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    section:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    section:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+  </style>
+</head>
+<body>
+
+<div class="floating-shape shape-1"></div>
+<div class="floating-shape shape-2"></div>
+
+<div class="translator-container">
+  <button class="translate-btn" id="translateToEnglish">
+    <span class="language-icon">🇬🇧</span>
+    <span>English</span>
+  </button>
+  <button class="translate-btn" id="translateToMarathi">
+    <span class="language-icon">🇮🇳</span>
+    <span>मराठी</span>
+  </button>
+</div>
+
+<header>
+  <div class="header-decoration"></div>
+  <div class="header-content">
+    <h1>
+      <span class="marathi-text">RTO कर्मचारी कमतरता समस्या</span>
+      <span class="english-text" style="display:none">RTO Staff Shortage Issue</span>
+    </h1>
+    <div class="header-subtitle marathi-text">कारणे, परिणाम आणि व्यावहारिक उपाय</div>
+    <div class="header-subtitle english-text" style="display:none">Causes, Effects and Practical Solutions</div>
+  </div>
+</header>
+
+<main>
+  <section id="problemSection">
+    <h2>
+      <span class="solution-icon">🔍</span>
+      <span class="marathi-text">समस्येचे स्वरूप</span>
+      <span class="english-text" style="display:none">Nature of the Problem</span>
+    </h2>
+    <p class="marathi-text">अनेक आरटीओ कार्यालयांमध्ये आवश्यकतेपेक्षा कमी कर्मचारी असल्यामुळे नागरिकांच्या अर्ज प्रक्रियेत विलंब होतो. ही समस्या विशेषतः खालील सेवांमध्ये जाणवते:</p>
+    <p class="english-text" style="display:none">Many RTO offices face staff shortages, causing delays in processing citizen applications. This problem is particularly noticeable in these services:</p>
+    <ul>
+      <li class="marathi-text">नवीन ड्रायव्हिंग लायसन्स</li>
+      <li class="english-text" style="display:none">New driving licenses</li>
+      <li class="marathi-text">लायसन्स नूतनीकरण</li>
+      <li class="english-text" style="display:none">License renewals</li>
+      <li class="marathi-text">वाहन नोंदणी (RC)</li>
+      <li class="english-text" style="display:none">Vehicle registration (RC)</li>
+      <li class="marathi-text">वाहन मालकी हस्तांतरण</li>
+      <li class="english-text" style="display:none">Vehicle ownership transfer</li>
+      <li class="marathi-text">परवाना नूतनीकरण</li>
+      <li class="english-text" style="display:none">Permit renewals</li>
+    </ul>
+  </section>
+
+  <section id="impactSection">
+    <h2>
+      <span class="solution-icon">⚠️</span>
+      <span class="marathi-text">याचे नागरिकांवरील परिणाम</span>
+      <span class="english-text" style="display:none">Impact on Citizens</span>
+    </h2>
+    <ul>
+      <li class="marathi-text">अपॉइंटमेंट मिळण्यासाठी 15-30 दिवस थांबावे लागतात</li>
+      <li class="english-text" style="display:none">15-30 days waiting time for appointments</li>
+      <li class="marathi-text">दस्तऐवज पडताळणीसाठी सरासरी 3-5 कामकाजी दिवस लागतात</li>
+      <li class="english-text" style="display:none">3-5 working days for document verification</li>
+      <li class="marathi-text">कार्यालयातील रांगेत 2-4 तास थांबावे लागते</li>
+      <li class="english-text" style="display:none">2-4 hours waiting in queues</li>
+      <li class="marathi-text">फोन कॉल्स आणि ईमेलला योग्य प्रतिसाद मिळत नाही</li>
+      <li class="english-text" style="display:none">Poor response to phone calls and emails</li>
+      <li class="marathi-text">ऑनलाइन तक्रारींना निराकरणासाठी जास्त वेळ लागतो</li>
+      <li class="english-text" style="display:none">Delayed resolution of online complaints</li>
+    </ul>
+  </section>
+
+  <section id="solutionsSection">
+    <h2>
+      <span class="solution-icon">✅</span>
+      <span class="marathi-text">व्यावहारिक उपाययोजना</span>
+      <span class="english-text" style="display:none">Practical Solutions</span>
+    </h2>
+    
+    <div class="solution-card">
+      <h3><span class="solution-icon">📲</span> <span class="marathi-text">डिजिटल सेवांचा वापर</span><span class="english-text" style="display:none">Use Digital Services</span></h3>
+      <p class="marathi-text">80% पेक्षा जास्त RTO सेवा आता ऑनलाइन उपलब्ध आहेत. खालील पोर्टल्सचा प्रभावी वापर करा:</p>
+      <p class="english-text" style="display:none">Over 80% RTO services are now available online. Use these portals effectively:</p>
+      <ul>
+        <li class="marathi-text"><strong>SARATHI पोर्टल:</strong> ड्रायव्हिंग लायसन्स संबंधित सर्व सेवा</li>
+        <li class="english-text" style="display:none"><strong>SARATHI Portal:</strong> All driving license related services</li>
+        <li class="marathi-text"><strong>VAHAN पोर्टल:</strong> वाहन नोंदणी आणि इतर सेवा</li>
+        <li class="english-text" style="display:none"><strong>VAHAN Portal:</strong> Vehicle registration and other services</li>
+        <li class="marathi-text"><strong>mParivahan App:</strong> डिजिटल RC आणि DL</li>
+        <li class="english-text" style="display:none"><strong>mParivahan App:</strong> Digital RC and DL</li>
+      </ul>
+    </div>
+    
+    <div class="solution-card">
+      <h3><span class="solution-icon">⏳</span> <span class="marathi-text">अपॉइंटमेंट व्यवस्थापन</span><span class="english-text" style="display:none">Appointment Management</span></h3>
+      <p class="marathi-text">अपॉइंटमेंट न घेता RTO ला भेट देणे टाळा. खालील टिप्स फॉलो करा:</p>
+      <p class="english-text" style="display:none">Avoid visiting RTO without appointment. Follow these tips:</p>
+      <ul>
+        <li class="marathi-text">सकाळी 8:00 वाजता नवीन अपॉइंटमेंट स्लॉट्स उपलब्ध होतात</li>
+        <li class="english-text" style="display:none">New appointment slots open at 8:00 AM</li>
+        <li class="marathi-text">तुमच्या जिल्ह्यातील इतर RTO ऑफिसचे स्लॉट्स तपासा</li>
+        <li class="english-text" style="display:none">Check slots at other RTOs in your district</li>
+        <li class="marathi-text">शुक्रवार आणि सोमवारी गर्दी जास्त असते</li>
+        <li class="english-text" style="display:none">More crowd on Fridays and Mondays</li>
+      </ul>
+    </div>
+    
+    <div class="solution-card">
+      <h3><span class="solution-icon">✍️</span> <span class="marathi-text">तक्रार नोंदवणे</span><span class="english-text" style="display:none">Filing Complaints</span></h3>
+      <p class="marathi-text">सेवा न मिळाल्यास खालील पद्धतींनी तक्रार नोंदवा:</p>
+      <p class="english-text" style="display:none">If services are denied, file complaints through:</p>
+      <ul>
+        <li class="marathi-text"><a href="https://pgportal.gov.in/" target="_blank">पीजी पोर्टल</a> - केंद्र सरकारचे तक्रार निवारण</li>
+        <li class="english-text" style="display:none"><a href="https://pgportal.gov.in/" target="_blank">PG Portal</a> - Central Government grievance redressal</li>
+        <li class="marathi-text"><a href="https://sarathi.parivahan.gov.in/sarathiservice/grievanceService.do" target="_blank">SARATHI तक्रार प्रणाली</a></li>
+        <li class="english-text" style="display:none"><a href="https://sarathi.parivahan.gov.in/sarathiservice/grievanceService.do" target="_blank">SARATHI Complaint System</a></li>
+        <li class="marathi-text">RTO अधिकाऱ्यांना थेट ईमेल</li>
+        <li class="english-text" style="display:none">Direct email to RTO officers</li>
+        <li class="marathi-text">सामाजिक माध्यमांवर @MORTHIndia टॅग करून</li>
+        <li class="english-text" style="display:none">Tagging @MORTHIndia on social media</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="linksSection">
+    <h2>
+      <span class="solution-icon">🔗</span>
+      <span class="marathi-text">द्रुत संदर्भ साधने</span>
+      <span class="english-text" style="display:none">Quick Reference Tools</span>
+    </h2>
+    <div class="link-grid">
+      <a href="https://sarathi.parivahan.gov.in/" target="_blank" class="link-card">
+        <div class="link-icon">🚗</div>
+        <div>
+          <div class="marathi-text">Sarathi पोर्टल</div>
+          <div class="english-text" style="display:none">Sarathi Portal</div>
+          <div class="marathi-text" style="font-size:0.9rem;color:#666;">DL सेवा</div>
+          <div class="english-text" style="display:none;font-size:0.9rem;color:#666;">DL Services</div>
+        </div>
+      </a>
+      <a href="https://vahan.parivahan.gov.in/" target="_blank" class="link-card">
+        <div class="link-icon">📝</div>
+        <div>
+          <div class="marathi-text">Vahan पोर्टल</div>
+          <div class="english-text" style="display:none">Vahan Portal</div>
+          <div class="marathi-text" style="font-size:0.9rem;color:#666;">RC सेवा</div>
+          <div class="english-text" style="display:none;font-size:0.9rem;color:#666;">RC Services</div>
+        </div>
+      </a>
+      <a href="https://rtionline.gov.in/" target="_blank" class="link-card">
+        <div class="link-icon">ℹ️</div>
+        <div>
+          <div class="marathi-text">RTI Online</div>
+          <div class="english-text" style="display:none">RTI Online</div>
+          <div class="marathi-text" style="font-size:0.9rem;color:#666;">माहिती अधिकार</div>
+          <div class="english-text" style="display:none;font-size:0.9rem;color:#666;">Right to Information</div>
+        </div>
+      </a>
+      <a href="https://pgportal.gov.in/" target="_blank" class="link-card">
+        <div class="link-icon">✍️</div>
+        <div>
+          <div class="marathi-text">सार्वजनिक तक्रार</div>
+          <div class="english-text" style="display:none">Public Grievance</div>
+          <div class="marathi-text" style="font-size:0.9rem;color:#666;">तक्रार निवारण</div>
+          <div class="english-text" style="display:none;font-size:0.9rem;color:#666;">Grievance Redressal</div>
+        </div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="marathi-text">© 2025 RTO सहाय्य केंद्र | सर्व हक्क राखीव | आपल्या सूचना: feedback@rtosahaay.in</div>
+  <div class="english-text" style="display:none">© 2025 RTO Help Center | All Rights Reserved | Your feedback: feedback@rtosahaay.in</div>
+</footer>
+
+<script>
+  document.getElementById('translateToEnglish').addEventListener('click', function() {
+    // Hide all Marathi text
+    const marathiTexts = document.querySelectorAll('.marathi-text');
+    marathiTexts.forEach(text => {
+      text.style.display = 'none';
+    });
+    
+    // Show all English text
+    const englishTexts = document.querySelectorAll('.english-text');
+    englishTexts.forEach(text => {
+      text.style.display = 'inline';
+    });
+    
+    // Update title
+    document.title = "RTO Staff Shortage - Solutions";
+    
+    // Change active button style
+    this.style.backgroundColor = '#ffab00';
+    this.style.color = '#1a237e';
+    document.getElementById('translateToMarathi').style.backgroundColor = 'white';
+    document.getElementById('translateToMarathi').style.color = '#1a237e';
+  });
+  
+  document.getElementById('translateToMarathi').addEventListener('click', function() {
+    // Show all Marathi text
+    const marathiTexts = document.querySelectorAll('.marathi-text');
+    marathiTexts.forEach(text => {
+      text.style.display = 'inline';
+    });
+    
+    // Hide all English text
+    const englishTexts = document.querySelectorAll('.english-text');
+    englishTexts.forEach(text => {
+      text.style.display = 'none';
+    });
+    
+    // Update title
+    document.title = "RTO कर्मचारी कमतरता - उपाय";
+    
+    // Change active button style
+    this.style.backgroundColor = '#ffab00';
+    this.style.color = '#1a237e';
+    document.getElementById('translateToEnglish').style.backgroundColor = 'white';
+    document.getElementById('translateToEnglish').style.color = '#1a237e';
+  });
+</script>
+
+</body>
+</html>

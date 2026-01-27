@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Driving Test Appointment</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f3f9ff;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Book Driving Test Appointment</h2>
+    <form action="bookAppointment.jsp" method="post">
+
+
+      <label for="fullName">Full Name:</label>
+      <input type="text" id="fullName" name="fullName" required>
+
+      <label for="licenseType">Type of Test:</label>
+      <select id="licenseType" name="licenseType" required>
+        <option value="">-- Select --</option>
+        <option value="ll">Learner’s License (LL)</option>
+        <option value="dl">Driving License (DL)</option>
+      </select>
+
+      <label for="dlNumber">Learner License Number (for DL Test):</label>
+      <input type="text" id="dlNumber" name="dlNumber" placeholder="Enter LL Number (if DL test)">
+
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob" required>
+
+      <label for="testDate">Preferred Test Date:</label>
+      <input type="date" id="testDate" name="testDate" required>
+
+      <label for="timeSlot">Preferred Time Slot:</label>
+      <select id="timeSlot" name="timeSlot" required>
+        <option value="">-- Select --</option>
+        <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM</option>
+        <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+        <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+        <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM</option>
+        <option value="03:00 PM - 04:00 PM">03:00 PM - 04:00 PM</option>
+      </select>
+
+      <label for="rto">Preferred RTO Office:</label>
+      <input type="text" id="rto" name="rto" required placeholder="e.g., Pune RTO, MH12">
+
+      <label for="mobile">Mobile Number:</label>
+      <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}">
+
+      <label for="email">Email ID:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="additionalInfo">Additional Information (optional):</label>
+      <textarea id="additionalInfo" name="additionalInfo" rows="3"></textarea>
+
+      <button type="submit">Book Appointment</button>
+    </form>
+  </div>
+</body>
+</html>

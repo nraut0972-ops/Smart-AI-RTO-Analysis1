@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>महाराष्ट्र RTO - नोंदणी पुस्तिका</title>
+    <style>
+        :root {
+            --primary: #1a5276;
+            --secondary: #2874a6;
+            --accent: #f39c12;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #27ae60;
+            --danger: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Nirmala UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e6f7ff 0%, #b3e0ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+        }
+
+        .sidebar {
+            background: linear-gradient(to bottom right, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .sidebar::after {
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .sidebar h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar p {
+            margin-bottom: 25px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+
+        .features {
+            margin-top: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .feature-icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .language-selector {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--dark);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 82, 118, 0.2);
+        }
+
+        .rto-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .rto-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .rto-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .rto-card.selected {
+            border-color: var(--primary);
+            background-color: #e6f7ff;
+        }
+
+        .rto-card h3 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .calendar {
+            margin-bottom: 25px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-title {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .calendar-nav button {
+            background: var(--light);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav button:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark);
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        .calendar-day {
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .calendar-day:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .calendar-day.disabled {
+            color: #ccc;
+            pointer-events: none;
+        }
+
+        .calendar-day.selected {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .time-slot {
+            padding: 8px;
+            text-align: center;
+            background: var(--light);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .time-slot:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .time-slot.selected {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .time-slot.booked {
+            background: var(--danger);
+            color: white;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .service-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .service-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .service-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-card.selected {
+            border-color: var(--primary);
+            background-color: #e6f7ff;
+        }
+
+        .service-icon {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #154360;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 82, 118, 0.3);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .confirmation {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+
+        .confirmation-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .confirmation-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .confirmation h2 {
+            color: var(--success);
+            margin-bottom: 10px;
+        }
+
+        .confirmation-details {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                padding: 25px 15px;
+            }
+            
+            .main-content {
+                padding: 25px 15px;
+            }
+            
+            .rto-selector, .service-types {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .time-slots {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTI1NiA4QzExOSA4IDggMTE5IDggMjU2czExMSAyNDggMjQ4IDI0OCAyNDgtMTExIDI0OC0yNDhTMzkzIDggMjU2IDh6bTAgNDQ4Yy0xMTAuNSAwLTIwMC04OS41LTIwMC0yMDBTMTQ1LjUgNTYgMjU2IDU2czIwMCA4OS41IDIwMCAyMDAtODkuNSAyMDAtMjAwIDIwMHptOTYuMi0xNDYuN2MtMy44IDIuNy05LjcgNC4yLTE1LjIgMy4yLTUuNS0xLTEwLjYtNC4zLTEzLjUtOC4zLTMuOS00LjktNC4yLTEyLjktMS4yLTE4LjEgMy0xMS4xIDYuNC0yMi43IDguNC0zNC41IDIuMS0xMi4zIDIuNy0yNC45IDEuNi0zNy4yLTEuMS0xMi4zLTQuMi0yNC4xLTkuMS0zNStDNDQwLjMgOTMuMSAzMjAuNyA0OCAxOTIgNDhDODYuNCA0OCAwIDEzNC40IDAgMjQwczg2LjQgMTkyIDE5MiAxOTIgMTkyLTg2LjQgMTkyLTE5MmMwLTQxLjItMTYuNC03OS4xLTQzLjYtMTA3LjEtNi41LTYuNS0xNi4zLTYuNS0yMi44IDAtNi41IDYuNS02LjUgMTYuMyAwIDIyLjggMjIuNSAyMi41IDM1LjIgNTYuOSAzNS4yIDkwLjMgMCAzMy40LTIzLjkgNjEuNS01Ny40IDc2LjR6Ii8+PC9zdmc+" alt="RTO Logo">
+                <span>महाराष्ट्र RTO</span>
+            </div>
+            <h1>RTO नोंदणी पुस्तिका</h1>
+            <p>आपल्या वाहन संबंधित सेवांसाठी ऑनलाइन अपॉइंटमेंट बुक करा. तुमच्या सोयीस्कर वेळेची निवड करा.</p>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div>ड्रायव्हिंग लायसन्स</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div>वाहन नोंदणी</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div>परवाना नूतनीकरण</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="language-selector">
+                <button class="lang-btn active">मराठी</button>
+                <button class="lang-btn">English</button>
+                <button class="lang-btn">हिंदी</button>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="driving-license">ड्रायव्हिंग लायसन्स</div>
+                <div class="tab" data-tab="vehicle-registration">वाहन नोंदणी</div>
+                <div class="tab" data-tab="other-services">इतर सेवा</div>
+            </div>
+            
+            <div class="tab-content active" id="driving-license-tab">
+                <h2>ड्रायव्हिंग लायसन्स सेवा निवडा</h2>
+                
+                <div class="service-types">
+                    <div class="service-card selected">
+                        <div class="service-icon">🚗</div>
+                        <div>नवीन लायसन्स</div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🔄</div>
+                        <div>नूतनीकरण</div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">✏️</div>
+                        <div>सुधारणा</div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">📝</div>
+                        <div>परीक्षा</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rto-office">आपले RTO ऑफिस निवडा</label>
+                    <div class="rto-selector">
+                        <div class="rto-card selected">
+                            <h3>मुंबई (MH-01)</h3>
+                            <p>तांदूळवाडी</p>
+                        </div>
+                        <div class="rto-card">
+                            <h3>पुणे (MH-12)</h3>
+                            <p>अंबेगाव</p>
+                        </div>
+                        <div class="rto-card">
+                            <h3>नागपूर (MH-31)</h3>
+                            <p>भंडारा रोड</p>
+                        </div>
+                        <div class="rto-card">
+                            <h3>औरंगाबाद (MH-20)</h3>
+                            <p>चिकलठाणा</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <div class="calendar-title">जून 2024</div>
+                        <div class="calendar-nav">
+                            <button class="prev-month">&lt;</button>
+                            <button class="next-month">&gt;</button>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <div class="calendar-day-header">रवि</div>
+                        <div class="calendar-day-header">सोम</div>
+                        <div class="calendar-day-header">मंगळ</div>
+                        <div class="calendar-day-header">बुध</div>
+                        <div class="calendar-day-header">गुरु</div>
+                        <div class="calendar-day-header">शुक्र</div>
+                        <div class="calendar-day-header">शनि</div>
+                        
+                        <!-- Calendar days will be populated by JavaScript -->
+                        <div class="calendar-day disabled">26</div>
+                        <div class="calendar-day disabled">27</div>
+                        <div class="calendar-day disabled">28</div>
+                        <div class="calendar-day disabled">29</div>
+                        <div class="calendar-day disabled">30</div>
+                        <div class="calendar-day disabled">31</div>
+                        <div class="calendar-day">1</div>
+                        <div class="calendar-day">2</div>
+                        <div class="calendar-day">3</div>
+                        <div class="calendar-day">4</div>
+                        <div class="calendar-day">5</div>
+                        <div class="calendar-day">6</div>
+                        <div class="calendar-day">7</div>
+                        <div class="calendar-day">8</div>
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day">11</div>
+                        <div class="calendar-day">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day">14</div>
+                        <div class="calendar-day">15</div>
+                        <div class="calendar-day">16</div>
+                        <div class="calendar-day">17</div>
+                        <div class="calendar-day selected">18</div>
+                        <div class="calendar-day">19</div>
+                        <div class="calendar-day">20</div>
+                        <div class="calendar-day">21</div>
+                        <div class="calendar-day">22</div>
+                        <div class="calendar-day">23</div>
+                        <div class="calendar-day">24</div>
+                        <div class="calendar-day">25</div>
+                        <div class="calendar-day">26</div>
+                        <div class="calendar-day">27</div>
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                    </div>
+                </div>
+                
+                <h3>उपलब्ध वेळ</h3>
+                <div class="time-slots">
+                    <div class="time-slot">9:00 AM</div>
+                    <div class="time-slot">9:30 AM</div>
+                    <div class="time-slot booked">10:00 AM</div>
+                    <div class="time-slot">10:30 AM</div>
+                    <div class="time-slot">11:00 AM</div>
+                    <div class="time-slot booked">11:30 AM</div>
+                    <div class="time-slot">2:00 PM</div>
+                    <div class="time-slot selected">2:30 PM</div>
+                    <div class="time-slot">3:00 PM</div>
+                    <div class="time-slot">3:30 PM</div>
+                    <div class="time-slot">4:00 PM</div>
+                    <div class="time-slot">4:30 PM</div>
+                </div>
+                
+                <button class="btn btn-primary btn-block" id="book-appointment">अपॉइंटमेंट बुक करा</button>
+            </div>
+            
+            <div class="tab-content" id="vehicle-registration-tab">
+                <h2>वाहन नोंदणी सेवा</h2>
+                
+                <div class="service-types">
+                    <div class="service-card selected">
+                        <div class="service-icon">🚘</div>
+                        <div>नवीन नोंदणी</div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🔄</div>
+                        <div>हस्तांतरण</div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">✏️</div>
+                        <div>सुधारणा</div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">📋</div>
+                        <div>डुप्लिकेट आरसी</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="vehicle-type">वाहन प्रकार</label>
+                    <select id="vehicle-type">
+                        <option value="">-- वाहन प्रकार निवडा --</option>
+                        <option value="2-wheeler">2-चाकी वाहन</option>
+                        <option value="4-wheeler">4-चाकी वाहन</option>
+                        <option value="commercial">व्यावसायिक वाहन</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rto-office">आपले RTO ऑफिस निवडा</label>
+                    <div class="rto-selector">
+                        <div class="rto-card selected">
+                            <h3>मुंबई (MH-01)</h3>
+                            <p>तांदूळवाडी</p>
+                        </div>
+                        <div class="rto-card">
+                            <h3>पुणे (MH-12)</h3>
+                            <p>अंबेगाव</p>
+                        </div>
+                        <div class="rto-card">
+                            <h3>नागपूर (MH-31)</h3>
+                            <p>भंडारा रोड</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <div class="calendar-title">जून 2024</div>
+                        <div class="calendar-nav">
+                            <button class="prev-month">&lt;</button>
+                            <button class="next-month">&gt;</button>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <div class="calendar-day-header">रवि</div>
+                        <div class="calendar-day-header">सोम</div>
+                        <div class="calendar-day-header">मंगळ</div>
+                        <div class="calendar-day-header">बुध</div>
+                        <div class="calendar-day-header">गुरु</div>
+                        <div class="calendar-day-header">शुक्र</div>
+                        <div class="calendar-day-header">शनि</div>
+                        
+                        <!-- Calendar days will be populated by JavaScript -->
+                        <div class="calendar-day disabled">26</div>
+                        <div class="calendar-day disabled">27</div>
+                        <div class="calendar-day disabled">28</div>
+                        <div class="calendar-day disabled">29</div>
+                        <div class="calendar-day disabled">30</div>
+                        <div class="calendar-day disabled">31</div>
+                        <div class="calendar-day">1</div>
+                        <div class="calendar-day">2</div>
+                        <div class="calendar-day">3</div>
+                        <div class="calendar-day">4</div>
+                        <div class="calendar-day">5</div>
+                        <div class="calendar-day">6</div>
+                        <div class="calendar-day">7</div>
+                        <div class="calendar-day">8</div>
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day">11</div>
+                        <div class="calendar-day">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day">14</div>
+                        <div class="calendar-day">15</div>
+                        <div class="calendar-day">16</div>
+                        <div class="calendar-day">17</div>
+                        <div class="calendar-day selected">18</div>
+                        <div class="calendar-day">19</div>
+                        <div class="calendar-day">20</div>
+                        <div class="calendar-day">21</div>
+                        <div class="calendar-day">22</div>
+                        <div class="calendar-day">23</div>
+                        <div class="calendar-day">24</div>
+                        <div class="calendar-day">25</div>
+                        <div class="calendar-day">26</div>
+                        <div class="calendar-day">27</div>
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                    </div>
+                </div>
+                
+                <h3>उपलब्ध वेळ</h3>
+                <div class="time-slots">
+                    <div class="time-slot">10:00 AM</div>
+                    <div class="time-slot">10:30 AM</div>
+                    <div class="time-slot booked">11:00 AM</div>
+                    <div class="time-slot">11:30 AM</div>
+                    <div class="time-slot">3:00 PM</div>
+                    <div class="time-slot selected">3:30 PM</div>
+                    <div class="time-slot">4:00 PM</div>
+                    <div class="time-slot">4:30 PM</div>
+                </div>
+                
+                <button class="btn btn-primary btn-block" id="book-registration">अपॉइंटमेंट बुक करा</button>
+            </div>
+            
+            <div class="confirmation" id="confirmation">
+                <div class="confirmation-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                </div>
+                <h2>अपॉइंटमेंट निश्चित केले!</h2>
+                
+                <div class="confirmation-details">
+                    <div class="detail-row">
+                        <span class="detail-label">अर्ज क्रमांक:</span>
+                        <span>RTO/2024/78654</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">सेवा:</span>
+                        <span>ड्रायव्हिंग लायसन्स - नवीन</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">RTO ऑफिस:</span>
+                        <span>मुंबई (MH-01), तांदूळवाडी</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">तारीख:</span>
+                        <span>18 जून 2024</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">वेळ:</span>
+                        <span>2:30 PM</span>
+                    </div>
+                </div>
+                
+                <p>तुमच्या ईमेलवर पुष्टीकरण पाठवले आहे.</p>
+                <button class="btn btn-primary" id="new-booking" style="margin-top: 20px;">नवीन अपॉइंटमेंट</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language switching functionality
+        const langButtons = document.querySelectorAll('.lang-btn');
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+        
+        // Tab switching functionality
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Service card selection
+        const serviceCards = document.querySelectorAll('.service-card');
+        serviceCards.forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+            });
+        });
+        
+        // RTO card selection
+        const rtoCards = document.querySelectorAll('.rto-card');
+        rtoCards.forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.rto-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+            });
+        });
+        
+        // Calendar day selection
+        const calendarDays = document.querySelectorAll('.calendar-day:not(.disabled)');
+        calendarDays.forEach(day => {
+            day.addEventListener('click', () => {
+                document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                day.classList.add('selected');
+            });
+        });
+        
+        // Time slot selection
+        const timeSlots = document.querySelectorAll('.time-slot:not(.booked)');
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                slot.classList.add('selected');
+            });
+        });
+        
+        // Booking confirmation
+        const bookButtons = document.querySelectorAll('#book-appointment, #book-registration');
+        const confirmation = document.getElementById('confirmation');
+        
+        bookButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+                
+                // Show confirmation
+                confirmation.style.display = 'block';
+            });
+        });
+        
+        // New booking button
+        document.getElementById('new-booking').addEventListener('click', () => {
+            // Hide confirmation
+            confirmation.style.display = 'none';
+            
+            // Show first tab content
+            document.querySelectorAll('.tab-content').forEach(c => {
+                c.classList.remove('active');
+                c.style.display = 'none';
+            });
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            document.querySelector('.tab').classList.add('active');
+            document.getElementById('driving-license-tab').classList.add('active');
+            document.getElementById('driving-license-tab').style.display = 'block';
+        });
+        
+        // Simple month navigation (would be more complex in a real implementation)
+        document.querySelectorAll('.prev-month').forEach(btn => {
+            btn.addEventListener('click', () => alert('Previous month clicked - would load previous month in real implementation'));
+        });
+        
+        document.querySelectorAll('.next-month').forEach(btn => {
+            btn.addEventListener('click', () => alert('Next month clicked - would load next month in real implementation'));
+        });
+    </script>
+</body>
+</html>

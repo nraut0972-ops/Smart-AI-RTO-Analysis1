@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart RTO - Map Integration & Vehicle Tracking System</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Leaflet MarkerCluster for grouping markers -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <style>
+        :root {
+            --gov-blue: #0d4e9e;
+            --gov-light-blue: #1a73e8;
+            --gov-red: #d32f2f;
+            --gov-green: #2e7d32;
+            --gov-orange: #f57c00;
+            --gov-gray: #f5f5f5;
+            --gov-dark: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: var(--gov-dark);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .gov-header {
+            background: linear-gradient(to right, var(--gov-blue), var(--gov-light-blue));
+            color: white;
+            padding: 12px 0;
+            border-bottom: 4px solid #ffc107;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .gov-logo {
+            height: 40px;
+            margin-right: 12px;
+        }
+        
+        .page-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .gov-subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .main-container {
+            display: flex;
+            height: calc(100vh - 70px);
+            margin-top: 70px;
+        }
+        
+        .sidebar {
+            width: 350px;
+            background-color: white;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .section-title {
+            color: var(--gov-blue);
+            font-weight: 600;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .filter-card {
+            background-color: var(--gov-gray);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--gov-light-blue);
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gov-dark);
+            font-size: 0.9rem;
+        }
+        
+        .btn-gov {
+            background-color: var(--gov-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .btn-gov:hover {
+            background-color: var(--gov-light-blue);
+            color: white;
+        }
+        
+        .btn-gov-outline {
+            background-color: transparent;
+            color: var(--gov-blue);
+            border: 1px solid var(--gov-blue);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .btn-gov-outline:hover {
+            background-color: rgba(13, 78, 158, 0.05);
+        }
+        
+        .vehicle-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .vehicle-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-color: var(--gov-blue);
+        }
+        
+        .vehicle-card.active {
+            border-color: var(--gov-blue);
+            background-color: rgba(13, 78, 158, 0.05);
+        }
+        
+        .vehicle-number {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--gov-blue);
+            margin-bottom: 5px;
+        }
+        
+        .vehicle-details {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        .vehicle-location {
+            font-size: 0.9rem;
+            color: var(--gov-dark);
+            margin-top: 8px;
+        }
+        
+        .timestamp {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .status-normal {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-stolen {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-violation {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .legend-container {
+            background-color: white;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .legend-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .legend-text {
+            font-size: 0.85rem;
+        }
+        
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .info-panel.active {
+            display: block;
+        }
+        
+        .close-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .control-buttons {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        
+        .control-btn {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-right: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .control-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .control-btn.active {
+            background-color: var(--gov-blue);
+            color: white;
+            border-color: var(--gov-blue);
+        }
+        
+        .layer-controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: white;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+        }
+        
+        .layer-checkbox {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .layer-checkbox input {
+            margin-right: 8px;
+        }
+        
+        .layer-checkbox label {
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .camera-status {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-active {
+            background-color: #4caf50;
+        }
+        
+        .status-offline {
+            background-color: #f44336;
+        }
+        
+        .status-priority {
+            background-color: #ff9800;
+        }
+        
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 300px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 280px;
+                padding: 15px;
+            }
+            
+            .info-panel {
+                width: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 300px;
+            }
+            
+            .map-container {
+                height: calc(100vh - 370px);
+            }
+            
+            .info-panel {
+                width: 200px;
+                right: 10px;
+                top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Government Header -->
+    <header class="gov-header">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/120px-Emblem_of_India.svg.png" alt="Government of India" class="gov-logo">
+                <div>
+                    <h1 class="page-title">Smart RTO - Map Integration & Vehicle Tracking</h1>
+                    <div class="gov-subtitle">Intelligent Traffic Management System • Ministry of Road Transport & Highways</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Search Section -->
+            <h4 class="section-title"><i class="fas fa-search me-2"></i>Vehicle Search</h4>
+            <div class="filter-card">
+                <div class="filter-label">Search by Vehicle Number</div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="vehicle-search" placeholder="e.g., MH12AB1234" autocomplete="off">
+                    <button class="btn btn-gov" type="button" id="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="filter-label">Date Filter</div>
+                        <input type="date" class="form-control" id="date-filter" value="">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="filter-label">Time Filter</div>
+                        <input type="time" class="form-control" id="time-filter" value="">
+                    </div>
+                </div>
+                
+                <div class="filter-label">Tracking Mode</div>
+                <div class="btn-group w-100 mb-3" role="group">
+                    <input type="radio" class="btn-check" name="tracking-mode" id="mode-lastseen" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="mode-lastseen">Last Seen</label>
+                    
+                    <input type="radio" class="btn-check" name="tracking-mode" id="mode-history" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="mode-history">Movement History</label>
+                    
+                    <input type="radio" class="btn-check" name="tracking-mode" id="mode-stolen" autocomplete="off">
+                    <label class="btn btn-outline-danger" for="mode-stolen">Stolen Vehicles</label>
+                </div>
+                
+                <button class="btn btn-gov w-100 mb-2" id="apply-filters">
+                    <i class="fas fa-filter me-1"></i> Apply Filters
+                </button>
+                <button class="btn btn-gov-outline w-100" id="reset-filters">
+                    <i class="fas fa-redo me-1"></i> Reset Filters
+                </button>
+            </div>
+            
+            <!-- Recently Tracked Vehicles -->
+            <h4 class="section-title"><i class="fas fa-car me-2"></i>Recently Tracked Vehicles</h4>
+            <div id="recent-vehicles">
+                <!-- Vehicle cards will be dynamically generated here -->
+            </div>
+            
+            <!-- Legend -->
+            <div class="legend-container">
+                <h5><i class="fas fa-key me-2"></i>Map Legend</h5>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background-color: #2e7d32; color: white;">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="legend-text">Normal Vehicle (Last Seen)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background-color: #d32f2f; color: white;">
+                        <i class="fas fa-car-crash"></i>
+                    </div>
+                    <div class="legend-text">Stolen Vehicle</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background-color: #f57c00; color: white;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="legend-text">Violation Detected</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background-color: #4caf50; color: white;">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="legend-text">Active CCTV Camera</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background-color: #f44336; color: white;">
+                        <i class="fas fa-video-slash"></i>
+                    </div>
+                    <div class="legend-text">Offline CCTV Camera</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background-color: #ff9800; color: white;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="legend-text">High Priority Camera</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="map"></div>
+            
+            <!-- Layer Controls -->
+            <div class="layer-controls">
+                <h6><i class="fas fa-layer-group me-2"></i>Map Layers</h6>
+                <div class="layer-checkbox">
+                    <input type="checkbox" id="layer-vehicles" checked>
+                    <label for="layer-vehicles">Vehicle Locations</label>
+                </div>
+                <div class="layer-checkbox">
+                    <input type="checkbox" id="layer-cameras" checked>
+                    <label for="layer-cameras">CCTV Cameras</label>
+                </div>
+                <div class="layer-checkbox">
+                    <input type="checkbox" id="layer-stolen" checked>
+                    <label for="layer-stolen">Stolen Vehicles</label>
+                </div>
+                <div class="layer-checkbox">
+                    <input type="checkbox" id="layer-heatmap">
+                    <label for="layer-heatmap">Violation Heatmap</label>
+                </div>
+                <div class="layer-checkbox">
+                    <input type="checkbox" id="layer-cluster" checked>
+                    <label for="layer-cluster">Marker Clustering</label>
+                </div>
+            </div>
+            
+            <!-- Control Buttons -->
+            <div class="control-buttons">
+                <button class="control-btn" id="btn-center">
+                    <i class="fas fa-crosshairs me-2"></i> Center Map
+                </button>
+                <button class="control-btn" id="btn-play" data-playing="false">
+                    <i class="fas fa-play me-2"></i> Play Animation
+                </button>
+                <button class="control-btn" id="btn-clear">
+                    <i class="fas fa-trash me-2"></i> Clear Paths
+                </button>
+            </div>
+            
+            <!-- Info Panel (hidden by default) -->
+            <div class="info-panel" id="info-panel">
+                <button class="close-panel" id="close-panel">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h5 id="info-title">Vehicle Details</h5>
+                <div id="info-content">
+                    <!-- Info will be dynamically generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ============================================
+        // SAMPLE DATA - Simulating RTO Tracking System
+        // ============================================
+        
+        // Sample vehicle detection data
+        const vehicleDetections = [
+            {
+                id: 1,
+                vehicleNumber: "MH12AB1234",
+                vehicleType: "Car",
+                owner: "Rajesh Kumar",
+                lastSeen: "2023-10-28 14:35:22",
+                latitude: 19.0760,
+                longitude: 72.8777,
+                source: "CCTV Camera",
+                sourceId: "CCTV-045",
+                status: "normal",
+                violationType: null
+            },
+            {
+                id: 2,
+                vehicleNumber: "DL3CAB4567",
+                vehicleType: "SUV",
+                owner: "Priya Sharma",
+                lastSeen: "2023-10-28 13:20:15",
+                latitude: 28.6139,
+                longitude: 77.2090,
+                source: "Manual Entry",
+                sourceId: "RTO-OFFICE-12",
+                status: "normal",
+                violationType: null
+            },
+            {
+                id: 3,
+                vehicleNumber: "GJ01HH7890",
+                vehicleType: "Two-Wheeler",
+                owner: "Amit Patel",
+                lastSeen: "2023-10-28 11:45:30",
+                latitude: 23.0225,
+                longitude: 72.5714,
+                source: "QR Scan",
+                sourceId: "QR-CHECKPOINT-8",
+                status: "stolen",
+                violationType: null
+            },
+            {
+                id: 4,
+                vehicleNumber: "KA05MN2345",
+                vehicleType: "Bus",
+                owner: "Bengaluru Transport",
+                lastSeen: "2023-10-28 10:15:08",
+                latitude: 12.9716,
+                longitude: 77.5946,
+                source: "CCTV Camera",
+                sourceId: "CCTV-112",
+                status: "normal",
+                violationType: "Over Speeding"
+            },
+            {
+                id: 5,
+                vehicleNumber: "TN09PQ6789",
+                vehicleType: "Truck",
+                owner: "Logistics Corp",
+                lastSeen: "2023-10-28 09:30:45",
+                latitude: 13.0827,
+                longitude: 80.2707,
+                source: "CCTV Camera",
+                sourceId: "CCTV-089",
+                status: "normal",
+                violationType: null
+            },
+            {
+                id: 6,
+                vehicleNumber: "UP16RS9012",
+                vehicleType: "Car",
+                owner: "Vikram Singh",
+                lastSeen: "2023-10-28 08:20:33",
+                latitude: 26.8467,
+                longitude: 80.9462,
+                source: "Manual Entry",
+                sourceId: "RTO-OFFICE-07",
+                status: "normal",
+                violationType: "No Parking"
+            },
+            {
+                id: 7,
+                vehicleNumber: "RJ14UV3456",
+                vehicleType: "Two-Wheeler",
+                owner: "Sanjay Mehta",
+                lastSeen: "2023-10-27 16:10:18",
+                latitude: 26.9124,
+                longitude: 75.7873,
+                source: "QR Scan",
+                sourceId: "QR-CHECKPOINT-3",
+                status: "stolen",
+                violationType: null
+            },
+            {
+                id: 8,
+                vehicleNumber: "AP07XY7890",
+                vehicleType: "Car",
+                owner: "Anil Reddy",
+                lastSeen: "2023-10-27 15:05:55",
+                latitude: 17.3850,
+                longitude: 78.4867,
+                source: "CCTV Camera",
+                sourceId: "CCTV-156",
+                status: "normal",
+                violationType: "Signal Jumping"
+            }
+        ];
+        
+        // Stolen vehicle movement history (for animation)
+        const stolenVehicleMovement = {
+            vehicleNumber: "GJ01HH7890",
+            owner: "Amit Patel",
+            vehicleType: "Two-Wheeler",
+            reportedStolen: "2023-10-25 09:00:00",
+            path: [
+                {latitude: 23.0225, longitude: 72.5714, timestamp: "2023-10-28 11:45:30", source: "CCTV-045"},
+                {latitude: 23.0325, longitude: 72.5814, timestamp: "2023-10-28 10:30:15", source: "QR-CHECKPOINT-8"},
+                {latitude: 23.0425, longitude: 72.5914, timestamp: "2023-10-28 09:15:22", source: "CCTV-112"},
+                {latitude: 23.0525, longitude: 72.6014, timestamp: "2023-10-28 08:00:10", source: "Manual Entry"},
+                {latitude: 23.0625, longitude: 72.6114, timestamp: "2023-10-27 19:45:35", source: "CCTV-089"},
+                {latitude: 23.0725, longitude: 72.6214, timestamp: "2023-10-27 18:30:20", source: "CCTV-156"}
+            ]
+        };
+        
+        // CCTV camera locations
+        const cctvCameras = [
+            {id: "CCTV-001", latitude: 19.0760, longitude: 72.8777, status: "active", priority: "high", area: "Marine Drive"},
+            {id: "CCTV-045", latitude: 19.0860, longitude: 72.8877, status: "active", priority: "medium", area: "Churchgate"},
+            {id: "CCTV-089", latitude: 19.0960, longitude: 72.8977, status: "offline", priority: "low", area: "Colaba"},
+            {id: "CCTV-112", latitude: 19.1060, longitude: 72.9077, status: "active", priority: "high", area: "Nariman Point"},
+            {id: "CCTV-156", latitude: 19.1160, longitude: 72.9177, status: "active", priority: "medium", area: "Worli"},
+            {id: "CCTV-201", latitude: 19.1260, longitude: 72.9277, status: "offline", priority: "low", area: "Bandra"},
+            {id: "CCTV-234", latitude: 19.1360, longitude: 72.9377, status: "active", priority: "high", area: "Andheri"},
+            {id: "CCTV-278", latitude: 19.1460, longitude: 72.9477, status: "active", priority: "medium", area: "Juhu"}
+        ];
+        
+        // Additional vehicles for clustering demo
+        const additionalVehicles = [];
+        for (let i = 1; i <= 50; i++) {
+            const lat = 19.0 + Math.random() * 0.3;
+            const lng = 72.8 + Math.random() * 0.3;
+            const statuses = ["normal", "normal", "normal", "violation"];
+            const status = statuses[Math.floor(Math.random() * statuses.length)];
+            
+            additionalVehicles.push({
+                id: 100 + i,
+                vehicleNumber: `MH${String(Math.floor(Math.random() * 99)).padStart(2, '0')}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${String(Math.floor(Math.random() * 9999)).padStart(4, '0')}`,
+                vehicleType: ["Car", "Two-Wheeler", "SUV", "Truck"][Math.floor(Math.random() * 4)],
+                owner: "Vehicle Owner " + i,
+                lastSeen: `2023-10-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')} ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+                latitude: lat,
+                longitude: lng,
+                source: ["CCTV Camera", "QR Scan", "Manual Entry"][Math.floor(Math.random() * 3)],
+                sourceId: `CCTV-${String(Math.floor(Math.random() * 999)).padStart(3, '0')}`,
+                status: status,
+                violationType: status === "violation" ? ["Over Speeding", "Signal Jumping", "No Helmet", "No Parking"][Math.floor(Math.random() * 4)] : null
+            });
+        }
+        
+        // Combine all vehicle data
+        const allVehicleData = [...vehicleDetections, ...additionalVehicles];
+        
+        // ============================================
+        // MAP INITIALIZATION & CONFIGURATION
+        // ============================================
+        
+        let map;
+        let vehicleMarkers = [];
+        let cameraMarkers = [];
+        let stolenVehiclePath = null;
+        let vehicleMarkerCluster;
+        let cameraMarkerCluster;
+        let heatmapLayer = null;
+        let currentSelectedVehicle = null;
+        let animationInterval = null;
+        let animationIndex = 0;
+        
+        // Initialize the map
+        function initMap() {
+            // Center on India
+            map = L.map('map').setView([20.5937, 78.9629], 5);
+            
+            // Add OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18
+            }).addTo(map);
+            
+            // Initialize marker clusters
+            vehicleMarkerCluster = L.markerClusterGroup({
+                chunkedLoading: true,
+                maxClusterRadius: 50
+            });
+            
+            cameraMarkerCluster = L.markerClusterGroup({
+                chunkedLoading: true,
+                maxClusterRadius: 40
+            });
+            
+            // Load initial data
+            loadVehicleMarkers(allVehicleData);
+            loadCameraMarkers(cctvCameras);
+            
+            // Add clusters to map
+            map.addLayer(vehicleMarkerCluster);
+            map.addLayer(cameraMarkerCluster);
+            
+            // Add event listener for map click to close info panel
+            map.on('click', function() {
+                document.getElementById('info-panel').classList.remove('active');
+            });
+            
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date-filter').value = today;
+            
+            // Set current time as default
+            const now = new Date();
+            const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            document.getElementById('time-filter').value = currentTime;
+            
+            // Update recent vehicles list
+            updateRecentVehiclesList(allVehicleData.slice(0, 6));
+        }
+        
+        // ============================================
+        // MARKER FUNCTIONS
+        // ============================================
+        
+        // Load vehicle markers on the map
+        function loadVehicleMarkers(vehicles) {
+            // Clear existing markers
+            vehicleMarkers.forEach(marker => {
+                vehicleMarkerCluster.removeLayer(marker);
+            });
+            vehicleMarkers = [];
+            
+            // Add new markers
+            vehicles.forEach(vehicle => {
+                const marker = createVehicleMarker(vehicle);
+                vehicleMarkers.push(marker);
+                vehicleMarkerCluster.addLayer(marker);
+            });
+        }
+        
+        // Create a vehicle marker with appropriate styling
+        function createVehicleMarker(vehicle) {
+            // Determine marker color based on status
+            let markerColor, iconClass;
+            if (vehicle.status === 'stolen') {
+                markerColor = '#d32f2f';
+                iconClass = 'fa-car-crash';
+            } else if (vehicle.status === 'violation' || vehicle.violationType) {
+                markerColor = '#f57c00';
+                iconClass = 'fa-exclamation-triangle';
+            } else {
+                markerColor = '#2e7d32';
+                iconClass = 'fa-car';
+            }
+            
+            // Create custom icon
+            const vehicleIcon = L.divIcon({
+                html: `<div style="background-color: ${markerColor}; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                          <i class="fas ${iconClass}"></i>
+                       </div>`,
+                className: 'vehicle-marker',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+            
+            // Create marker
+            const marker = L.marker([vehicle.latitude, vehicle.longitude], {
+                icon: vehicleIcon,
+                title: vehicle.vehicleNumber
+            });
+            
+            // Add popup with vehicle info
+            marker.bindPopup(`
+                <div style="min-width: 200px;">
+                    <h5 style="margin: 0 0 10px 0; color: ${markerColor};">${vehicle.vehicleNumber}</h5>
+                    <p style="margin: 5px 0;"><strong>Type:</strong> ${vehicle.vehicleType}</p>
+                    <p style="margin: 5px 0;"><strong>Owner:</strong> ${vehicle.owner}</p>
+                    <p style="margin: 5px 0;"><strong>Last Seen:</strong> ${vehicle.lastSeen}</p>
+                    <p style="margin: 5px 0;"><strong>Source:</strong> ${vehicle.source} (${vehicle.sourceId})</p>
+                    ${vehicle.violationType ? `<p style="margin: 5px 0; color: #f57c00;"><strong>Violation:</strong> ${vehicle.violationType}</p>` : ''}
+                    ${vehicle.status === 'stolen' ? `<p style="margin: 5px 0; color: #d32f2f;"><strong>STATUS: STOLEN VEHICLE</strong></p>` : ''}
+                </div>
+            `);
+            
+            // Add click event to show detailed info panel
+            marker.on('click', function() {
+                showVehicleInfo(vehicle);
+                currentSelectedVehicle = vehicle;
+                highlightVehicleCard(vehicle.id);
+            });
+            
+            return marker;
+        }
+        
+        // Load CCTV camera markers on the map
+        function loadCameraMarkers(cameras) {
+            // Clear existing markers
+            cameraMarkers.forEach(marker => {
+                cameraMarkerCluster.removeLayer(marker);
+            });
+            cameraMarkers = [];
+            
+            // Add new markers
+            cameras.forEach(camera => {
+                const marker = createCameraMarker(camera);
+                cameraMarkers.push(marker);
+                cameraMarkerCluster.addLayer(marker);
+            });
+        }
+        
+        // Create a CCTV camera marker with appropriate styling
+        function createCameraMarker(camera) {
+            // Determine marker color based on status
+            let markerColor, iconClass;
+            if (camera.status === 'offline') {
+                markerColor = '#f44336';
+                iconClass = 'fa-video-slash';
+            } else if (camera.priority === 'high') {
+                markerColor = '#ff9800';
+                iconClass = 'fa-star';
+            } else {
+                markerColor = '#4caf50';
+                iconClass = 'fa-video';
+            }
+            
+            // Create custom icon
+            const cameraIcon = L.divIcon({
+                html: `<div style="background-color: ${markerColor}; color: white; width: 28px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                          <i class="fas ${iconClass}" style="font-size: 0.9rem;"></i>
+                       </div>`,
+                className: 'camera-marker',
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+            });
+            
+            // Create marker
+            const marker = L.marker([camera.latitude, camera.longitude], {
+                icon: cameraIcon,
+                title: camera.id
+            });
+            
+            // Add popup with camera info
+            marker.bindPopup(`
+                <div style="min-width: 180px;">
+                    <h5 style="margin: 0 0 10px 0;">${camera.id}</h5>
+                    <p style="margin: 5px 0;"><strong>Status:</strong> ${camera.status.toUpperCase()}</p>
+                    <p style="margin: 5px 0;"><strong>Priority:</strong> ${camera.priority.toUpperCase()}</p>
+                    <p style="margin: 5px 0;"><strong>Area:</strong> ${camera.area}</p>
+                    <div class="camera-status">
+                        <div class="status-dot ${camera.status === 'active' ? 'status-active' : 'status-offline'}"></div>
+                        <span>${camera.status === 'active' ? 'Active' : 'Offline'}</span>
+                    </div>
+                </div>
+            `);
+            
+            // Add click event to show camera info
+            marker.on('click', function() {
+                showCameraInfo(camera);
+            });
+            
+            return marker;
+        }
+        
+        // ============================================
+        // INFO PANEL FUNCTIONS
+        // ============================================
+        
+        // Show vehicle info in the side panel
+        function showVehicleInfo(vehicle) {
+            const panel = document.getElementById('info-panel');
+            const title = document.getElementById('info-title');
+            const content = document.getElementById('info-content');
+            
+            // Determine status badge
+            let statusBadge;
+            if (vehicle.status === 'stolen') {
+                statusBadge = '<span class="status-badge status-stolen">STOLEN</span>';
+            } else if (vehicle.violationType) {
+                statusBadge = `<span class="status-badge status-violation">VIOLATION: ${vehicle.violationType}</span>`;
+            } else {
+                statusBadge = '<span class="status-badge status-normal">NORMAL</span>';
+            }
+            
+            title.textContent = vehicle.vehicleNumber;
+            content.innerHTML = `
+                <div class="vehicle-details">
+                    <p><strong>Vehicle Type:</strong> ${vehicle.vehicleType}</p>
+                    <p><strong>Owner:</strong> ${vehicle.owner}</p>
+                    <p><strong>Last Seen:</strong> ${vehicle.lastSeen}</p>
+                    <p><strong>Detection Source:</strong> ${vehicle.source} (${vehicle.sourceId})</p>
+                    <p><strong>Location:</strong> ${vehicle.latitude.toFixed(4)}, ${vehicle.longitude.toFixed(4)}</p>
+                    <div class="mt-2">${statusBadge}</div>
+                </div>
+                <hr>
+                <div>
+                    <h6>Actions</h6>
+                    <button class="btn btn-gov btn-sm w-100 mb-2" onclick="centerOnVehicle('${vehicle.vehicleNumber}')">
+                        <i class="fas fa-crosshairs me-1"></i> Center on Map
+                    </button>
+                    ${vehicle.status === 'stolen' ? 
+                        `<button class="btn btn-danger btn-sm w-100 mb-2" onclick="showStolenVehiclePath('${vehicle.vehicleNumber}')">
+                            <i class="fas fa-route me-1"></i> Track Movement Path
+                        </button>` : ''}
+                    <button class="btn btn-gov-outline btn-sm w-100" onclick="generateReport('${vehicle.vehicleNumber}')">
+                        <i class="fas fa-file-pdf me-1"></i> Generate Report
+                    </button>
+                </div>
+            `;
+            
+            panel.classList.add('active');
+        }
+        
+        // Show camera info in the side panel
+        function showCameraInfo(camera) {
+            const panel = document.getElementById('info-panel');
+            const title = document.getElementById('info-title');
+            const content = document.getElementById('info-content');
+            
+            // Determine status indicator
+            let statusIndicator;
+            if (camera.status === 'active') {
+                statusIndicator = '<span style="color: #4caf50;"><i class="fas fa-circle me-1"></i> ACTIVE</span>';
+            } else {
+                statusIndicator = '<span style="color: #f44336;"><i class="fas fa-circle me-1"></i> OFFLINE</span>';
+            }
+            
+            title.textContent = camera.id;
+            content.innerHTML = `
+                <div class="vehicle-details">
+                    <p><strong>Area:</strong> ${camera.area}</p>
+                    <p><strong>Status:</strong> ${statusIndicator}</p>
+                    <p><strong>Priority:</strong> ${camera.priority.toUpperCase()}</p>
+                    <p><strong>Coordinates:</strong> ${camera.latitude.toFixed(4)}, ${camera.longitude.toFixed(4)}</p>
+                </div>
+                <hr>
+                <div>
+                    <h6>Camera Controls</h6>
+                    <button class="btn btn-gov btn-sm w-100 mb-2" onclick="centerOnCamera('${camera.id}')">
+                        <i class="fas fa-crosshairs me-1"></i> Center on Map
+                    </button>
+                    <button class="btn btn-gov-outline btn-sm w-100 mb-2" ${camera.status === 'offline' ? 'disabled' : ''}>
+                        <i class="fas fa-eye me-1"></i> View Live Feed
+                    </button>
+                    <button class="btn btn-gov-outline btn-sm w-100">
+                        <i class="fas fa-history me-1"></i> View Recordings
+                    </button>
+                </div>
+            `;
+            
+            panel.classList.add('active');
+        }
+        
+        // ============================================
+        // VEHICLE TRACKING FUNCTIONS
+        // ============================================
+        
+        // Show stolen vehicle movement path
+        function showStolenVehiclePath(vehicleNumber) {
+            // Clear any existing path
+            if (stolenVehiclePath) {
+                map.removeLayer(stolenVehiclePath);
+            }
+            
+            // Get vehicle data
+            const vehicle = allVehicleData.find(v => v.vehicleNumber === vehicleNumber);
+            if (!vehicle || vehicle.status !== 'stolen') {
+                alert('No stolen vehicle found with that number.');
+                return;
+            }
+            
+            // Create path from stolen vehicle movement data
+            const pathCoordinates = stolenVehicleMovement.path.map(point => [point.latitude, point.longitude]);
+            
+            // Create polyline for the path
+            stolenVehiclePath = L.polyline(pathCoordinates, {
+                color: '#d32f2f',
+                weight: 4,
+                opacity: 0.7,
+                dashArray: '10, 10'
+            }).addTo(map);
+            
+            // Add markers for each point in the path
+            stolenVehicleMovement.path.forEach((point, index) => {
+                const isLastPoint = index === stolenVehicleMovement.path.length - 1;
+                
+                const pathIcon = L.divIcon({
+                    html: `<div style="background-color: ${isLastPoint ? '#d32f2f' : '#ff9800'}; color: white; width: ${isLastPoint ? '24' : '18'}px; height: ${isLastPoint ? '24' : '18'}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                              <i class="fas fa-${isLastPoint ? 'car-crash' : 'dot-circle'}" style="font-size: ${isLastPoint ? '0.9rem' : '0.7rem'}"></i>
+                           </div>`,
+                    className: 'path-marker',
+                    iconSize: isLastPoint ? [24, 24] : [18, 18],
+                    iconAnchor: isLastPoint ? [12, 12] : [9, 9]
+                });
+                
+                const marker = L.marker([point.latitude, point.longitude], { icon: pathIcon });
+                marker.bindPopup(`
+                    <div style="min-width: 200px;">
+                        <h6>Detection Point ${index + 1}</h6>
+                        <p><strong>Time:</strong> ${point.timestamp}</p>
+                        <p><strong>Source:</strong> ${point.source}</p>
+                        <p><strong>Coordinates:</strong> ${point.latitude.toFixed(4)}, ${point.longitude.toFixed(4)}</p>
+                    </div>
+                `).addTo(map);
+            });
+            
+            // Fit map to show the entire path
+            map.fitBounds(stolenVehiclePath.getBounds());
+            
+            // Update info panel
+            const panel = document.getElementById('info-panel');
+            const title = document.getElementById('info-title');
+            const content = document.getElementById('info-content');
+            
+            title.textContent = `${vehicleNumber} - Movement Path`;
+            content.innerHTML = `
+                <div class="vehicle-details">
+                    <p><strong>Vehicle:</strong> ${vehicleNumber}</p>
+                    <p><strong>Owner:</strong> ${stolenVehicleMovement.owner}</p>
+                    <p><strong>Type:</strong> ${stolenVehicleMovement.vehicleType}</p>
+                    <p><strong>Reported Stolen:</strong> ${stolenVehicleMovement.reportedStolen}</p>
+                    <p><strong>Path Points:</strong> ${stolenVehicleMovement.path.length} detection points</p>
+                    <div class="mt-2"><span class="status-badge status-stolen">STOLEN VEHICLE TRACKING</span></div>
+                </div>
+                <hr>
+                <div>
+                    <h6>Path Controls</h6>
+                    <button class="btn btn-gov btn-sm w-100 mb-2" id="btn-play-path" data-playing="false" onclick="togglePathAnimation()">
+                        <i class="fas fa-play me-1"></i> Play Animation
+                    </button>
+                    <button class="btn btn-gov-outline btn-sm w-100" onclick="clearStolenVehiclePath()">
+                        <i class="fas fa-trash me-1"></i> Clear Path
+                    </button>
+                </div>
+            `;
+            
+            panel.classList.add('active');
+        }
+        
+        // Toggle stolen vehicle path animation
+        function togglePathAnimation() {
+            const btn = document.getElementById('btn-play-path');
+            const isPlaying = btn.getAttribute('data-playing') === 'true';
+            
+            if (isPlaying) {
+                // Stop animation
+                clearInterval(animationInterval);
+                btn.innerHTML = '<i class="fas fa-play me-1"></i> Play Animation';
+                btn.setAttribute('data-playing', 'false');
+                animationIndex = 0;
+            } else {
+                // Start animation
+                if (!stolenVehiclePath) return;
+                
+                const pathCoordinates = stolenVehiclePath.getLatLngs();
+                if (pathCoordinates.length === 0) return;
+                
+                animationIndex = 0;
+                btn.innerHTML = '<i class="fas fa-pause me-1"></i> Pause Animation';
+                btn.setAttribute('data-playing', 'true');
+                
+                // Create animation interval
+                animationInterval = setInterval(() => {
+                    if (animationIndex < pathCoordinates.length) {
+                        // Move map to current point
+                        map.setView(pathCoordinates[animationIndex], 14);
+                        animationIndex++;
+                    } else {
+                        // End of animation
+                        clearInterval(animationInterval);
+                        btn.innerHTML = '<i class="fas fa-play me-1"></i> Play Animation';
+                        btn.setAttribute('data-playing', 'false');
+                        animationIndex = 0;
+                    }
+                }, 1000); // 1 second per point
+            }
+        }
+        
+        // Clear stolen vehicle path
+        function clearStolenVehiclePath() {
+            if (stolenVehiclePath) {
+                map.removeLayer(stolenVehiclePath);
+                stolenVehiclePath = null;
+            }
+            
+            // Clear animation if running
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+            
+            // Clear all path markers
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker && layer.options.icon && 
+                    layer.options.icon.options.className === 'path-marker') {
+                    map.removeLayer(layer);
+                }
+            });
+        }
+        
+        // ============================================
+        // FILTER FUNCTIONS
+        // ============================================
+        
+        // Apply filters to the map
+        function applyFilters() {
+            const searchTerm = document.getElementById('vehicle-search').value.toLowerCase();
+            const dateFilter = document.getElementById('date-filter').value;
+            const timeFilter = document.getElementById('time-filter').value;
+            const modeLastSeen = document.getElementById('mode-lastseen').checked;
+            const modeHistory = document.getElementById('mode-history').checked;
+            const modeStolen = document.getElementById('mode-stolen').checked;
+            
+            // Filter vehicles based on criteria
+            let filteredVehicles = allVehicleData;
+            
+            // Apply search filter
+            if (searchTerm) {
+                filteredVehicles = filteredVehicles.filter(vehicle => 
+                    vehicle.vehicleNumber.toLowerCase().includes(searchTerm) ||
+                    vehicle.owner.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Apply date filter
+            if (dateFilter) {
+                filteredVehicles = filteredVehicles.filter(vehicle => {
+                    const vehicleDate = vehicle.lastSeen.split(' ')[0];
+                    return vehicleDate === dateFilter;
+                });
+            }
+            
+            // Apply stolen vehicle filter
+            if (modeStolen) {
+                filteredVehicles = filteredVehicles.filter(vehicle => vehicle.status === 'stolen');
+            }
+            
+            // Reload markers with filtered data
+            loadVehicleMarkers(filteredVehicles);
+            
+            // Update recent vehicles list
+            updateRecentVehiclesList(filteredVehicles.slice(0, 6));
+            
+            // Clear any existing path if not in stolen mode
+            if (!modeStolen && stolenVehiclePath) {
+                clearStolenVehiclePath();
+            }
+            
+            // If in stolen mode and a vehicle is selected, show its path
+            if (modeStolen && currentSelectedVehicle && currentSelectedVehicle.status === 'stolen') {
+                showStolenVehiclePath(currentSelectedVehicle.vehicleNumber);
+            }
+        }
+        
+        // Reset all filters
+        function resetFilters() {
+            document.getElementById('vehicle-search').value = '';
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date-filter').value = today;
+            
+            const now = new Date();
+            const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            document.getElementById('time-filter').value = currentTime;
+            
+            document.getElementById('mode-lastseen').checked = true;
+            
+            // Reset to showing all vehicles
+            loadVehicleMarkers(allVehicleData);
+            updateRecentVehiclesList(allVehicleData.slice(0, 6));
+            
+            // Clear any stolen vehicle path
+            clearStolenVehiclePath();
+        }
+        
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        
+        // Update recent vehicles list in sidebar
+        function updateRecentVehiclesList(vehicles) {
+            const container = document.getElementById('recent-vehicles');
+            container.innerHTML = '';
+            
+            vehicles.forEach(vehicle => {
+                const card = document.createElement('div');
+                card.className = 'vehicle-card';
+                card.dataset.vehicleId = vehicle.id;
+                
+                // Determine status badge
+                let statusBadge;
+                if (vehicle.status === 'stolen') {
+                    statusBadge = '<span class="status-badge status-stolen">STOLEN</span>';
+                } else if (vehicle.violationType) {
+                    statusBadge = `<span class="status-badge status-violation">${vehicle.violationType}</span>`;
+                } else {
+                    statusBadge = '<span class="status-badge status-normal">NORMAL</span>';
+                }
+                
+                card.innerHTML = `
+                    <div class="vehicle-number">${vehicle.vehicleNumber}</div>
+                    <div class="vehicle-details">${vehicle.vehicleType} • ${vehicle.owner}</div>
+                    <div class="vehicle-location">
+                        <i class="fas fa-map-marker-alt me-1"></i>
+                        ${vehicle.source} (${vehicle.sourceId})
+                    </div>
+                    <div class="timestamp">${vehicle.lastSeen}</div>
+                    ${statusBadge}
+                `;
+                
+                // Add click event to select vehicle
+                card.addEventListener('click', function() {
+                    showVehicleInfo(vehicle);
+                    currentSelectedVehicle = vehicle;
+                    centerOnVehicle(vehicle.vehicleNumber);
+                    highlightVehicleCard(vehicle.id);
+                });
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Highlight selected vehicle card
+        function highlightVehicleCard(vehicleId) {
+            // Remove active class from all cards
+            document.querySelectorAll('.vehicle-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            const selectedCard = document.querySelector(`.vehicle-card[data-vehicle-id="${vehicleId}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+            }
+        }
+        
+        // Center map on a specific vehicle
+        function centerOnVehicle(vehicleNumber) {
+            const vehicle = allVehicleData.find(v => v.vehicleNumber === vehicleNumber);
+            if (vehicle) {
+                map.setView([vehicle.latitude, vehicle.longitude], 15);
+                showVehicleInfo(vehicle);
+                currentSelectedVehicle = vehicle;
+                highlightVehicleCard(vehicle.id);
+            }
+        }
+        
+        // Center map on a specific camera
+        function centerOnCamera(cameraId) {
+            const camera = cctvCameras.find(c => c.id === cameraId);
+            if (camera) {
+                map.setView([camera.latitude, camera.longitude], 16);
+                showCameraInfo(camera);
+            }
+        }
+        
+        // Generate report for a vehicle
+        function generateReport(vehicleNumber) {
+            alert(`Generating report for vehicle ${vehicleNumber}...\n\nIn a real system, this would generate a PDF report with:\n- Vehicle details\n- Tracking history\n- Violation records\n- Location data\n\nThis is a demo simulation.`);
+        }
+        
+        // Toggle heatmap layer
+        function toggleHeatmap() {
+            const showHeatmap = document.getElementById('layer-heatmap').checked;
+            
+            if (showHeatmap && !heatmapLayer) {
+                // Create heatmap data from violations
+                const heatmapData = allVehicleData
+                    .filter(v => v.violationType)
+                    .map(v => [v.latitude, v.longitude, 1]); // Third value is intensity
+                
+                // Create heatmap layer (simplified version)
+                heatmapLayer = L.layerGroup();
+                
+                heatmapData.forEach(point => {
+                    const circle = L.circle([point[0], point[1]], {
+                        color: '#ff5722',
+                        fillColor: '#ff5722',
+                        fillOpacity: 0.3,
+                        radius: 200
+                    }).addTo(heatmapLayer);
+                });
+                
+                map.addLayer(heatmapLayer);
+            } else if (!showHeatmap && heatmapLayer) {
+                map.removeLayer(heatmapLayer);
+                heatmapLayer = null;
+            }
+        }
+        
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map
+            initMap();
+            
+            // Set up event listeners
+            document.getElementById('apply-filters').addEventListener('click', applyFilters);
+            document.getElementById('reset-filters').addEventListener('click', resetFilters);
+            document.getElementById('search-btn').addEventListener('click', applyFilters);
+            document.getElementById('close-panel').addEventListener('click', function() {
+                document.getElementById('info-panel').classList.remove('active');
+            });
+            document.getElementById('btn-center').addEventListener('click', function() {
+                map.setView([20.5937, 78.9629], 5);
+            });
+            document.getElementById('btn-clear').addEventListener('click', clearStolenVehiclePath);
+            document.getElementById('btn-play').addEventListener('click', togglePathAnimation);
+            
+            // Enter key for search
+            document.getElementById('vehicle-search').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    applyFilters();
+                }
+            });
+            
+            // Layer controls
+            document.getElementById('layer-vehicles').addEventListener('change', function() {
+                if (this.checked) {
+                    map.addLayer(vehicleMarkerCluster);
+                } else {
+                    map.removeLayer(vehicleMarkerCluster);
+                }
+            });
+            
+            document.getElementById('layer-cameras').addEventListener('change', function() {
+                if (this.checked) {
+                    map.addLayer(cameraMarkerCluster);
+                } else {
+                    map.removeLayer(cameraMarkerCluster);
+                }
+            });
+            
+            document.getElementById('layer-stolen').addEventListener('change', function() {
+                // Filter vehicles based on stolen status
+                applyFilters();
+            });
+            
+            document.getElementById('layer-cluster').addEventListener('change', function() {
+                // Toggle clustering (simplified - would need reimplementation for full toggle)
+                alert('Marker clustering toggled. In a full implementation, this would enable/disable clustering dynamically.');
+            });
+            
+            document.getElementById('layer-heatmap').addEventListener('change', toggleHeatmap);
+            
+            // Demo: Auto-select a stolen vehicle for demonstration
+            setTimeout(() => {
+                const stolenVehicle = allVehicleData.find(v => v.status === 'stolen');
+                if (stolenVehicle) {
+                    centerOnVehicle(stolenVehicle.vehicleNumber);
+                }
+            }, 1000);
+        });
+        
+        // Export functions for HTML onclick handlers
+        window.centerOnVehicle = centerOnVehicle;
+        window.showStolenVehiclePath = showStolenVehiclePath;
+        window.generateReport = generateReport;
+        window.togglePathAnimation = togglePathAnimation;
+        window.clearStolenVehiclePath = clearStolenVehiclePath;
+        window.centerOnCamera = centerOnCamera;
+    </script>
+</body>
+</html>

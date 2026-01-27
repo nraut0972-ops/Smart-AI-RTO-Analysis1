@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTO Feedback Portal | सोप्या पद्धतीने तक्रारी नोंदवा</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #f59e0b;
+            --accent: #10b981;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            min-height: 100vh;
+        }
+        
+        .header-banner {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .header-banner:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-container {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .language-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .language-btn.active {
+            background-color: var(--primary-dark) !important;
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .highlight-box {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .highlight-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--secondary);
+        }
+        
+        .required::after {
+            content: '*';
+            color: #ef4444;
+            margin-left: 4px;
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="py-12">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Header Section -->
+        <div class="header-banner mb-12">
+            <div class="flex flex-col md:flex-row items-center p-6 md:p-8 text-white">
+                <div class="flex-shrink-0 mb-6 md:mb-0 md:mr-8">
+                    <img src="https://placehold.co/150x150" alt="RTO Logo - Government of Maharashtra emblem in gold and blue" class="w-20 h-20 rounded-full bg-white p-2 shadow-lg">
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2">RTO Public Feedback Portal</h1>
+                    <p class="opacity-90">Your voice matters in improving our services</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Language Toggle -->
+        <div class="flex justify-center mb-8">
+            <div class="inline-flex rounded-full shadow-md overflow-hidden bg-gray-100">
+                <button id="englishBtn" class="language-btn active px-6 py-2 font-medium text-sm sm:text-base text-white">
+                    English
+                </button>
+                <button id="marathiBtn" class="language-btn px-6 py-2 font-medium text-sm sm:text-base text-gray-700 hover:bg-gray-200">
+                    मराठी
+                </button>
+            </div>
+        </div>
+
+        <!-- English Form -->
+        <div id="englishForm" class="form-section active">
+            <div class="form-container p-6 sm:p-8 fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Feedback/Complaint Form</h2>
+                <p class="text-gray-600 mb-6 text-center">Please fill this form to register your feedback or complaint with the RTO department.</p>
+                
+                <form id="feedbackForm" class="space-y-6">
+                    <div class="highlight-box p-4 sm:p-6 bg-white rounded-lg shadow-sm">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Personal Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1 required">Full Name</label>
+                                    <input type="text" id="name" name="name" required 
+                                           class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                </div>
+                                <div>
+                                    <label for="contact" class="block text-sm font-medium text-gray-700 mb-1 required">Contact Number</label>
+                                    <input type="tel" id="contact" name="contact" required 
+                                           pattern="[0-9]{10}" maxlength="10"
+                                           class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                    <input type="email" id="email" name="email" 
+                                           class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                </div>
+                                <div>
+                                    <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                    <input type="text" id="address" name="address" 
+                                           class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box p-4 sm:p-6 bg-white rounded-lg shadow-sm">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Feedback Details</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="office" class="block text-sm font-medium text-gray-700 mb-1 required">RTO Office</label>
+                                    <select id="office" name="office" required 
+                                            class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                        <option value="">Select your RTO office</option>
+                                        <option value="mumbai">Mumbai (Central)</option>
+                                        <option value="pune">Pune</option>
+                                        <option value="nagpur">Nagpur</option>
+                                        <option value="thane">Thane</option>
+                                        <option value="nashik">Nashik</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="department" class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                                    <select id="department" name="department" 
+                                            class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                        <option value="">Select department</option>
+                                        <option value="driving_license">Driving License</option>
+                                        <option value="vehicle_registration">Vehicle Registration</option>
+                                        <option value="permit">Permit</option>
+                                        <option value="fitness">Fitness Certificate</option>
+                                        <option value="tax">Taxation</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-2 required">Nature of Feedback</label>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div class="flex items-center">
+                                        <input id="complaint" name="feedbackType" type="radio" value="complaint" required
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                        <label for="complaint" class="ml-2 text-sm text-gray-700">Complaint</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="suggestion" name="feedbackType" type="radio" value="suggestion"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                        <label for="suggestion" class="ml-2 text-sm text-gray-700">Suggestion</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="appreciation" name="feedbackType" type="radio" value="appreciation"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                        <label for="appreciation" class="ml-2 text-sm text-gray-700">Appreciation</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1 required">Subject</label>
+                                <input type="text" id="subject" name="subject" required
+                                       class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="message" class="block text-sm font-medium text-gray-700 mb-1 required">Details</label>
+                                <textarea id="message" name="message" rows="4" required
+                                          class="input-field w-full px-4 py-2 rounded-lg focus:outline-none"></textarea>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="documents" class="block text-sm font-medium text-gray-700 mb-1">Upload Documents (if any)</label>
+                                <div class="mt-1 flex items-center">
+                                    <input type="file" id="documents" name="documents"
+                                           class="block w-full text-sm text-gray-500
+                                                  file:mr-4 file:py-2 file:px-4
+                                                  file:rounded-lg file:border-0
+                                                  file:text-sm file:font-semibold
+                                                  file:bg-blue-50 file:text-blue-700
+                                                  hover:file:bg-blue-100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 text-center">
+                        <button type="submit" class="submit-btn px-8 py-3 text-white font-medium rounded-lg shadow-md">
+                            Submit Feedback
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Marathi Form -->
+        <div id="marathiForm" class="form-section">
+            <div class="form-container p-6 sm:p-8 fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">फीडबॅक / तक्रार फॉर्म</h2>
+                <p class="text-gray-600 mb-6 text-center">कृपया RTO विभागाकडे आपली फीडबॅक किंवा तक्रार नोंदवण्यासाठी हा फॉर्म भरा.</p>
+                
+                <form id="feedbackFormMarathi" class="space-y-6">
+                    <div class="highlight-box p-4 sm:p-6 bg-white rounded-lg shadow-sm">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">वैयक्तिक माहिती</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="nameMarathi" class="block text-sm font-medium text-gray-700 mb-1 required">पूर्ण नाव</label>
+                                    <input type="text" id="nameMarathi" name="nameMarathi" required 
+                                           class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                </div>
+                                <div>
+                                    <label for="contactMarathi" class="block text-sm font-medium text-gray-700 mb-1 required">संपर्क क्रमांक</label>
+                                    <input type="tel" id="contactMarathi" name="contactMarathi" required 
+                                           pattern="[0-9]{10}" maxlength="10"
+                                           class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                </div>
+                                <div>
+                                    <label for="emailMarathi" class="block text-sm font-medium text-gray-700 mb-1">ईमेल पत्ता</label>
+                                    <input type="email" id="emailMarathi" name="emailMarathi" 
+                                           class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                </div>
+                                <div>
+                                    <label for="addressMarathi" class="block text-sm font-medium text-gray-700 mb-1">पत्ता</label>
+                                    <input type="text" id="addressMarathi" name="addressMarathi" 
+                                           class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box p-4 sm:p-6 bg-white rounded-lg shadow-sm">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">फीडबॅक तपशील</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="officeMarathi" class="block text-sm font-medium text-gray-700 mb-1 required">RTO कार्यालय</label>
+                                    <select id="officeMarathi" name="officeMarathi" required 
+                                            class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                        <option value="">तुमचे RTO कार्यालय निवडा</option>
+                                        <option value="mumbai">मुंबई (सेंट्रल)</option>
+                                        <option value="pune">पुणे</option>
+                                        <option value="nagpur">नागपूर</option>
+                                        <option value="thane">ठाणे</option>
+                                        <option value="nashik">नाशिक</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="departmentMarathi" class="block text-sm font-medium text-gray-700 mb-1">विभाग</label>
+                                    <select id="departmentMarathi" name="departmentMarathi" 
+                                            class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                                        <optgroup label="कार्यालय">
+                                        <option value="driving_license">ड्रायव्हिंग लायसन्स</option>
+                                        <option value="vehicle_registration">वाहन नोंदणी</option>
+                                        <option value="permit">परवाना</option>
+                                        <option value="fitness">फिटनेस प्रमाणपत्र</option>
+                                        <option value="tax">कर</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-2 required">फीडबॅकचे स्वरूप</label>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div class="flex items-center">
+                                        <input id="complaintMarathi" name="feedbackTypeMarathi" type="radio" value="complaint" required
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                        <label for="complaintMarathi" class="ml-2 text-sm text-gray-700">तक्रार</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="suggestionMarathi" name="feedbackTypeMarathi" type="radio" value="suggestion"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                        <label for="suggestionMarathi" class="ml-2 text-sm text-gray-700">सूचना</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="appreciationMarathi" name="feedbackTypeMarathi" type="radio" value="appreciation"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                        <label for="appreciationMarathi" class="ml-2 text-sm text-gray-700">प्रशंसा</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="subjectMarathi" class="block text-sm font-medium text-gray-700 mb-1 required">विषय</label>
+                                <input type="text" id="subjectMarathi" name="subjectMarathi" required
+                                       class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="messageMarathi" class="block text-sm font-medium text-gray-700 mb-1 required">तपशील</label>
+                                <textarea id="messageMarathi" name="messageMarathi" rows="4" required
+                                          class="input-field w-full px-4 py-2 rounded-lg focus:outline-none"></textarea>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="documentsMarathi" class="block text-sm font-medium text-gray-700 mb-1">दस्तऐवज अपलोड करा (असल्यास)</label>
+                                <div class="mt-1 flex items-center">
+                                    <input type="file" id="documentsMarathi" name="documentsMarathi"
+                                           class="block w-full text-sm text-gray-500
+                                                  file:mr-4 file:py-2 file:px-4
+                                                  file:rounded-lg file:border-0
+                                                  file:text-sm file:font-semibold
+                                                  file:bg-blue-50 file:text-blue-700
+                                                  hover:file:bg-blue-100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 text-center">
+                        <button type="submit" class="submit-btn px-8 py-3 text-white font-medium rounded-lg shadow-md">
+                            फीडबॅक पाठवा
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language toggle functionality
+        document.getElementById('englishBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            this.classList.remove('text-gray-700', 'hover:bg-gray-200');
+            this.classList.add('text-white');
+            document.getElementById('marathiBtn').classList.remove('active', 'text-white');
+            document.getElementById('marathiBtn').classList.add('text-gray-700', 'hover:bg-gray-200');
+            document.getElementById('englishForm').classList.add('active');
+            document.getElementById('marathiForm').classList.remove('active');
+        });
+
+        document.getElementById('marathiBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            this.classList.remove('text-gray-700', 'hover:bg-gray-200');
+            this.classList.add('text-white');
+            document.getElementById('englishBtn').classList.remove('active', 'text-white');
+            document.getElementById('englishBtn').classList.add('text-gray-700', 'hover:bg-gray-200');
+            document.getElementById('marathiForm').classList.add('active');
+            document.getElementById('englishForm').classList.remove('active');
+        });
+
+        // Form submission
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Form validation would go here
+            alert('Thank you for your feedback! We will review your submission.');
+            this.reset();
+        });
+
+        document.getElementById('feedbackFormMarathi').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Form validation would go here
+            alert('तुमच्या फीडबॅकबद्दल धन्यवाद! आम्ही तुमचा फॉर्म तपासू.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

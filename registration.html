@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>New Vehicle Information Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f7f9fc;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 20px 30px;
+            max-width: 600px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #444;
+        }
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 90%;
+            max-width: 900px;
+            margin: 30px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .edit-btn {
+            background-color: #28a745;
+            border: none;
+            padding: 6px 12px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<h1>New Vehicle Information Form</h1>
+
+<form action="/RTO_Analysis_Connectivity/registrationServlet" method="post">
+
+
+
+
+    <label for="vehicleNumber">Vehicle Number:</label>
+    <input type="text" id="vehicleNumber" name="vehicleNumber" required placeholder="e.g. MH12AB1234" />
+
+    <label for="ownerName">Owner Name:</label>
+    <input type="text" id="ownerName" name="ownerName" required />
+
+    <label for="vehicleModel">Vehicle Model:</label>
+    <input type="text" id="vehicleModel" name="vehicleModel" required />
+
+    <label for="registrationDate">Registration Date:</label>
+    <input type="date" id="registrationDate" name="registrationDate" required />
+
+    <label for="rtoOffice">RTO Office:</label>
+    <input type="text" id="rtoOffice" name="rtoOffice" required />
+
+    <label for="status">Status:</label>
+    <select id="status" name="status" required>
+        <option value="" disabled selected>Select</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+    </select>
+
+    <label for="contactNumber">Contact Number:</label>
+    <input type="text" id="contactNumber" name="contactNumber" pattern="[0-9]{10}" placeholder="10-digit number" required />
+
+    <label for="remarks">Remarks (Optional):</label>
+    <textarea id="remarks" name="remarks" placeholder="Write your notes here..."></textarea>
+
+    <button type="submit">Submit</button>
+</form>
+
+<table id="vehicleTable">
+    <thead>
+        <tr>
+            <th>Vehicle Number</th>
+            <th>Owner Name</th>
+            <th>Vehicle Model</th>
+            <th>Registration Date</th>
+            <th>RTO Office</th>
+            <th>Status</th>
+            <th>Contact Number</th>
+            <th>Remarks</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- data rows will appear here -->
+    </tbody>
+</table>
+<script>
+const form = document.getElementById("vehicleForm");
+
+function addVehicleToTable(data) {
+    const tableBody = document.querySelector('#vehicleTable tbody');
+
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+        <td>${data.vehicleNumber}</td>
+        <td>${data.ownerName}</td>
+        <td>${data.vehicleModel}</td>
+        <td>${data.registrationDate}</td>
+        <td>${data.rtoOffice}</td>
+        <td>${data.status}</td>
+        <td>${data.contactNumber}</td>
+        <td>${data.remarks}</td>
+        <td><button class="edit-btn">Edit</button></td>
+    `;
+
+    tableBody.appendChild(row);
+}
+
+    // 🎯 THIS IS VERY IMPORTANT
+    // let the form go to servlet
+
+</script>
+
+
+
+
+</body>
+</html>

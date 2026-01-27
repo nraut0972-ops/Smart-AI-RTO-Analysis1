@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RTO Vehicle Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6f2ff;
+      padding: 30px;
+      max-width: 700px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #003366;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .result-box {
+      background-color: #ffffff;
+      padding: 20px;
+      margin-top: 25px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .result-box p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .value {
+      color: #005580;
+    }
+  </style>
+</head>
+<body>
+  <h1>RTO Vehicle Verification</h1>
+
+  <label for="vehicleNumber">Enter Vehicle Number:</label>
+  <input type="text" id="vehicleNumber" placeholder="">
+
+  <button onclick="verifyVehicle()">Verify Vehicle</button>
+
+  <div id="result" class="result-box" style="display:none;"></div>
+
+  <script>
+    // Dummy vehicle database (sample data)
+    const vehicleDatabase = {
+      "MH12AB1234": {
+        owner: "Rahul Patil",
+        type: "4-Wheeler",
+        registrationDate: "2019-05-15",
+        rcStatus: "Active",
+        pucStatus: "Valid",
+        insuranceStatus: "Valid till 2025-12-01",
+        fitnessValidity: "2029-05-15"
+      },
+      "MH45Q9441": {
+        owner: "Balaji Awchar",
+        type: "2-Wheeler",
+        registrationDate: "2021-11-20",
+        rcStatus: "Active",
+        pucStatus: "Expired",
+        insuranceStatus: "Valid till 2025-09-10",
+        fitnessValidity: "2026-11-20"
+      }
+    };
+
+    function verifyVehicle() {
+      const vehicleNumber = document.getElementById("vehicleNumber").value.toUpperCase().trim();
+      const resultDiv = document.getElementById("result");
+
+      if (!vehicleNumber) {
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = "<p>Please enter a vehicle number.</p>";
+        return;
+      }
+
+      const data = vehicleDatabase[vehicleNumber];
+
+      if (!data) {
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = "<p>No record found for this vehicle.</p>";
+        return;
+      }
+
+      resultDiv.style.display = "block";
+      resultDiv.innerHTML = `
+        <p><span class="label">Vehicle Number:</span> <span class="value">${vehicleNumber}</span></p>
+        <p><span class="label">Owner Name:</span> <span class="value">${data.owner}</span></p>
+        <p><span class="label">Vehicle Type:</span> <span class="value">${data.type}</span></p>
+        <p><span class="label">Registration Date:</span> <span class="value">${data.registrationDate}</span></p>
+        <p><span class="label">RC Status:</span> <span class="value">${data.rcStatus}</span></p>
+        <p><span class="label">PUC Status:</span> <span class="value">${data.pucStatus}</span></p>
+        <p><span class="label">Insurance Status:</span> <span class="value">${data.insuranceStatus}</span></p>
+        <p><span class="label">Fitness Valid Till:</span> <span class="value">${data.fitnessValidity}</span></p>
+      `;
+    }
+  </script>
+</body>
+</html>

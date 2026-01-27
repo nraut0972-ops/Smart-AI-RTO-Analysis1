@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RTO Complaint & Report Forms - तक्रार आणि रिपोर्ट फॉर्म</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f8ff;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #004d40;
+      margin-bottom: 25px;
+    }
+    .top-controls {
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    label {
+      font-weight: bold;
+    }
+    select {
+      padding: 8px;
+      font-size: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      min-width: 180px;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto 40px auto;
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-left: 6px solid #009688;
+    }
+    label, .form-title {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    button {
+      background-color: #00796b;
+      color: white;
+      padding: 12px 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #004d40;
+    }
+    .hidden {
+      display: none;
+    }
+    .form-title {
+      margin-bottom: 15px;
+      color: #00796b;
+      font-weight: 700;
+      font-size: 1.25rem;
+      border-bottom: 2px solid #009688;
+      padding-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔐 RTO Complaint & Report Forms</h1>
+
+  <div class="top-controls">
+    <div>
+      <label for="role-select" id="role-label">Select Role / भूमिका निवडा:</label>
+      <select id="role-select" aria-describedby="role-label">
+        <option value="user">Citizen / Applicant (नागरिक / अर्जदार)</option>
+        <option value="officer">RTO Officer (RTO अधिकारी)</option>
+      </select>
+    </div>
+    <div>
+      <label for="language" id="language-label">Language / भाषा:</label>
+      <select id="language" aria-describedby="language-label">
+        <option value="mr">मराठी</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Citizen / Applicant Form -->
+  <div class="form-container" id="user-form-container">
+    <h2 class="form-title" id="user-form-title">नागरिक / अर्जदार तक्रार फॉर्म</h2>
+    <form id="user-form" action="#" method="post" enctype="multipart/form-data">
+      <label for="u-name" id="u-label-name">नाव (पर्यायी):</label>
+      <input type="text" id="u-name" name="name" placeholder="तुमचं नाव (ऐच्छिक)">
+
+      <label for="u-location" id="u-label-location">RTO कार्यालय / शहर:</label>
+      <input type="text" id="u-location" name="location" required placeholder="उदा. पुणे RTO, नाशिक RTO">
+
+      <label for="u-issue" id="u-label-issue">तक्रारीचा प्रकार:</label>
+      <select id="u-issue" name="issue" required>
+        <option value="" id="u-option-issue-default">-- निवडा --</option>
+        <option value="bribe" id="u-option-issue-bribe">लाच मागितली</option>
+        <option value="agent" id="u-option-issue-agent">दलाल/एजंट द्वारे अडथळा</option>
+        <option value="delay" id="u-option-issue-delay">मुद्दाम अर्ज लांबवला</option>
+        <option value="harassment" id="u-option-issue-harassment">अर्ज करताना त्रास दिला</option>
+      </select>
+
+      <label for="u-description" id="u-label-description">तक्रारीचा तपशील:</label>
+      <textarea id="u-description" name="description" required placeholder="तुमची तक्रार येथे लिहा..."></textarea>
+
+      <label for="u-proof" id="u-label-proof">पुरावा (फोटो/ऑडिओ - ऑप्शनल):</label>
+      <input type="file" id="u-proof" name="proof" accept="image/*,audio/*">
+
+      <label for="u-datetime" id="u-label-datetime">घटनेचा दिनांक व वेळ:</label>
+      <input type="datetime-local" id="u-datetime" name="datetime" required>
+
+      <button type="submit" id="u-submit-btn">तक्रार सबमिट करा</button>
+    </form>
+  </div>
+
+  <!-- RTO Officer Form -->
+  <div class="form-container hidden" id="officer-form-container">
+    <h2 class="form-title" id="officer-form-title">RTO अधिकारी रिपोर्ट फॉर्म</h2>
+    <form id="officer-form" action="#" method="post" enctype="multipart/form-data">
+      <label for="o-name" id="o-label-name">Name (Optional):</label>
+      <input type="text" id="o-name" name="name" placeholder="Your name (optional)">
+
+      <label for="o-location" id="o-label-location">RTO Office / City:</label>
+      <input type="text" id="o-location" name="location" required placeholder="E.g. Pune RTO, Nashik RTO">
+
+      <label for="o-issue" id="o-label-issue">Type of Issue:</label>
+      <select id="o-issue" name="issue" required>
+        <option value="" id="o-option-issue-default">-- Select --</option>
+        <option value="bribe" id="o-option-issue-bribe">Bribe demanded by staff</option>
+        <option value="agent" id="o-option-issue-agent">Obstruction by agent/broker</option>
+        <option value="delay" id="o-option-issue-delay">Deliberate delay in processing</option>
+        <option value="harassment" id="o-option-issue-harassment">Harassment to applicants</option>
+        <option value="policy" id="o-option-issue-policy">Policy or procedural violation</option>
+        <option value="others" id="o-option-issue-others">Other issues</option>
+      </select>
+
+      <label for="o-description" id="o-label-description">Issue Details:</label>
+      <textarea id="o-description" name="description" required placeholder="Write your report here..."></textarea>
+
+      <label for="o-proof" id="o-label-proof">Proof (Photo/Audio - Optional):</label>
+      <input type="file" id="o-proof" name="proof" accept="image/*,audio/*">
+
+      <label for="o-datetime" id="o-label-datetime">Date & Time of Incident:</label>
+      <input type="datetime-local" id="o-datetime" name="datetime" required>
+
+      <button type="submit" id="o-submit-btn">Submit Report</button>
+    </form>
+  </div>
+
+  <script>
+    const roleSelect = document.getElementById('role-select');
+    const languageSelect = document.getElementById('language');
+
+    const userFormContainer = document.getElementById('user-form-container');
+    const officerFormContainer = document.getElementById('officer-form-container');
+
+    // Show the form based on role
+    roleSelect.addEventListener('change', () => {
+      if (roleSelect.value === 'user') {
+        userFormContainer.classList.remove('hidden');
+        officerFormContainer.classList.add('hidden');
+      } else {
+        officerFormContainer.classList.remove('hidden');
+        userFormContainer.classList.add('hidden');
+      }
+    });
+
+    // Translations object for language toggle
+    const translations = {
+      mr: {
+        roleLabel: "भूमिका निवडा:",
+        languageLabel: "भाषा:",
+        user: {
+          formTitle: "नागरिक / अर्जदार तक्रार फॉर्म",
+          labels: {
+            name: "नाव (पर्यायी):",
+            location: "RTO कार्यालय / शहर:",
+            issue: "तक्रारीचा प्रकार:",
+            description: "तक्रारीचा तपशील:",
+            proof: "पुरावा (फोटो/ऑडिओ - ऑप्शनल):",
+            datetime: "घटनेचा दिनांक व वेळ:",
+            submit: "तक्रार सबमिट करा"
+          },
+          placeholders: {
+            name: "तुमचं नाव (ऐच्छिक)",
+            location: "उदा. पुणे RTO, नाशिक RTO",
+            issueDefault: "-- निवडा --",
+            issueBribe: "लाच मागितली",
+            issueAgent: "दलाल/एजंट द्वारे अडथळा",
+            issueDelay: "मुद्दाम अर्ज लांबवला",
+            issueHarassment: "अर्ज करताना त्रास दिला",
+            description: "तुमची तक्रार येथे लिहा..."
+          }
+        },
+        officer: {
+          formTitle: "RTO अधिकारी रिपोर्ट फॉर्म",
+          labels: {
+            name: "नाव (पर्यायी):",
+            location: "RTO कार्यालय / शहर:",
+            issue: "तक्रारीचा प्रकार:",
+            description: "तक्रारीचा तपशील:",
+            proof: "पुरावा (फोटो/ऑडिओ - ऑप्शनल):",
+            datetime: "घटनेचा दिनांक व वेळ:",
+            submit: "रिपोर्ट सबमिट करा"
+          },
+          placeholders: {
+            name: "तुमचं नाव (ऐच्छिक)",
+            location: "उदा. पुणे RTO, नाशिक RTO",
+            issueDefault: "-- निवडा --",
+            issueBribe: "कर्मचाऱ्यांकडून लाच मागितली",
+            issueAgent: "एजंट/दलालांकडून अडथळा",
+            issueDelay: "मुद्दाम प्रक्रियेत उशीर",
+            issueHarassment: "अर्जदारांना त्रास",
+            issuePolicy: "धोरण किंवा प्रक्रिया भंग",
+            issueOthers: "इतर समस्या",
+            description: "तुमचा रिपोर्ट येथे लिहा..."
+          }
+        }
+      },
+      en: {
+        roleLabel: "Select Role:",
+        languageLabel: "Language:",
+        user: {
+          formTitle: "Citizen / Applicant Complaint Form",
+          labels: {
+            name: "Name (Optional):",
+            location: "RTO Office / City:",
+            issue: "Type of Issue:",
+            description: "Complaint Details:",
+            proof: "Proof (Photo/Audio - Optional):",
+            datetime: "Date & Time of Incident:",
+            submit: "Submit Complaint"
+          },
+          placeholders: {
+            name: "Your name (optional)",
+            location: "E.g. Pune RTO, Nashik RTO",
+            issueDefault: "-- Select --",
+            issueBribe: "Bribe demanded",
+            issueAgent: "Obstruction by agent/broker",
+            issueDelay: "Deliberate delay",
+            issueHarassment: "Harassment during application"
+          }
+        },
+        officer: {
+          formTitle: "RTO Officer Report Form",
+          labels: {
+            name: "Name (Optional):",
+            location: "RTO Office / City:",
+            issue: "Type of Issue:",
+            description: "Issue Details:",
+            proof: "Proof (Photo/Audio - Optional):",
+            datetime: "Date & Time of Incident:",
+            submit: "Submit Report"
+          },
+          placeholders: {
+            name: "Your name (optional)",
+            location: "E.g. Pune RTO, Nashik RTO",
+            issueDefault: "-- Select --",
+            issueBribe: "Bribe demanded by staff",
+            issueAgent: "Obstruction by agent/broker",
+            issueDelay: "Deliberate delay in processing",
+            issueHarassment: "Harassment to applicants",
+            issuePolicy: "Policy or procedural violation",
+            issueOthers: "Other issues",
+            description: "Write your report here..."
+          }
+        }
+      }
+    };
+
+    // Function to update all labels & placeholders per selected language
+    function updateLanguage(lang) {
+      document.getElementById('role-label').textContent = translations[lang].roleLabel;
+      document.getElementById('language-label').textContent = translations[lang].languageLabel;
+
+      // User form
+      const u = translations[lang].user;
+      document.getElementById('user-form-title').textContent = u.formTitle;
+      document.getElementById('u-label-name').textContent = u.labels.name;
+      document.getElementById('u-name').placeholder = u.placeholders.name;
+      document.getElementById('u-label-location').textContent = u.labels.location;
+      document.getElementById('u-location').placeholder = u.placeholders.location;
+      document.getElementById('u-label-issue').textContent = u.labels.issue;
+
+      document.getElementById('u-option-issue-default').textContent = u.placeholders.issueDefault;
+      document.getElementById('u-option-issue-bribe').textContent = u.placeholders.issueBribe;
+      document.getElementById('u-option-issue-agent').textContent = u.placeholders.issueAgent;
+      document.getElementById('u-option-issue-delay').textContent = u.placeholders.issueDelay;
+      document.getElementById('u-option-issue-harassment').textContent = u.placeholders.issueHarassment;
+
+      document.getElementById('u-label-description').textContent = u.labels.description;
+      document.getElementById('u-description').placeholder = u.placeholders.description;
+      document.getElementById('u-label-proof').textContent = u.labels.proof;
+      document.getElementById('u-label-datetime').textContent = u.labels.datetime;
+      document.getElementById('u-submit-btn').textContent = u.labels.submit;
+
+      // Officer form
+      const o = translations[lang].officer;
+      document.getElementById('officer-form-title').textContent = o.formTitle;
+      document.getElementById('o-label-name').textContent = o.labels.name;
+      document.getElementById('o-name').placeholder = o.placeholders.name;
+      document.getElementById('o-label-location').textContent = o.labels.location;
+      document.getElementById('o-location').placeholder = o.placeholders.location;
+      document.getElementById('o-label-issue').textContent = o.labels.issue;
+
+      document.getElementById('o-option-issue-default').textContent = o.placeholders.issueDefault;
+      document.getElementById('o-option-issue-bribe').textContent = o.placeholders.issueBribe;
+      document.getElementById('o-option-issue-agent').textContent = o.placeholders.issueAgent;
+      document.getElementById('o-option-issue-delay').textContent = o.placeholders.issueDelay;
+      document.getElementById('o-option-issue-harassment').textContent = o.placeholders.issueHarassment;
+      document.getElementById('o-option-issue-policy').textContent = o.placeholders.issuePolicy;
+      document.getElementById('o-option-issue-others').textContent = o.placeholders.issueOthers;
+
+      document.getElementById('o-label-description').textContent = o.labels.description;
+      document.getElementById('o-description').placeholder = o.placeholders.description;
+      document.getElementById('o-label-proof').textContent = o.labels.proof;
+      document.getElementById('o-label-datetime').textContent = o.labels.datetime;
+      document.getElementById('o-submit-btn').textContent = o.labels.submit;
+    }
+
+    // Initialize default language Marathi
+    updateLanguage('mr');
+
+    languageSelect.addEventListener('change', e => {
+      updateLanguage(e.target.value);
+    });
+  </script>
+
+</body>
+</html>

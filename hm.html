@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Dashboard - VehicleInfo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      color: #2c3e50;
+    }
+
+    header {
+      background-color: #34495e;
+      padding: 20px;
+      color: #ecf0f1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    nav a {
+      color: #ecf0f1;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      color: #27ae60;
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 1rem;
+      margin-bottom: 15px;
+      color: #555;
+    }
+
+    .card button {
+      background-color: #27ae60;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .card button:hover {
+      background-color: #219150;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #34495e;
+      color: white;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">VehicleInfo Dashboard</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="logout.html">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Welcome, [Username]</h1>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Application Status</h3>
+        <p>Track the progress of your RTO applications in real time.</p>
+        <button onclick="location.href='application-status.html'">View Status</button>
+      </div>
+
+      <div class="card">
+        <h3>Upload Documents</h3>
+        <p>Securely upload your driving license, ID proof and other documents.</p>
+        <button onclick="location.href='Documents_Upload_System.html'">Upload</button>
+      </div>
+
+      <div class="card">
+        <h3>Book Appointment</h3>
+        <p>Schedule RTO visits or driving tests online.</p>
+        <button onclick="location.href='Appointment_Booking.html'">Book Now</button>
+      </div>
+
+      <div class="card">
+        <h3>Test Tracking</h3>
+        <p>Track your written and driving test performance.</p>
+        <button onclick="location.href='test-tracking.html'">Track Test</button>
+      </div>
+
+      <div class="card">
+        <h3>Checklist Generator</h3>
+        <p>Create a checklist of required documents for various RTO services.</p>
+        <button onclick="location.href='Checklist_Generator.html'">Generate</button>
+      </div>
+
+      <div class="card">
+        <h3>Live Chat Support</h3>
+        <p>Connect with our support team instantly for assistance.</p>
+        <button onclick="location.href='Live_Chat_Support.html'">Chat</button>
+      </div>
+
+      <div class="card">
+        <h3>Make Payment</h3>
+        <p>Use our secure payment gateway to pay your RTO fees.</p>
+        <button onclick="location.href='payment.html'">Pay Now</button>
+      </div>
+
+      <div class="card">
+        <h3>Report Agent</h3>
+        <p>Report fraudulent agents or malpractice at RTOs.</p>
+        <button onclick="location.href='report-agent.html'">Report</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 VehicleInfo App | Designed for smarter RTO services
+  </footer>
+
+</body>
+</html>

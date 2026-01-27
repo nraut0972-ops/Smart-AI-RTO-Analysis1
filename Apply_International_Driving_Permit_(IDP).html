@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>International Driving Permit Application</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f7ff;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #555;
+      margin-top: -12px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>International Driving Permit (IDP) Application Form</h2>
+  <form action="submit_idp.jsp" method="post" enctype="multipart/form-data">
+
+
+      
+      <label for="fullName">Full Name (As per Passport):</label>
+      <input type="text" id="fullName" name="fullName" required>
+
+      <label for="licenseNumber">Indian Driving License Number:</label>
+      <input type="text" id="licenseNumber" name="licenseNumber" required>
+
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob" required>
+
+      <label for="passportNumber">Passport Number:</label>
+      <input type="text" id="passportNumber" name="passportNumber" required>
+
+      <label for="passportExpiry">Passport Expiry Date:</label>
+      <input type="date" id="passportExpiry" name="passportExpiry" required>
+
+      <label for="country">Country for which IDP is required:</label>
+      <input type="text" id="country" name="country" required>
+
+      <label for="address">Current Address:</label>
+      <textarea id="address" name="address" rows="3" required></textarea>
+
+      <label for="mobile">Mobile Number:</label>
+      <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}">
+
+      <label for="email">Email ID:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="photo">Upload Passport Size Photo:</label>
+      <input type="file" id="photo" name="photo" accept="image/*" required>
+
+      <label for="licenseCopy">Upload Copy of Driving License:</label>
+      <input type="file" id="licenseCopy" name="licenseCopy" accept=".pdf,image/*" required>
+
+      <label for="visaCopy">Upload Visa Copy (if applicable):</label>
+      <input type="file" id="visaCopy" name="visaCopy" accept=".pdf,image/*">
+
+      <label for="declaration">Declaration:</label>
+      <textarea id="declaration" name="declaration" rows="3" required>
+I hereby declare that the information provided above is true and correct to the best of my knowledge. I request the competent authority to issue me an International Driving Permit.
+      </textarea>
+
+      <button type="submit">Submit Application</button>
+    </form>
+  </div>
+</body>
+</html>

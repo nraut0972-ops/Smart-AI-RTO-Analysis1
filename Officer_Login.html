@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTO Officer Login - Maharashtra Government</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0d47a1, #1976d2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+            top: -50%;
+            left: -50%;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        /* Login Form */
+        .login-form {
+            padding: 35px 30px;
+        }
+
+        /* Session Status */
+        .session-status {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2e7d32;
+            display: none;
+        }
+
+        .session-status.show {
+            display: block;
+        }
+
+        .session-status.logged-out {
+            background: #fff3e0;
+            border-left: 4px solid #f57c00;
+        }
+
+        .status-message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .session-status.logged-out .status-message {
+            color: #f57c00;
+        }
+
+        /* Demo Credentials Box */
+        .credentials-box {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .credentials-box h3 {
+            color: #e65100;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .credentials-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .credential-item {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .credential-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .credential-item span {
+            font-weight: 600;
+            color: #1976d2;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #c62828;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        /* Buttons Container */
+        .buttons-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 17px;
+            background: linear-gradient(135deg, #1976d2, #0d47a1);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #1565c0, #0d3c8a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.4);
+        }
+
+        .login-btn:disabled {
+            background: #90a4ae;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            width: 100%;
+            padding: 17px;
+            background: linear-gradient(135deg, #f44336, #c62828);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        /* Direct Menu Button */
+        .menu-btn {
+            width: 100%;
+            padding: 17px;
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-btn:hover {
+            background: linear-gradient(135deg, #388E3C, #1B5E20);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f5f5f5;
+            border-top: 1px solid #ddd;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .footer p {
+            margin-bottom: 5px;
+        }
+
+        /* Security Features */
+        .security-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .security-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .security-item i {
+            font-size: 1.5rem;
+            color: #1976d2;
+            margin-bottom: 8px;
+        }
+
+        .security-item p {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        /* Officer Info */
+        .officer-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #1565c0;
+        }
+
+        .officer-info i {
+            margin-right: 8px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .login-container {
+                max-width: 100%;
+            }
+
+            .login-form {
+                padding: 25px 20px;
+            }
+
+            .credentials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .security-features {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons-container {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Current Session Info */
+        .session-info {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffb300;
+        }
+
+        .session-info h4 {
+            color: #ff8f00;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .session-details {
+            font-size: 0.9rem;
+            color: #5d4037;
+        }
+
+        .session-details div {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-traffic-light"></i>
+                </div>
+                <h1>RTO Officer Login Portal</h1>
+                <p>Government of Maharashtra • Ministry of Transport</p>
+                <div class="badge">
+                    <i class="fas fa-shield-alt"></i> AUTHORIZED PERSONNEL ONLY
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-form">
+            <!-- Session Status -->
+            <div class="session-status" id="sessionStatus">
+                <div class="status-message" id="statusMessage">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="statusText"></span>
+                </div>
+            </div>
+
+            <!-- Current Session Info -->
+            <div class="session-info" id="sessionInfo" style="display: none;">
+                <h4><i class="fas fa-user-clock"></i> Current Session Active</h4>
+                <div class="session-details">
+                    <div>Officer: <span id="currentOfficer"></span></div>
+                    <div>Login Time: <span id="loginTime"></span></div>
+                    <div>Session ID: <span id="sessionId"></span></div>
+                </div>
+            </div>
+
+            <!-- Demo Credentials -->
+            <div class="credentials-box">
+                <h3><i class="fas fa-key"></i> Fixed Officer Credentials (Choose Any)</h3>
+                <div class="credentials-grid">
+                    <div class="credential-item">Username: <span>officer1</span> | Password: <span>RTO@2024</span></div>
+                    <div class="credential-item">Username: <span>officer2</span> | Password: <span>RTO@2024</span></div>
+                    <div class="credential-item">Username: <span>officer3</span> | Password: <span>RTO@2024</span></div>
+                    <div class="credential-item">Username: <span>officer4</span> | Password: <span>RTO@2024</span></div>
+                    <div class="credential-item">Username: <span>officer5</span> | Password: <span>RTO@2024</span></div>
+                    <div class="credential-item">Username: <span>traffic1</span> | Password: <span>RTO@2024</span></div>
+                    <div class="credential-item">Username: <span>traffic2</span> | Password: <span>RTO@2024</span></div>
+                    <div class="credential-item">Username: <span>rto_pune</span> | Password: <span>RTO@2024</span></div>
+                    <div class="credential-item">Username: <span>rto_mumbai</span> | Password: <span>RTO@2024</span></div>
+                    <div class="credential-item">Username: <span>admin_rto</span> | Password: <span>RTO@2024</span></div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText"></span>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText"></span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <!-- Username -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user-tie"></i> Officer Username
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" 
+                               class="form-input" 
+                               id="username" 
+                               placeholder="Enter officer username"
+                               required
+                               autocomplete="username">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key input-icon"></i>
+                        <input type="password" 
+                               class="form-input" 
+                               id="password" 
+                               placeholder="Enter your password"
+                               required
+                               autocomplete="current-password">
+                        <button type="button" 
+                                class="password-toggle" 
+                                id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="buttons-container">
+                    <button type="submit" 
+                            class="login-btn" 
+                            id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span id="btnText">Login</span>
+                    </button>
+
+                    <button type="button" 
+                            class="menu-btn" 
+                            id="menuBtn">
+                            <a href="menu.html">
+                        <i class="fas fa-home"></i>
+                        Open Menu
+                        </a>
+                    </button>
+
+                    <button type="button" 
+                            class="logout-btn" 
+                            id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <a href="RTO Analysis.html">
+                        Logout
+                        </a>
+                    </button>
+
+                    <button type="button" 
+                            class="menu-btn" 
+                            id="doubleLoginBtn">
+                        <i class="fas fa-redo"></i>
+                        Double Login
+                    </button>
+                </div>
+            </form>
+
+            <!-- Officer Info -->
+            <div class="officer-info">
+                <i class="fas fa-info-circle"></i>
+                <strong>Instructions:</strong> 
+                <ul style="margin-left: 20px; margin-top: 5px;">
+                    <li><strong>Login:</strong> Use any credentials from above list</li>
+                    <li><strong>Open Menu:</strong> Go to menu.html if already logged in</li>
+                    <li><strong>Logout:</strong> Clear current session</li>
+                    <li><strong>Double Login:</strong> Login again without logout</li>
+                </ul>
+            </div>
+
+            <!-- Security Features -->
+            <div class="security-features">
+                <div class="security-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <p>Secure Login</p>
+                </div>
+                <div class="security-item">
+                    <i class="fas fa-user-lock"></i>
+                    <p>Session Control</p>
+                </div>
+                <div class="security-item">
+                    <i class="fas fa-history"></i>
+                    <p>Activity Logged</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><i class="fas fa-lock"></i> Secure Officer Portal • Smart RTO System</p>
+            <p>Protected under Indian IT Act, 2000 • All rights reserved</p>
+            <p style="font-size: 0.75rem; margin-top: 5px;">Version 2.2 • Session Management Enabled</p>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // RTO OFFICER LOGIN SYSTEM WITH SESSION CONTROL
+        // ============================================
+
+        // 10 Fixed Officer Credentials
+        const OFFICER_CREDENTIALS = [
+            { username: 'officer1', password: 'RTO@2024', name: 'Officer Rajesh Sharma', designation: 'Traffic Inspector' },
+            { username: 'officer2', password: 'RTO@2024', name: 'Officer Priya Patel', designation: 'License Officer' },
+            { username: 'officer3', password: 'RTO@2024', name: 'Officer Amit Kumar', designation: 'Vehicle Inspector' },
+            { username: 'officer4', password: 'RTO@2024', name: 'Officer Sneha Desai', designation: 'Traffic Controller' },
+            { username: 'officer5', password: 'RTO@2024', name: 'Officer Vikram Singh', designation: 'Senior Inspector' },
+            { username: 'traffic1', password: 'RTO@2024', name: 'Officer Anjali Joshi', designation: 'Traffic Marshal' },
+            { username: 'traffic2', password: 'RTO@2024', name: 'Officer Sameer Khan', designation: 'Road Safety Officer' },
+            { username: 'rto_pune', password: 'RTO@2024', name: 'Officer Pune Branch', designation: 'Branch Head' },
+            { username: 'rto_mumbai', password: 'RTO@2024', name: 'Officer Mumbai Branch', designation: 'Branch Head' },
+            { username: 'admin_rto', password: 'RTO@2024', name: 'Admin Officer', designation: 'System Administrator' }
+        ];
+
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const menuBtn = document.getElementById('menuBtn');
+        const doubleLoginBtn = document.getElementById('doubleLoginBtn');
+        const btnText = document.getElementById('btnText');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const successMessage = document.getElementById('successMessage');
+        const successText = document.getElementById('successText');
+        const sessionStatus = document.getElementById('sessionStatus');
+        const statusText = document.getElementById('statusText');
+        const sessionInfo = document.getElementById('sessionInfo');
+        const currentOfficer = document.getElementById('currentOfficer');
+        const loginTime = document.getElementById('loginTime');
+        const sessionId = document.getElementById('sessionId');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if already logged in
+            checkLoginStatus();
+            
+            // Auto-focus username field
+            usernameInput.focus();
+            
+            // Load saved username if exists
+            const savedUsername = localStorage.getItem('rto_last_username');
+            if (savedUsername) {
+                usernameInput.value = savedUsername;
+                passwordInput.focus();
+            }
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Check Login Status
+        function checkLoginStatus() {
+            const session = sessionStorage.getItem('rto_officer_session');
+            const isLoggedIn = localStorage.getItem('rto_logged_in');
+            
+            if (session && isLoggedIn === 'true') {
+                try {
+                    const sessionData = JSON.parse(session);
+                    
+                    // Show session info
+                    sessionInfo.style.display = 'block';
+                    currentOfficer.textContent = sessionData.name;
+                    loginTime.textContent = new Date(sessionData.loginTime).toLocaleTimeString();
+                    sessionId.textContent = sessionData.sessionId.substring(0, 15) + '...';
+                    
+                    // Show session status
+                    showSessionStatus(`Currently logged in as ${sessionData.name}`, 'logged-in');
+                    
+                } catch (error) {
+                    clearSession();
+                }
+            } else {
+                showSessionStatus('Please login to access officer menu', 'logged-out');
+            }
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Form submission
+            loginForm.addEventListener('submit', handleLogin);
+            
+            // Password visibility toggle
+            togglePasswordBtn.addEventListener('click', togglePasswordVisibility);
+            
+            // Clear error when typing
+            usernameInput.addEventListener('input', clearError);
+            passwordInput.addEventListener('input', clearError);
+            
+            // Enter key support
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleLogin(e);
+                }
+            });
+            
+            // Demo credentials click
+            document.querySelectorAll('.credential-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const text = this.textContent;
+                    const username = text.split('Username: ')[1].split(' |')[0].trim();
+                    const password = text.split('Password: ')[1].trim();
+                    
+                    usernameInput.value = username;
+                    passwordInput.value = password;
+                    passwordInput.focus();
+                });
+            });
+            
+            // Logout button
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            // Menu button (opens menu.html)
+            menuBtn.addEventListener('click', openMenu);
+            
+            // Double Login button
+            doubleLoginBtn.addEventListener('click', handleDoubleLogin);
+        }
+
+        // Handle Login
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            // Validate inputs
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+            
+            // Show loading state
+            setLoadingState(true, 'login');
+            
+            // Check credentials after 1 second
+            setTimeout(() => {
+                checkCredentials(username, password);
+            }, 1000);
+        }
+
+        // Check Credentials
+        function checkCredentials(username, password) {
+            // Find matching credentials
+            const officer = OFFICER_CREDENTIALS.find(officer => 
+                officer.username === username && officer.password === password
+            );
+            
+            if (officer) {
+                // Successful login
+                handleSuccessfulLogin(officer);
+            } else {
+                // Failed login
+                handleFailedLogin();
+            }
+        }
+
+        // Handle Successful Login
+        function handleSuccessfulLogin(officer) {
+            // Save username for next time
+            localStorage.setItem('rto_last_username', officer.username);
+            
+            // Create session data
+            const sessionData = {
+                username: officer.username,
+                name: officer.name,
+                designation: officer.designation,
+                loginTime: new Date().toISOString(),
+                sessionId: generateSessionId(),
+                station: 'Maharashtra RTO',
+                department: 'Transport Department'
+            };
+            
+            // Store session
+            sessionStorage.setItem('rto_officer_session', JSON.stringify(sessionData));
+            localStorage.setItem('rto_logged_in', 'true');
+            
+            // Show success message
+            showSuccess(`Welcome ${officer.name}! Redirecting to Officer Menu...`);
+            
+            // Update session info
+            checkLoginStatus();
+            
+            // Update button
+            loginBtn.innerHTML = '<i class="fas fa-check"></i> Login Successful!';
+            loginBtn.style.background = 'linear-gradient(135deg, #2e7d32, #1b5e20)';
+            
+            // Redirect to menu.html after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'menu.html';
+            }, 2000);
+        }
+
+        // Handle Failed Login
+        function handleFailedLogin() {
+            // Show error message
+            showError('Invalid username or password. Please try again.');
+            
+            // Clear password field
+            passwordInput.value = '';
+            passwordInput.focus();
+            
+            // Reset button
+            setLoadingState(false, 'login');
+            
+            // Track failed attempts
+            trackFailedAttempt();
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            const session = sessionStorage.getItem('rto_officer_session');
+            
+            if (session) {
+                try {
+                    const sessionData = JSON.parse(session);
+                    
+                    // Show logout message
+                    showSessionStatus(`Logged out ${sessionData.name} successfully`, 'logged-out');
+                    showSuccess('Logged out successfully!');
+                    
+                } catch (error) {
+                    // Error parsing session
+                }
+            } else {
+                showSessionStatus('No active session found', 'logged-out');
+            }
+            
+            // Clear session data
+            clearSession();
+            
+            // Reset form
+            usernameInput.value = '';
+            passwordInput.value = '';
+            usernameInput.focus();
+            
+            // Hide session info
+            sessionInfo.style.display = 'none';
+            
+            // Reset buttons
+            setLoadingState(false, 'login');
+            
+            // Reset failed attempts counter
+            localStorage.removeItem('login_attempts');
+        }
+
+        // Open Menu (menu.html)
+        function openMenu() {
+            const isLoggedIn = localStorage.getItem('rto_logged_in');
+            
+            if (isLoggedIn === 'true') {
+                // Already logged in, open menu
+                window.location.href = 'menu.html';
+            } else {
+                // Not logged in, show error
+                showError('Please login first to access the menu');
+                showSessionStatus('Please login to access officer menu', 'logged-out');
+            }
+        }
+
+        // Handle Double Login (Login without logout)
+        function handleDoubleLogin() {
+            const isLoggedIn = localStorage.getItem('rto_logged_in');
+            
+            if (isLoggedIn === 'true') {
+                // Already logged in, ask for confirmation
+                if (confirm('You are already logged in. Do you want to login with another account?')) {
+                    // Proceed with double login
+                    usernameInput.focus();
+                    showSessionStatus('Enter new credentials for double login', 'logged-out');
+                }
+            } else {
+                // Not logged in, focus on username
+                usernameInput.focus();
+                showSessionStatus('Please enter your credentials', 'logged-out');
+            }
+        }
+
+        // Track Failed Attempts
+        function trackFailedAttempt() {
+            let attempts = parseInt(localStorage.getItem('login_attempts') || '0') + 1;
+            localStorage.setItem('login_attempts', attempts.toString());
+            
+            // Lock after 3 failed attempts
+            if (attempts >= 3) {
+                disableLogin();
+                setTimeout(() => {
+                    enableLogin();
+                    localStorage.setItem('login_attempts', '0');
+                }, 30000); // 30 seconds lock
+            }
+        }
+
+        // Toggle Password Visibility
+        function togglePasswordVisibility() {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            
+            // Update icon
+            const icon = togglePasswordBtn.querySelector('i');
+            icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+        }
+
+        // Show Error Message
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.add('show');
+            successMessage.classList.remove('show');
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 5000);
+        }
+
+        // Show Success Message
+        function showSuccess(message) {
+            successText.textContent = message;
+            successMessage.classList.add('show');
+            errorMessage.classList.remove('show');
+        }
+
+        // Show Session Status
+        function showSessionStatus(message, type) {
+            statusText.textContent = message;
+            sessionStatus.className = 'session-status show';
+            
+            if (type === 'logged-in') {
+                sessionStatus.classList.add('logged-in');
+                sessionStatus.classList.remove('logged-out');
+            } else {
+                sessionStatus.classList.add('logged-out');
+                sessionStatus.classList.remove('logged-in');
+            }
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                sessionStatus.classList.remove('show');
+            }, 5000);
+        }
+
+        // Clear Error Message
+        function clearError() {
+            errorMessage.classList.remove('show');
+        }
+
+        // Set Loading State
+        function setLoadingState(isLoading, buttonType) {
+            if (isLoading) {
+                if (buttonType === 'login') {
+                    loginBtn.disabled = true;
+                    btnText.innerHTML = '<div class="loading-spinner"></div> Authenticating...';
+                }
+            } else {
+                if (buttonType === 'login') {
+                    loginBtn.disabled = false;
+                    btnText.textContent = 'Login';
+                    loginBtn.style.background = 'linear-gradient(135deg, #1976d2, #0d47a1)';
+                }
+            }
+        }
+
+        // Disable Login
+        function disableLogin() {
+            loginBtn.disabled = true;
+            usernameInput.disabled = true;
+            passwordInput.disabled = true;
+            btnText.textContent = 'Temporarily Locked (30s)';
+            loginBtn.style.background = '#757575';
+            showError('Too many failed attempts. Account locked for 30 seconds.');
+        }
+
+        // Enable Login
+        function enableLogin() {
+            loginBtn.disabled = false;
+            usernameInput.disabled = false;
+            passwordInput.disabled = false;
+            btnText.textContent = 'Login';
+            loginBtn.style.background = 'linear-gradient(135deg, #1976d2, #0d47a1)';
+            errorMessage.classList.remove('show');
+        }
+
+        // Clear Session
+        function clearSession() {
+            sessionStorage.removeItem('rto_officer_session');
+            localStorage.removeItem('rto_logged_in');
+            localStorage.removeItem('login_attempts');
+        }
+
+        // Generate Session ID
+        function generateSessionId() {
+            return 'RTO_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RTO Seized Vehicles Information</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .filter-section {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .vehicle-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .vehicle-card {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 300px;
+      padding: 10px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+      position: relative;
+    }
+
+    .vehicle-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .vehicle-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .vehicle-info {
+      margin-top: 10px;
+    }
+
+    .vehicle-info h3 {
+      margin: 0;
+      color: #444;
+    }
+
+    .vehicle-info p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+
+    .buy-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      margin: 10px 0 5px;
+      cursor: pointer;
+      border-radius: 4px;
+      width: 100%;
+    }
+
+    .buy-btn:hover {
+      background-color: #45a049;
+    }
+
+    select {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    #google_translate_element {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 8px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: black;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    .submit-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🚗 RTO Seized Vehicles Information</h1>
+
+<!-- Google Translate Widget -->
+<div id="google_translate_element"></div>
+
+<!-- Dropdown for Model Filter -->
+<div class="filter-section">
+  <label for="modelSelect">Select Vehicle Model: </label>
+  <select id="modelSelect" onchange="filterVehicles()">
+    <option value="All">All</option>
+    <option value="Honda">Honda</option>
+    <option value="Maruti">Maruti</option>
+    <option value="Tata">Tata</option>
+    <option value="Hyundai">Hyundai</option>
+  </select>
+</div>
+
+<!-- Vehicle List -->
+<div class="vehicle-section" id="vehicleList">
+  <!-- Vehicle Cards -->
+  <div class="vehicle-card" data-model="Honda">
+    <img src="https://via.placeholder.com/300x180?text=Honda+City" alt="Honda City">
+    <div class="vehicle-info">
+      <h3>Honda City</h3>
+      <p>Seized Date: 2025-07-20</p>
+      <p>Sale Price: ₹3,50,000</p>
+      <p>Days Since Seized: <span class="days-since" data-date="2025-07-20"></span></p>
+      <button class="buy-btn" onclick="openBuyModal('Honda City', 350000)">Buy Now</button>
+    </div>
+  </div>
+
+  <div class="vehicle-card" data-model="Maruti">
+    <img src="https://via.placeholder.com/300x180?text=Maruti+Swift" alt="Maruti Swift">
+    <div class="vehicle-info">
+      <h3>Maruti Swift</h3>
+      <p>Seized Date: 2025-07-15</p>
+      <p>Sale Price: ₹2,80,000</p>
+      <p>Days Since Seized: <span class="days-since" data-date="2025-07-15"></span></p>
+      <button class="buy-btn" onclick="openBuyModal('Maruti Swift', 280000)">Buy Now</button>
+    </div>
+  </div>
+
+  <div class="vehicle-card" data-model="Tata">
+    <img src="https://via.placeholder.com/300x180?text=Tata+Nexon" alt="Tata Nexon">
+    <div class="vehicle-info">
+      <h3>Tata Nexon</h3>
+      <p>Seized Date: 2025-06-25</p>
+      <p>Sale Price: ₹4,00,000</p>
+      <p>Days Since Seized: <span class="days-since" data-date="2025-06-25"></span></p>
+      <button class="buy-btn" onclick="openBuyModal('Tata Nexon', 400000)">Buy Now</button>
+    </div>
+  </div>
+
+  <div class="vehicle-card" data-model="Hyundai">
+    <img src="https://via.placeholder.com/300x180?text=Hyundai+Creta" alt="Hyundai Creta">
+    <div class="vehicle-info">
+      <h3>Hyundai Creta</h3>
+      <p>Seized Date: 2025-06-10</p>
+      <p>Sale Price: ₹5,20,000</p>
+      <p>Days Since Seized: <span class="days-since" data-date="2025-06-10"></span></p>
+      <button class="buy-btn" onclick="openBuyModal('Hyundai Creta', 520000)">Buy Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Buy Now Modal -->
+<div id="buyModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2 id="modalTitle">Purchase Vehicle</h2>
+    <form id="purchaseForm">
+      <input type="hidden" id="vehicleModel">
+      <input type="hidden" id="vehiclePrice">
+      
+      <div class="form-group">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="address">Address:</label>
+        <input type="text" id="address" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="paymentMethod">Payment Method:</label>
+        <select id="paymentMethod" required>
+          <option value="">Select Payment Method</option>
+          <option value="online">Online Payment</option>
+          <option value="dd">Demand Draft</option>
+          <option value="cash">Cash (At RTO Office)</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label id="priceLabel">Price: ₹0</label>
+      </div>
+      
+      <button type="submit" class="submit-btn">Submit Purchase Request</button>
+    </form>
+  </div>
+</div>
+
+<!-- Script to Calculate Days & Filter Vehicles -->
+<script>
+  // Calculate number of days since vehicle was seized
+  document.querySelectorAll(".days-since").forEach(function(el) {
+    const seizedDate = new Date(el.dataset.date);
+    const today = new Date();
+    const diffTime = Math.abs(today - seizedDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    el.innerText = `${diffDays} Days`;
+  });
+
+  // Filter vehicles by selected model
+  function filterVehicles() {
+    const selectedModel = document.getElementById("modelSelect").value;
+    document.querySelectorAll(".vehicle-card").forEach(function(card) {
+      if (selectedModel === "All" || card.dataset.model === selectedModel) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
+
+  // Modal functions
+  const modal = document.getElementById("buyModal");
+
+  function openBuyModal(model, price) {
+    document.getElementById("vehicleModel").value = model;
+    document.getElementById("vehiclePrice").value = price;
+    document.getElementById("modalTitle").textContent = `Purchase ${model}`;
+    document.getElementById("priceLabel").textContent = `Price: ₹${price.toLocaleString('en-IN')}`;
+    modal.style.display = "block";
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+    document.getElementById("purchaseForm").reset();
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      closeModal();
+    }
+  }
+
+  // Form submission
+  document.getElementById("purchaseForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    const formData = {
+      vehicleModel: document.getElementById("vehicleModel").value,
+      vehiclePrice: document.getElementById("vehiclePrice").value,
+      fullName: document.getElementById("fullName").value,
+      email: document.getElementById("email").value,
+      phone: document.getElementById("phone").value,
+      address: document.getElementById("address").value,
+      paymentMethod: document.getElementById("paymentMethod").value
+    };
+    
+    // Here you would typically send this data to a server
+    console.log("Purchase request submitted:", formData);
+    
+    alert(`Thank you for your purchase request for ${formData.vehicleModel}. We will contact you shortly.`);
+    closeModal();
+  });
+</script>
+
+<!-- Google Translate Script -->
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {
+        pageLanguage: 'en',
+        includedLanguages: 'en,mr',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      },
+      'google_translate_element'
+    );
+  }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>

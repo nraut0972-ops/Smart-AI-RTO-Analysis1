@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTO Connect - Digital Helpline & Social Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        .hindi-text {
+            font-family: 'Hind', sans-serif;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+            to { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: scale(1.2) rotate(5deg);
+        }
+        
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: floatParticle 15s linear infinite;
+        }
+        
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            border-right: 3px solid #667eea;
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #667eea }
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Animated Background Particles -->
+    <div id="particles"></div>
+
+    <!-- Header with 3D Effect -->
+    <header class="glass-effect rounded-b-3xl py-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-blue-900/20"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-3 gradient-text">RTO CONNECT</h1>
+                    <p class="hindi-text text-xl opacity-80">आरटीओ कनेक्ट - डिजिटल हेल्पलाइन</p>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-4 pulse-glow">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-phone-alt text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-300">Emergency Hotline</p>
+                            <p class="font-bold text-lg text-white">1800-123-4567</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Floating Elements -->
+    <section class="py-16 relative">
+        <div class="container mx-auto px-4 text-center">
+            <div class="floating mb-8">
+                <div class="w-24 h-24 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center shadow-2xl">
+                    <i class="fas fa-comments text-white text-3xl"></i>
+                </div>
+            </div>
+            
+            <h2 class="text-3xl md:text-5xl font-bold mb-6 typewriter">
+                Comprehensive Feedback & Increased Reach
+            </h2>
+            <p class="hindi-text text-xl md:text-2xl text-gray-300 mb-8">
+                व्यापक स्तरावर अभिप्राय मिळतो आणि पोहोच वाढते
+            </p>
+            
+            <div class="glass-effect rounded-2xl p-6 max-w-2xl mx-auto transform hover:scale-105 transition-transform duration-300">
+                <p class="text-lg">
+                    <i class="fas fa-lightbulb text-yellow-400 mr-2"></i>
+                    Connect with us through our digital ecosystem for instant resolution of RTO-related issues
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Helpline Cards -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 gradient-text">Digital Helpline Channels</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Phone Card -->
+                <div class="glass-effect rounded-2xl p-6 card-hover group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                            <i class="fas fa-phone-alt text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-center mb-3">24/7 Phone Support</h3>
+                        <p class="hindi-text text-center mb-4 text-gray-300">२४/७ फोन समर्थन</p>
+                        <p class="text-center mb-6 text-gray-400">Immediate assistance for urgent complaints</p>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-cyan-400">1800-123-4567</p>
+                            <p class="text-sm text-gray-400">Toll Free | Always Available</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Card -->
+                <div class="glass-effect rounded-2xl p-6 card-hover group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-600/10 to-teal-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center transform group-hover:-rotate-12 transition-transform duration-300">
+                            <i class="fas fa-envelope text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-center mb-3">Email Support</h3>
+                        <p class="hindi-text text-center mb-4 text-gray-300">ईमेल समर्थन</p>
+                        <p class="text-center mb-6 text-gray-400">Detailed complaints with attachments</p>
+                        <div class="text-center">
+                            <p class="text-xl font-bold text-green-400">complaint@rto.gov.in</p>
+                            <p class="text-sm text-gray-400">24-hour response guarantee</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WhatsApp Card -->
+                <div class="glass-effect rounded-2xl p-6 card-hover group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-600/10 to-emerald-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                            <i class="fab fa-whatsapp text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-center mb-3">WhatsApp Support</h3>
+                        <p class="hindi-text text-center mb-4 text-gray-300">व्हॉट्सअॅप समर्थन</p>
+                        <p class="text-center mb-6 text-gray-400">Quick queries with media sharing</p>
+                        <div class="text-center">
+                            <p class="text-xl font-bold text-emerald-400">+91 98765 43210</p>
+                            <p class="text-sm text-gray-400">9 AM - 9 PM | Instant Replies</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Media Galaxy -->
+    <section class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 gradient-text">Social Media Universe</h2>
+                <p class="hindi-text text-xl text-gray-300 mb-2">सोशल मीडिया युनिव्हर्स</p>
+                <p class="text-gray-400">Join our digital community for real-time updates and support</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                <!-- Facebook Orbit -->
+                <a href="#" class="glass-effect rounded-2xl p-8 text-center group relative overflow-hidden transform hover:scale-105 transition-all duration-300">
+                    <div class="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10">
+                        <i class="fab fa-facebook-f text-4xl text-blue-400 mb-4 social-icon"></i>
+                        <h3 class="font-semibold text-lg mb-2">Facebook</h3>
+                        <p class="text-sm text-gray-400 mb-2">Community updates & support</p>
+                        <p class="hindi-text text-xs text-gray-500">समुदाय अपडेट्स आणि समर्थन</p>
+                    </div>
+                </a>
+
+                <!-- Twitter Orbit -->
+                <a href="#" class="glass-effect rounded-2xl p-8 text-center group relative overflow-hidden transform hover:scale-105 transition-all duration-300">
+                    <div class="absolute inset-0 bg-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10">
+                        <i class="fab fa-twitter text-4xl text-blue-300 mb-4 social-icon"></i>
+                        <h3 class="font-semibold text-lg mb-2">Twitter</h3>
+                        <p class="text-sm text-gray-400 mb-2">Quick updates & alerts</p>
+                        <p class="hindi-text text-xs text-gray-500">त्वरित अपडेट्स आणि अलर्ट</p>
+                    </div>
+                </a>
+
+                <!-- Instagram Orbit -->
+                <a href="#" class="glass-effect rounded-2xl p-8 text-center group relative overflow-hidden transform hover:scale-105 transition-all duration-300">
+                    <div class="absolute inset-0 bg-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10">
+                        <i class="fab fa-instagram text-4xl text-pink-400 mb-4 social-icon"></i>
+                        <h3 class="font-semibold text-lg mb-2">Instagram</h3>
+                        <p class="text-sm text-gray-400 mb-2">Visual updates & stories</p>
+                        <p class="hindi-text text-xs text-gray-500">व्हिज्युअल अपडेट्स आणि कथा</p>
+                    </div>
+                </a>
+
+                <!-- YouTube Orbit -->
+                <a href="#" class="glass-effect rounded-2xl p-8 text-center group relative overflow-hidden transform hover:scale-105 transition-all duration-300">
+                    <div class="absolute inset-0 bg-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10">
+                        <i class="fab fa-youtube text-4xl text-red-400 mb-4 social-icon"></i>
+                        <h3 class="font-semibold text-lg mb-2">YouTube</h3>
+                        <p class="text-sm text-gray-400 mb-2">Tutorials & guides</p>
+                        <p class="hindi-text text-xs text-gray-500">ट्यूटोरियल आणि मार्गदर्शक</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-16 glass-effect rounded-3xl mx-4 md:mx-auto max-w-6xl">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="p-6">
+                    <div class="text-4xl md:text-5xl font-bold text-purple-400 mb-2">15K+</div>
+                    <p class="text-gray-300">Daily Resolutions</p>
+                    <p class="hindi-text text-sm text-gray-400">दैनंदिन निराकरण</p>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl md:text-5xl font-bold text-cyan-400 mb-2">99%</div>
+                    <p class="text-gray-300">Satisfaction Rate</p>
+                    <p class="hindi-text text-sm text-gray-400">समाधान दर</p>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl md:text-5xl font-bold text-green-400 mb-2">24/7</div>
+                    <p class="text-gray-300">Support Available</p>
+                    <p class="hindi-text text-sm text-gray-400">समर्थन उपलब्ध</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 mt-16 glass-effect rounded-t-3xl">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="#" class="social-icon text-xl text-gray-400 hover:text-white transition-colors duration-300">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-icon text-xl text-gray-400 hover:text-white transition-colors duration-300">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-icon text-xl text-gray-400 hover:text-white transition-colors duration-300">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-icon text-xl text-gray-400 hover:text-white transition-colors duration-300">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+            <p class="text-gray-400">© 2024 RTO Connect - Digital Helpline Platform</p>
+            <p class="hindi-text text-sm text-gray-500 mt-2">आरटीओ कनेक्ट - डिजिटल हेल्पलाइन प्लॅटफॉर्म</p>
+        </div>
+    </footer>
+
+    <script>
+        // Create animated background particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 20 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Add hover effects to all cards
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.zIndex = '10';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.zIndex = '1';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
