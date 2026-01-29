@@ -1,11 +1,8 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>VehicleInfo - RTO & Vehicle Details</title>
   <style>
     /* Reset */
@@ -14,6 +11,7 @@
       padding: 0;
       box-sizing: border-box;
     }
+    
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f9fafb;
@@ -23,56 +21,65 @@
       display: flex;
       flex-direction: column;
     }
+    
     a {
       color: #007bff;
       text-decoration: none;
     }
+    
     a:hover {
       text-decoration: underline;
     }
 
     /* Container */
     .container {
-      width: 90%;
+      width: 95%;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 20px 0;
+      padding: 20px 15px;
       flex: 1;
     }
 
     /* Header */
     header {
       background: #34495e;
-      padding: 20px 0;
+      padding: 15px 0;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       position: relative;
     }
+    
     header .container {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      padding: 0 15px;
     }
+    
     header .logo {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: #ecf0f1;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
     }
+    
     nav ul {
       list-style: none;
       display: flex;
-      gap: 25px;
+      gap: 15px;
       align-items: center;
+      flex-wrap: wrap;
     }
+    
     nav ul li a {
       color: #ecf0f1;
       font-weight: 600;
-      font-size: 1rem;
-      padding: 6px 10px;
+      font-size: 0.9rem;
+      padding: 6px 8px;
       border-radius: 4px;
       transition: background-color 0.3s ease;
     }
+    
     nav ul li a:hover {
       background-color: #2c3e50;
     }
@@ -81,43 +88,58 @@
     .hero {
       background: url('https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
       color: white;
-      padding: 80px 20px;
+      padding: 60px 15px;
       text-align: center;
       border-radius: 10px;
-      margin: 30px 0;
+      margin: 20px 0;
       box-shadow: inset 0 0 0 1000px rgba(0,0,0,0.4);
     }
+    
     .hero h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      font-weight: 900;
-      letter-spacing: 2px;
+      font-size: 2.2rem;
+      margin-bottom: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
+    
     .hero p {
-      font-size: 1.3rem;
-      margin-bottom: 30px;
+      font-size: 1.1rem;
+      margin-bottom: 25px;
       font-weight: 500;
     }
+    
+    .search-form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
     .hero input[type="text"] {
-      width: 60%;
-      max-width: 400px;
-      padding: 15px 20px;
-      font-size: 1.1rem;
+      flex: 1;
+      min-width: 250px;
+      padding: 14px 18px;
+      font-size: 1rem;
       border: none;
-      border-radius: 6px 0 0 6px;
+      border-radius: 6px;
       outline: none;
     }
+    
     .hero button {
-      padding: 15px 30px;
-      font-size: 1.1rem;
+      padding: 14px 25px;
+      font-size: 1rem;
       border: none;
-      border-radius: 0 6px 6px 0;
+      border-radius: 6px;
       background-color: #27ae60;
       color: white;
       font-weight: 700;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      white-space: nowrap;
     }
+    
     .hero button:hover {
       background-color: #219150;
     }
@@ -125,32 +147,35 @@
     /* Info Sections */
     section.info {
       background: white;
-      padding: 40px 30px;
+      padding: 30px 20px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
+    
     section.info h2 {
       color: #34495e;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       font-weight: 700;
-      font-size: 2rem;
+      font-size: 1.8rem;
       border-left: 5px solid #27ae60;
       padding-left: 15px;
     }
+    
     section.info p {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #555;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       line-height: 1.5;
     }
 
     /* Cards Container */
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
     }
+    
     .card {
       background: #ecf0f1;
       padding: 20px;
@@ -159,20 +184,25 @@
       transition: box-shadow 0.3s ease;
       text-align: center;
     }
+    
     .card:hover {
       box-shadow: 0 6px 20px rgba(39,174,96,0.3);
     }
+    
     .card h3 {
       color: #27ae60;
       margin-bottom: 12px;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 700;
     }
+    
     .card p {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: #444;
       line-height: 1.4;
+      margin-bottom: 15px;
     }
+    
     .card button {
       padding: 10px 20px;
       border: none;
@@ -181,35 +211,52 @@
       color: white;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      width: 100%;
+      font-size: 0.95rem;
     }
+    
     .card button:hover {
       background-color: #219150;
     }
 
     /* Table Styles */
+    .table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
       font-size: 0.95rem;
+      min-width: 600px;
     }
+    
     thead {
       background-color: #27ae60;
       color: white;
     }
+    
     thead th {
       padding: 12px 15px;
       text-align: left;
+      font-weight: 600;
     }
+    
     tbody tr {
       border-bottom: 1px solid #ddd;
       transition: background-color 0.2s ease;
     }
+    
     tbody tr:hover {
       background-color: #d1f2eb;
     }
+    
     tbody td {
-      padding: 10px 15px;
+      padding: 12px 15px;
     }
 
     /* Footer */
@@ -234,6 +281,8 @@
       border: none;
       color: #ecf0f1;
       cursor: pointer;
+      padding: 5px;
+      min-width: 40px;
     }
 
     #menuOptions {
@@ -253,6 +302,7 @@
       padding: 8px 12px;
       cursor: pointer;
       color: #2c3e50;
+      font-size: 0.9rem;
     }
 
     #menuOptions div:hover {
@@ -265,28 +315,229 @@
     }
 
     .dashboard h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       margin-bottom: 20px;
+      color: #34495e;
     }
 
-    /* Responsive */
-    @media (max-width: 600px) {
-      .hero input[type="text"] {
+    /* Mobile Menu Button */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    /* Responsive Styles */
+    
+    /* Tablet (768px to 1024px) */
+    @media (max-width: 1024px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .dashboard .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    /* Mobile (max-width: 768px) */
+    @media (max-width: 768px) {
+      html {
+        font-size: 14px;
+      }
+      
+      .container {
         width: 100%;
-        border-radius: 6px 6px 0 0;
+        padding: 15px;
       }
-      .hero button {
-        width: 100%;
-        border-radius: 0 0 6px 6px;
-        margin-top: 8px;
-      }
-      nav ul {
-        flex-direction: column;
-        gap: 10px;
-      }
+      
       header .container {
         flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .logo {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+        position: absolute;
+        top: 15px;
+        right: 20px;
+      }
+      
+      nav {
+        width: 100%;
+        display: none;
+      }
+      
+      nav.active {
+        display: block;
+      }
+      
+      nav ul {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+        background: #2c3e50;
+        border-radius: 5px;
+        padding: 10px;
+        margin-top: 10px;
+      }
+      
+      nav ul li {
+        width: 100%;
+      }
+      
+      nav ul li a {
+        display: block;
+        padding: 12px 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .hero {
+        padding: 40px 15px;
+        margin: 15px 0;
+      }
+      
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      
+      .search-form {
+        flex-direction: column;
+      }
+      
+      .hero input[type="text"],
+      .hero button {
+        width: 100%;
+        min-width: auto;
+      }
+      
+      .cards {
+        grid-template-columns: 1fr;
         gap: 15px;
+      }
+      
+      .dashboard .cards {
+        grid-template-columns: 1fr;
+      }
+      
+      .table-container {
+        border: none;
+      }
+      
+      table {
+        min-width: 100%;
+      }
+      
+      section.info {
+        padding: 20px 15px;
+      }
+      
+      section.info h2 {
+        font-size: 1.5rem;
+      }
+      
+      .menu-wrapper {
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+      }
+      
+      #menuOptions {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+    
+    /* Small Mobile (max-width: 480px) */
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+      
+      .hero p {
+        font-size: 0.95rem;
+      }
+      
+      .dashboard h1 {
+        font-size: 1.6rem;
+      }
+      
+      section.info h2 {
+        font-size: 1.4rem;
+      }
+      
+      .card {
+        padding: 15px;
+      }
+      
+      .card h3 {
+        font-size: 1.1rem;
+      }
+      
+      .card button {
+        padding: 12px;
+      }
+      
+      thead th,
+      tbody td {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+      
+      footer {
+        padding: 15px 10px;
+        font-size: 0.8rem;
+      }
+    }
+    
+    /* Extra Small Mobile (max-width: 360px) */
+    @media (max-width: 360px) {
+      .hero h1 {
+        font-size: 1.3rem;
+      }
+      
+      .hero button {
+        padding: 12px;
+      }
+      
+      .card button {
+        font-size: 0.9rem;
+      }
+      
+      header .logo {
+        font-size: 1.4rem;
+      }
+    }
+    
+    /* Print Styles */
+    @media print {
+      .hero, .menu-wrapper, .card button, footer {
+        display: none;
+      }
+      
+      body {
+        background: white;
+        color: black;
+      }
+      
+      .container {
+        width: 100%;
+        max-width: none;
       }
     }
   </style>
@@ -296,15 +547,15 @@
   <header>
     <div class="container">
       <div class="logo">AI RTO Analysis</div>
-      <nav>
-        <br>
+      <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+      <nav id="mainNav">
         <ul>
           <li><a href="#">Home</a></li>
           <li><a href="aAI2.html">AI assistance</a></li>
           <li><a href="vehicledetails.html">Vehicle Search</a></li>
-          <li><a href="c:\Users\rautn\Desktop\RTO Analysis UI\Complaint & Report Form.html">Complaint & Report Form</a></li>
+          <li><a href="Complaint_Report_Form.html">Complaint & Report Form</a></li>
           <li><a href="Officer_Login.html">Officer Login</a></li>
-           <li><a href="Login_Admin_&_Officer.html">Administrator Login</a></li>
+          <li><a href="Login_Admin_&_Officer.html">Administrator Login</a></li>
           <li class="menu-wrapper">
             <button id="menuButton" aria-label="Open more options">⋮</button>
             <div id="menuOptions">
@@ -324,9 +575,9 @@
     <div class="container">
       <h1>Check Vehicle & RTO Information Instantly</h1>
       <p>Enter your vehicle number below to get detailed registration, owner, and RTO details.</p>
-      <form onsubmit="event.preventDefault(); alert('Search functionality not implemented');">
-        <input type="text" placeholder="Enter Vehicle Number" required />
-        <button type="submit">Search</button>
+      <form class="search-form" onsubmit="event.preventDefault(); alert('Search functionality not implemented');">
+        <input type="text" placeholder="Enter Vehicle Number (e.g. MH12AB1234)" required />
+        <button type="submit">Search Vehicle</button>
       </form>
     </div>
   </section>
@@ -335,6 +586,9 @@
     <h2>About VehicleInfo</h2>
     <p>
       VehicleInfo is your one-stop platform to find detailed information about vehicles registered in India. From RTO office addresses to vehicle registration details and document status, we aim to provide accurate and up-to-date data.
+    </p>
+    <p>
+      Our platform uses AI-powered analysis to give you insights about vehicle history, ownership details, and RTO-related information in a user-friendly format.
     </p>
   </section>
 
@@ -345,52 +599,69 @@
         <h3>Mumbai Central (MH 01)</h3>
         <p>Dr. Ambedkar Bhavan, Opp. Bank of India, Mumbai - 400001</p>
         <p><strong>Phone:</strong> 022-22634567</p>
+        <p><strong>Timings:</strong> 10:00 AM - 5:00 PM</p>
       </div>
       <div class="card" tabindex="0">
         <h3>Pune City (MH 12)</h3>
         <p>RTO Building, Shivajinagar, Pune - 411005</p>
         <p><strong>Phone:</strong> 020-25501234</p>
+        <p><strong>Timings:</strong> 9:30 AM - 6:00 PM</p>
       </div>
       <div class="card" tabindex="0">
         <h3>Nashik (MH 15)</h3>
         <p>New Administrative Building, Gangapur Road, Nashik - 422013</p>
         <p><strong>Phone:</strong> 0253-2601234</p>
+        <p><strong>Timings:</strong> 10:00 AM - 5:30 PM</p>
       </div>
     </div>
   </section>
 
   <section class="info container">
     <h2>Vehicle Registration Data Example</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Vehicle Number</th>
-          <th>Owner Name</th>
-          <th>Model</th>
-          <th>RTO Office</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>MH45Q9441</td>
-          <td>Balaji Awchar</td>
-          <td>Hero Honda</td>
-          <td>Akluj (MH 45)</td>
-        </tr>
-        <tr>
-          <td>MH01XY5678</td>
-          <td>Jane Smith</td>
-          <td>Honda Civic</td>
-          <td>Mumbai Central (MH 01)</td>
-        </tr>
-        <tr>
-          <td>MH15CD9012</td>
-          <td>Raj Patel</td>
-          <td>Hyundai Verna</td>
-          <td>Nashik (MH 15)</td>
-        </tr>
-      </tbody>
-    </table>
+    <p>Here are some sample vehicle records from our database:</p>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Vehicle Number</th>
+            <th>Owner Name</th>
+            <th>Model</th>
+            <th>RTO Office</th>
+            <th>Registration Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>MH45Q9441</td>
+            <td>Balaji Awchar</td>
+            <td>Hero Honda</td>
+            <td>Akluj (MH 45)</td>
+            <td>2022-05-15</td>
+          </tr>
+          <tr>
+            <td>MH01XY5678</td>
+            <td>Jane Smith</td>
+            <td>Honda Civic</td>
+            <td>Mumbai Central (MH 01)</td>
+            <td>2021-11-20</td>
+          </tr>
+          <tr>
+            <td>MH15CD9012</td>
+            <td>Raj Patel</td>
+            <td>Hyundai Verna</td>
+            <td>Nashik (MH 15)</td>
+            <td>2023-01-10</td>
+          </tr>
+          <tr>
+            <td>MH12AB3456</td>
+            <td>Priya Sharma</td>
+            <td>Maruti Suzuki Swift</td>
+            <td>Pune City (MH 12)</td>
+            <td>2020-08-05</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="dashboard container">
@@ -440,21 +711,95 @@
   </section>
 
   <footer>
-  
+    <div class="container">
+      <p>&copy; 2024 AI RTO Analysis. All rights reserved.</p>
+      <p>This is a demo project for educational purposes.</p>
+      <p>Contact: support@airtoanalysis.com | Phone: 1800-123-4567</p>
+      <p style="margin-top: 10px; font-size: 0.8rem;">
+        <a href="#" style="color: #ecf0f1; margin: 0 10px;">Privacy Policy</a> | 
+        <a href="#" style="color: #ecf0f1; margin: 0 10px;">Terms of Service</a> | 
+        <a href="#" style="color: #ecf0f1; margin: 0 10px;">Contact Us</a>
+      </p>
+    </div>
   </footer>
 
   <script>
-    const button = document.getElementById('menuButton');
-    const menu = document.getElementById('menuOptions');
-
-    button.addEventListener('click', (e) => {
-      e.stopPropagation(); // Prevent immediate close on click
-      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mainNav = document.getElementById('mainNav');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      mainNav.classList.toggle('active');
     });
-
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenuBtn.contains(e.target) && !mainNav.contains(e.target)) {
+        mainNav.classList.remove('active');
+      }
+    });
+    
+    // 3-dot menu functionality
+    const menuButton = document.getElementById('menuButton');
+    const menuOptions = document.getElementById('menuOptions');
+    
+    menuButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menuOptions.style.display = menuOptions.style.display === 'block' ? 'none' : 'block';
+    });
+    
     window.addEventListener('click', function(e) {
-      if (!button.contains(e.target) && !menu.contains(e.target)) {
-        menu.style.display = 'none';
+      if (!menuButton.contains(e.target) && !menuOptions.contains(e.target)) {
+        menuOptions.style.display = 'none';
+      }
+    });
+    
+    // Add click functionality to menu options
+    document.querySelectorAll('#menuOptions div').forEach(option => {
+      option.addEventListener('click', function() {
+        alert(`Selected: ${this.textContent}`);
+        menuOptions.style.display = 'none';
+      });
+    });
+    
+    // Search form functionality
+    document.querySelector('.search-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const vehicleNumber = this.querySelector('input[type="text"]').value.trim();
+      
+      if (vehicleNumber) {
+        alert(`Searching for vehicle: ${vehicleNumber}\n\nThis feature will be implemented in the next version.`);
+        // You can add actual search functionality here later
+      }
+    });
+    
+    // Make table rows clickable on mobile
+    document.querySelectorAll('tbody tr').forEach(row => {
+      row.addEventListener('click', function() {
+        if (window.innerWidth <= 768) {
+          const cells = this.querySelectorAll('td');
+          const vehicleInfo = `Vehicle: ${cells[0].textContent}\nOwner: ${cells[1].textContent}\nModel: ${cells[2].textContent}\nRTO: ${cells[3].textContent}`;
+          alert(vehicleInfo);
+        }
+      });
+    });
+    
+    // Add responsive behavior for cards
+    document.querySelectorAll('.card button').forEach(button => {
+      button.addEventListener('click', function(e) {
+        if (window.innerWidth <= 480) {
+          // Optional: Add vibration feedback on mobile
+          if (navigator.vibrate) {
+            navigator.vibrate(50);
+          }
+        }
+      });
+    });
+    
+    // Auto-hide mobile menu on resize
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 768) {
+        mainNav.classList.remove('active');
       }
     });
   </script>
